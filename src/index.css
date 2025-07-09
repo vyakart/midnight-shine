@@ -1,0 +1,180 @@
+@import url('https://fonts.googleapis.com/css2?family=Recursive:wght@300..1000&display=swap');
+@import url('https://api.fontshare.com/v2/css?f[]=clash-display@200,300,400,500,600,700&display=swap');
+@import url('https://api.fontshare.com/v2/css?f[]=general-sans@200,300,400,500,600,700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom CSS Custom Properties for Dynamic Themes */
+:root {
+  --color-primary: #1a1a1a;
+  --color-secondary: #6b7280;
+  --color-accent: #3b82f6;
+  --color-background: #ffffff;
+  --gradient-bg: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+  --gradient-accent: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+}
+
+.dark {
+  --color-primary: #f9fafb;
+  --color-secondary: #9ca3af;
+  --color-accent: #8b5cf6;
+  --color-background: #0f172a;
+  --gradient-bg: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+  --gradient-accent: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+}
+
+/* Base Layer Styles */
+@layer base {
+  * {
+    @apply border-gray-200 dark:border-gray-700;
+  }
+  
+  body {
+    @apply bg-white dark:bg-slate-900;
+    @apply text-gray-900 dark:text-gray-100;
+    @apply transition-colors duration-200;
+    font-family: 'Recursive', system-ui, sans-serif;
+    line-height: 1.6;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-clash;
+    @apply font-medium;
+  }
+  
+  h1 {
+    @apply text-6xl md:text-7xl lg:text-8xl;
+    @apply font-bold;
+    @apply leading-tight;
+  }
+  
+  h2 {
+    @apply text-4xl md:text-5xl lg:text-6xl;
+    @apply leading-tight;
+  }
+  
+  h3 {
+    @apply text-2xl md:text-3xl lg:text-4xl;
+  }
+  
+  h4 {
+    @apply text-xl md:text-2xl;
+  }
+  
+  h5 {
+    @apply text-lg md:text-xl;
+  }
+  
+  h6 {
+    @apply text-base md:text-lg;
+  }
+  
+  p {
+    @apply text-base md:text-lg;
+    @apply leading-relaxed;
+  }
+  
+  a {
+    @apply text-blue-600 dark:text-purple-400;
+    @apply hover:opacity-80;
+    @apply transition-opacity duration-200;
+  }
+}
+
+/* Component Layer Styles */
+@layer components {
+  .btn {
+    @apply px-6 py-3 rounded-lg font-medium transition-all duration-200;
+    @apply focus:outline-none focus:ring-2 focus:ring-offset-2;
+  }
+  
+  .btn-primary {
+    @apply bg-gradient-to-r from-blue-600 to-blue-800 dark:from-purple-600 dark:to-purple-800;
+    @apply text-white hover:opacity-90;
+    @apply focus:ring-blue-500 dark:focus:ring-purple-500;
+  }
+  
+  .btn-secondary {
+    @apply bg-gray-100 dark:bg-gray-800;
+    @apply text-gray-900 dark:text-gray-100;
+    @apply hover:bg-gray-200 dark:hover:bg-gray-700;
+  }
+  
+  .btn-ghost {
+    @apply bg-transparent;
+    @apply text-gray-900 dark:text-gray-100;
+    @apply hover:bg-gray-100 dark:hover:bg-gray-800;
+  }
+  
+  .card {
+    @apply bg-white dark:bg-gray-900;
+    @apply border border-gray-200 dark:border-gray-700;
+    @apply rounded-xl shadow-sm;
+    @apply transition-all duration-200;
+  }
+  
+  .card-hover {
+    @apply hover:shadow-md hover:scale-105;
+  }
+  
+  .input {
+    @apply w-full px-4 py-3 rounded-lg;
+    @apply bg-gray-50 dark:bg-gray-800;
+    @apply border border-gray-300 dark:border-gray-600;
+    @apply focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-purple-500;
+    @apply transition-all duration-200;
+  }
+  
+  .section-padding {
+    @apply py-16 md:py-24 lg:py-32;
+  }
+  
+  .container-width {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+}
+
+/* Utility Layer Styles */
+@layer utilities {
+  .text-gradient {
+    @apply bg-gradient-to-r from-blue-600 to-purple-600;
+    @apply bg-clip-text text-transparent;
+  }
+  
+  .bg-gradient-dynamic {
+    background: var(--gradient-bg);
+  }
+  
+  .bg-gradient-accent-dynamic {
+    background: var(--gradient-accent);
+  }
+  
+  .animation-delay-100 {
+    animation-delay: 0.1s;
+  }
+  
+  .animation-delay-200 {
+    animation-delay: 0.2s;
+  }
+  
+  .animation-delay-300 {
+    animation-delay: 0.3s;
+  }
+  
+  .animation-delay-400 {
+    animation-delay: 0.4s;
+  }
+  
+  .animation-delay-500 {
+    animation-delay: 0.5s;
+  }
+
+  .bg-noise {
+    background-image: 
+      radial-gradient(circle at 20% 50%, transparent 20%, rgba(255,255,255,0.3) 21%, rgba(255,255,255,0.3) 34%, transparent 35%, transparent),
+      linear-gradient(0deg, transparent 24%, rgba(255,255,255,0.05) 25%, rgba(255,255,255,0.05) 26%, transparent 27%, transparent 74%, rgba(255,255,255,0.05) 75%, rgba(255,255,255,0.05) 76%, transparent 77%, transparent);
+    background-size: 3px 3px;
+  }
+}
