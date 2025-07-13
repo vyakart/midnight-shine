@@ -1,40 +1,43 @@
-# Personal Portfolio Website - Detailed Implementation Plan
+# Personal Portfolio Website - Bento Grid Redesign Plan
 
 ## 🎯 Project Overview
 
-A modern, minimalist personal portfolio website that blends bold typography, minimal navigation, personal storytelling, and subtle interactions into a cohesive, engaging experience.
+A modern, futuristic personal portfolio website using a bento grid layout with interactive cards that expand to full pages. Inspired by the encom-boardroom project but with a cleaner, lighter aesthetic and modern minimalistic approach.
 
 ### Core Design Principles
-- **Bold Typography**: Large, impactful headings with carefully chosen font hierarchies
-- **Minimal Navigation**: Clean, intuitive navigation that doesn't distract from content
-- **Personal Storytelling**: Authentic voice and narrative throughout the site
-- **Subtle Interactions**: Micro-animations and hover effects that enhance UX without overwhelming
+- **Bento Grid Layout**: Single-page dashboard with different sized interactive cards
+- **Futuristic Interface**: Clean, modern aesthetic inspired by encom-boardroom
+- **Interactive Navigation**: Integrated navigation within the grid itself
+- **Smooth Transitions**: Seamless expansion from cards to full pages
+- **Minimalistic Design**: Clean, spacious layout with subtle animations
 
-### Site Structure
-1. **About Me** - Portfolio-style personal introduction
-2. **Writing** - Blog-style collection of writings
-3. **Resources** - Curated collection across genres, themes, and subjects
-4. **Art** - Showcase of photos and generated images
-5. **Donation/Support** - Multi-format support (crypto, cash, resources)
+### Bento Grid Structure
+1. **About Me** - Large featured card with multilingual name animation
+2. **Feed** - Twitter feed integration card
+3. **Writing** - Recent posts preview card
+4. **Resources** - Dropdown menu within card
+5. **Photos** - Visual grid with daily changing photos
+6. **Dāna** - Support/donation card with supporter count and impact meter
+7. **Terminal** - Interactive terminal GUI card
+8. **Chat** - Modern minimalistic chat interface
 
 ## 🏗️ Technical Architecture
 
 ### Frontend Stack
 - **Framework**: React 18 with TypeScript
 - **Styling**: Tailwind CSS + CSS custom properties
-- **Animations**: Framer Motion for subtle interactions
+- **Animations**: Framer Motion for smooth interactions and transitions
+- **Grid System**: CSS Grid with responsive breakpoints
 - **Build Tool**: Vite for fast development
 - **Testing**: Vitest + React Testing Library
-- **Image Optimization**: Next.js Image component or similar
 
 ### Backend & Services
 - **Backend**: Serverless functions (Vercel Functions)
-- **CMS**: MDX for blog content + JSON for structured data
-- **Payment Processing**: 
-  - Razorpay for INR donations
-  - Coinbase Commerce or similar for crypto
-- **Image Storage**: Cloudinary or Vercel blob storage
-- **Analytics**: Vercel Analytics (privacy-focused)
+- **Content**: MDX for writing + JSON for structured data
+- **Twitter Integration**: Twitter API for feed
+- **Payment Processing**: Razorpay for Dāna donations
+- **Photo Management**: Daily photo rotation system
+- **Analytics**: Vercel Analytics
 
 ### Deployment
 - **Hosting**: Vercel with automatic deployments
@@ -43,284 +46,199 @@ A modern, minimalist personal portfolio website that blends bold typography, min
 
 ## 🎨 Design System
 
+### Bento Grid Layout
+- **Grid Structure**: CSS Grid with predefined card sizes
+- **Card Sizes**: 
+  - Large: 2x2 grid units (About Me, Photos)
+  - Medium: 2x1 grid units (Writing, Dāna)
+  - Small: 1x1 grid units (Feed, Resources, Terminal, Chat)
+- **Responsive**: Mobile-first approach with stacked layout on small screens
+
 ### Typography Hierarchy
-- **Hero Text**: 3.5rem+ (bold, impactful)
-- **Section Headers**: 2.5rem (medium weight)
-- **Subsections**: 1.5rem (regular weight)
-- **Body Text**: 1rem (readable, balanced)
-- **Captions**: 0.875rem (subtle)
+- **Card Titles**: 1.5rem (medium weight, clean)
+- **Content Text**: 1rem (readable, balanced)
+- **Metrics**: 1.25rem (bold, prominent)
+- **Captions**: 0.875rem (subtle, secondary)
 
 ### Color System
 - **Light Theme**: 
-  - Primary: #1a1a1a (rich black)
-  - Secondary: #6b7280 (neutral gray)
-  - Accent: #3b82f6 (vibrant blue)
-  - Background: #ffffff
+  - Primary: #1e293b (slate-800)
+  - Secondary: #64748b (slate-500)
+  - Accent: #3b82f6 (blue-500)
+  - Background: #f8fafc (slate-50)
+  - Card Background: #ffffff with subtle borders
 - **Dark Theme**:
-  - Primary: #f9fafb (off-white)
-  - Secondary: #9ca3af (light gray)
-  - Accent: #8b5cf6 (purple)
-  - Background: #0f172a (deep navy)
+  - Primary: #f1f5f9 (slate-100)
+  - Secondary: #94a3b8 (slate-400)
+  - Accent: #8b5cf6 (purple-500)
+  - Background: #0f172a (slate-900)
+  - Card Background: #1e293b with subtle borders
 
-### Interaction Design
-- **Hover Effects**: Subtle color transitions (200ms ease)
-- **Loading States**: Skeleton screens and progressive loading
-- **Micro-animations**: Button press feedback, icon animations
-- **Page Transitions**: Smooth, contextual transitions between sections
+### Interactive Elements
+- **Card Hover**: Subtle scale transform and glow effect
+- **Card Click**: Smooth expansion transition to full page
+- **Micro-animations**: Loading states, data updates, real-time feeds
+- **Terminal**: Retro-style typing animations
+- **Chat**: Modern message bubbles with smooth scrolling
 
-## 📱 Detailed Page Specifications
+## 📱 Detailed Card Specifications
 
-### 1. About Me (Portfolio-Style)
-- **Hero Section**: Large photo, name, tagline with bold typography
-- **Professional Story**: Narrative-driven content blocks
-- **Skills & Expertise**: Interactive skill cards with hover effects
-- **Personal Interests**: Visual grid with subtle animations
-- **Contact CTA**: Prominent but not overwhelming
+### 1. About Me Card (Large 2x2)
+- **Content**: Minimalistic profile with photo, name, tagline
+- **Animation**: Multilingual name animation (redesigned)
+- **Interaction**: Click to expand to full About page
+- **Features**: 
+  - Profile photo with subtle animation
+  - Rotating multilingual name display
+  - Brief tagline/current status
+  - Social links
 
-### 2. Writing (Blog)
-- **Article Grid**: Masonry layout with featured posts
-- **Search & Filter**: Category tags, date filters, text search
-- **Article Pages**: Clean reading experience with progress indicators
-- **Reading Time**: Estimated read time for each post
-- **Related Posts**: Contextual recommendations
+### 2. Feed Card (Small 1x1)
+- **Content**: Live Twitter feed integration
+- **Real-time**: Latest tweets with timestamps
+- **Interaction**: Click to view full Twitter timeline
+- **Features**:
+  - Recent tweet preview
+  - Tweet count/engagement metrics
+  - Auto-refresh functionality
+  - Smooth scrolling feed
 
-### 3. Resources
-- **Categorized Collections**: Filterable by genre, theme, subject
-- **Resource Cards**: Title, description, source, and direct links
-- **Curated Lists**: Themed collections (e.g., "Design Tools", "Learning Resources")
-- **Submission Form**: Allow visitors to suggest resources
+### 3. Writing Card (Medium 2x1)
+- **Content**: Recent blog posts preview
+- **Layout**: Clean list with titles and dates
+- **Interaction**: Click to expand to full Writing page
+- **Features**:
+  - Latest 3-4 post titles
+  - Publication dates
+  - Reading time estimates
+  - "View all" indicator
 
-### 4. Art Gallery
-- **Masonry Grid**: Responsive photo gallery
-- **Lightbox View**: Full-screen image viewing with navigation
-- **Categories**: Photography, AI-generated, digital art, etc.
-- **Image Metadata**: Title, description, creation date, tools used
-- **Download Options**: High-res versions (optional)
+### 4. Resources Card (Small 1x1)
+- **Content**: Dropdown menu with categorized resources
+- **Interaction**: Hover/click to reveal dropdown
+- **Categories**: Tools, Learning, Design, etc.
+- **Features**:
+  - Compact dropdown interface
+  - Category icons
+  - External link indicators
+  - Resource count per category
 
-### 5. Donation/Support
-- **Multiple Payment Options**:
-  - Razorpay for INR (UPI, cards, wallets)
-  - Crypto wallet integration (BTC, ETH, USDT)
-  - PayPal for international
-- **Support Tiers**: Different contribution levels with benefits
-- **Resource Sharing**: Non-monetary support options
-- **Thank You Page**: Personalized appreciation
+### 5. Photos Card (Large 2x2)
+- **Content**: Visual grid with daily changing photos
+- **Rotation**: Automated daily photo updates
+- **Interaction**: Click to view full photo gallery
+- **Features**:
+  - 4-photo grid layout
+  - Smooth transitions between photos
+  - Date/location metadata
+  - Lightbox preview
 
-## 🚀 Detailed Development Phases
+### 6. Dāna Card (Medium 2x1)
+- **Content**: Support/donation with metrics
+- **Metrics**: Supporter count, impact meter
+- **Interaction**: Click to open donation page
+- **Features**:
+  - Real-time supporter count
+  - Impact visualization
+  - Multiple payment options
+  - Thank you message rotation
 
-### Phase 1: Foundation & Core Setup (Week 1-2)
+### 7. Terminal Card (Small 1x1)
+- **Content**: Interactive terminal interface
+- **Functionality**: Basic commands, file system
+- **Interaction**: Click to focus terminal
+- **Features**:
+  - Retro terminal styling
+  - Command history
+  - File system navigation
+  - Custom commands
 
-#### Week 1: Project Setup & Design System
-**Tasks:**
-1. **Project Initialization**
-   - [ ] Create React + TypeScript + Vite project
-   - [ ] Configure ESLint, Prettier, TypeScript configs
-   - [ ] Set up folder structure (`src/components`, `src/pages`, `src/hooks`, etc.)
-   - [ ] Initialize Git repository with proper .gitignore
+### 8. Chat Card (Small 1x1)
+- **Content**: Modern chat interface
+- **Functionality**: Contact form or live chat
+- **Interaction**: Click to open chat window
+- **Features**:
+  - Message bubbles
+  - Typing indicators
+  - Quick responses
+  - Modern minimalistic design
 
-2. **Design System Implementation**
-   - [ ] Create Tailwind config with custom design tokens
-   - [ ] Build typography system with font imports
-   - [ ] Implement color palette with CSS custom properties
-   - [ ] Create base component library (Button, Card, Input, etc.)
-   - [ ] Set up theme switching context and hook
+## 🚀 Implementation Phases
 
-3. **Testing Setup**
-   - [ ] Configure Vitest with React Testing Library
-   - [ ] Create test utilities and custom matchers
-   - [ ] Set up test coverage reporting
-   - [ ] Write initial tests for design system components
+### Phase 1: Core Bento Grid System (Week 1)
+- [ ] Create responsive bento grid layout
+- [ ] Implement card base components
+- [ ] Add theme switching integration
+- [ ] Set up smooth card transitions
+- [ ] Create page routing system
 
-#### Week 2: Core Layout & Navigation
-**Tasks:**
-1. **Layout Components**
-   - [ ] Create responsive header with navigation
-   - [ ] Build footer with social links and contact info
-   - [ ] Implement main layout wrapper with theme support
-   - [ ] Add mobile menu with smooth animations
+### Phase 2: Essential Cards (Week 2)
+- [ ] About Me card with multilingual animation
+- [ ] Writing card with recent posts
+- [ ] Photos card with daily rotation
+- [ ] Basic terminal card functionality
 
-2. **Routing & Navigation**
-   - [ ] Set up React Router with lazy loading
-   - [ ] Create navigation context for active state management
-   - [ ] Implement breadcrumb navigation
-   - [ ] Add smooth scroll behavior between sections
+### Phase 3: Advanced Features (Week 3)
+- [ ] Twitter feed integration
+- [ ] Resources dropdown system
+- [ ] Dāna metrics and donation flow
+- [ ] Chat interface implementation
 
-3. **Theme System**
-   - [ ] Complete theme toggle functionality
-   - [ ] Add system preference detection
-   - [ ] Implement theme persistence in localStorage
-   - [ ] Create theme-aware animations
+### Phase 4: Polish & Deploy (Week 4)
+- [ ] Performance optimization
+- [ ] Mobile responsiveness
+- [ ] Accessibility improvements
+- [ ] Production deployment
 
-### Phase 2: Content Pages (Week 3-4)
+## 🎯 Key Features to Implement
 
-#### Week 3: About Me & Writing Pages
-**Tasks:**
-1. **About Me Page**
-   - [ ] Create hero section with profile image and intro
-   - [ ] Build skills section with interactive cards
-   - [ ] Add personal story timeline component
-   - [ ] Implement contact form with validation
-   - [ ] Add subtle scroll-triggered animations
+### Interactive Elements
+- [ ] Card hover effects with glow
+- [ ] Smooth expansion transitions
+- [ ] Real-time data updates
+- [ ] Loading states and skeletons
 
-2. **Writing/Blog System**
-   - [ ] Set up MDX processing with syntax highlighting
-   - [ ] Create blog post template with reading progress
-   - [ ] Build article listing with search and filters
-   - [ ] Add pagination for blog posts
-   - [ ] Implement category and tag system
+### Data Integration
+- [ ] Twitter API for feed
+- [ ] Daily photo rotation system
+- [ ] Supporter count tracking
+- [ ] Blog post management
 
-3. **Content Management**
-   - [ ] Create content schemas for blog posts
-   - [ ] Set up content validation
-   - [ ] Build content preview system
-   - [ ] Add RSS feed generation
-
-#### Week 4: Resources & Art Gallery
-**Tasks:**
-1. **Resources Page**
-   - [ ] Create filterable resource grid
-   - [ ] Build resource card component with external links
-   - [ ] Implement category filtering system
-   - [ ] Add resource search functionality
-   - [ ] Create resource submission form
-
-2. **Art Gallery**
-   - [ ] Build responsive masonry grid layout
-   - [ ] Implement lightbox with keyboard navigation
-   - [ ] Add image lazy loading and optimization
-   - [ ] Create category filtering for art pieces
-   - [ ] Build art piece detail modal
-
-3. **Image Management**
-   - [ ] Set up image optimization pipeline
-   - [ ] Implement responsive image components
-   - [ ] Add image metadata management
-   - [ ] Create image upload utilities (for content management)
-
-### Phase 3: Donation System & Polish (Week 5-6)
-
-#### Week 5: Payment Integration
-**Tasks:**
-1. **Razorpay Integration**
-   - [ ] Set up Razorpay payment gateway
-   - [ ] Create donation form with amount selection
-   - [ ] Implement payment success/failure handling
-   - [ ] Add transaction logging and email notifications
-
-2. **Crypto Payment System**
-   - [ ] Research and choose crypto payment provider
-   - [ ] Integrate cryptocurrency payment options
-   - [ ] Create wallet address display and QR codes
-   - [ ] Add crypto transaction verification
-
-3. **Support Features**
-   - [ ] Create support tier system with benefits
-   - [ ] Build thank you page with personalization
-   - [ ] Add donor wall (optional, with permission)
-   - [ ] Implement non-monetary support options
-
-#### Week 6: Performance & Deployment
-**Tasks:**
-1. **Performance Optimization**
-   - [ ] Implement code splitting and lazy loading
-   - [ ] Optimize images and assets
-   - [ ] Add service worker for caching
-   - [ ] Configure bundle analysis and optimization
-
-2. **Accessibility & SEO**
-   - [ ] Complete WCAG AA compliance audit
-   - [ ] Add semantic HTML and ARIA labels
-   - [ ] Implement SEO meta tags and Open Graph
-   - [ ] Create sitemap and robots.txt
-
-3. **Testing & Deployment**
-   - [ ] Complete unit and integration test suite
-   - [ ] Set up Vercel deployment configuration
-   - [ ] Configure custom domain and SSL
-   - [ ] Add performance monitoring and analytics
+### User Experience
+- [ ] Intuitive navigation
+- [ ] Responsive design
+- [ ] Fast loading times
+- [ ] Smooth animations
 
 ## 🧪 Testing Strategy
 
-### Unit Tests (Write First)
-- [ ] Component rendering and props handling
-- [ ] Theme switching functionality
-- [ ] Form validation logic
-- [ ] Utility functions and helpers
-- [ ] Payment integration components
+### Component Testing
+- [ ] Bento grid responsiveness
+- [ ] Card interactions
+- [ ] Theme switching
+- [ ] Navigation transitions
+- [ ] Real-time data updates
 
-### Integration Tests
-- [ ] Page navigation and routing
-- [ ] Search and filtering functionality
-- [ ] Payment flow end-to-end
-- [ ] Theme persistence across sessions
-- [ ] Contact form submission
+### Integration Testing
+- [ ] Twitter feed functionality
+- [ ] Payment processing
+- [ ] Photo rotation system
+- [ ] Terminal commands
 
-### Visual Tests
-- [ ] Component visual regression testing
-- [ ] Responsive design validation
-- [ ] Theme switching visual consistency
-- [ ] Animation and interaction testing
-
-## 📋 Content Requirements
-
-### Content to Prepare
-1. **About Me Content**
-   - Professional bio and story
-   - High-quality profile photos
-   - Skills and expertise list
-   - Personal interests and hobbies
-
-2. **Writing Content**
-   - Existing blog posts in markdown
-   - Categories and tags system
-   - Author bio and social links
-
-3. **Resources Content**
-   - Curated resource lists
-   - Resource descriptions and links
-   - Category organization
-
-4. **Art Content**
-   - High-resolution images
-   - Image metadata and descriptions
-   - Category organization
-
-## 🎯 Success Metrics
-
-### Performance Targets
-- [ ] Lighthouse Performance Score: 90+
-- [ ] First Contentful Paint: < 1.5s
-- [ ] Largest Contentful Paint: < 2.5s
-- [ ] Cumulative Layout Shift: < 0.1
-
-### Accessibility Targets
-- [ ] WCAG AA compliance
-- [ ] Screen reader compatibility
-- [ ] Keyboard navigation support
-- [ ] Color contrast ratios met
-
-### User Experience Goals
-- [ ] Mobile-first responsive design
-- [ ] Intuitive navigation flow
-- [ ] Fast, engaging interactions
-- [ ] Clear content hierarchy
-
-## 🤔 Technical Decisions Needed
-
-1. **Crypto Payment Provider**: Coinbase Commerce vs. custom wallet integration?
-2. **Image Storage**: Cloudinary vs. Vercel blob storage?
-3. **Content Management**: Pure MDX vs. headless CMS integration?
-4. **Animation Library**: Framer Motion vs. lighter alternative?
-5. **Art Gallery**: Custom masonry vs. library like react-masonry-css?
-
-## 🚀 Getting Started
-
-**Immediate Next Steps:**
-1. Answer technical decision questions above
-2. Gather content (bio, images, writing samples)
-3. Set up payment accounts (Razorpay, crypto provider)
-4. Initialize project and begin Phase 1, Week 1 tasks
+### User Testing
+- [ ] Navigation intuitiveness
+- [ ] Mobile experience
+- [ ] Accessibility compliance
+- [ ] Performance metrics
 
 ---
 
-*This plan will be updated as we progress through development and make technical decisions.* 
+## 📋 Next Steps
+
+1. **Set up bento grid structure** - Create the CSS Grid foundation
+2. **Implement card components** - Build reusable card base
+3. **Add theme integration** - Ensure theme switching works with new design
+4. **Create page transitions** - Smooth card-to-page animations
+5. **Implement essential cards** - About Me, Writing, Photos first
+6. **Add interactive features** - Terminal, Chat, Feed integration
+7. **Polish and deploy** - Final optimization and production deployment 

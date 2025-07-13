@@ -7,61 +7,87 @@ export default {
   darkMode: 'class',
   theme: {
     extend: {
-      fontFamily: {
-        'recursive': ['Recursive', 'system-ui', 'sans-serif'],
-        'clash': ['Clash Display', 'system-ui', 'sans-serif'],
-        'array': ['Array', 'system-ui', 'sans-serif'], 
-        'aktura': ['Aktura', 'system-ui', 'sans-serif'],
-        'general': ['General Sans', 'system-ui', 'sans-serif'],
-      },
       colors: {
-        primary: {
-          light: '#1a1a1a',
-          dark: '#f9fafb',
+        // New bento design system colors
+        slate: {
+          50: '#f8fafc',
+          100: '#f1f5f9',
+          200: '#e2e8f0',
+          300: '#cbd5e1',
+          400: '#94a3b8',
+          500: '#64748b',
+          600: '#475569',
+          700: '#334155',
+          750: '#2a3441', // Custom intermediate shade
+          800: '#1e293b',
+          900: '#0f172a',
         },
-        secondary: {
-          light: '#6b7280',
-          dark: '#9ca3af',
+        blue: {
+          300: '#93c5fd',
+          500: '#3b82f6',
         },
-        accent: {
-          light: '#3b82f6',
-          dark: '#8b5cf6',
+        purple: {
+          500: '#8b5cf6',
         },
-        primary: '#3B5BDB',
-        background: {
-          light: '#ffffff',
-          dark: '#0f172a',
+        green: {
+          400: '#4ade80',
+          500: '#22c55e',
+        }
+      },
+      fontFamily: {
+        sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+        mono: ['JetBrains Mono', 'Menlo', 'Monaco', 'monospace'],
+      },
+      animation: {
+        'gradient-x': 'gradient-x 15s ease infinite',
+        'gradient-y': 'gradient-y 15s ease infinite',
+        'gradient-xy': 'gradient-xy 15s ease infinite',
+        'float': 'float 6s ease-in-out infinite',
+        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+      },
+      keyframes: {
+        'gradient-y': {
+          '0%, 100%': {
+            transform: 'translateY(0%)',
+          },
+          '50%': {
+            transform: 'translateY(-100%)',
+          },
+        },
+        'gradient-x': {
+          '0%, 100%': {
+            transform: 'translateX(0%)',
+          },
+          '50%': {
+            transform: 'translateX(100%)',
+          },
+        },
+        'gradient-xy': {
+          '0%, 100%': {
+            transform: 'translate(0%, 0%)',
+          },
+          '25%': {
+            transform: 'translate(100%, 0%)',
+          },
+          '50%': {
+            transform: 'translate(100%, 100%)',
+          },
+          '75%': {
+            transform: 'translate(0%, 100%)',
+          },
+        },
+        float: {
+          '0%, 100%': { transform: 'translateY(0px)' },
+          '50%': { transform: 'translateY(-20px)' },
         },
       },
       backgroundImage: {
-        'gradient-light': 'linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%)',
-        'gradient-dark': 'linear-gradient(135deg, #0f172a 0%, #1e293b 100%)',
-        'gradient-accent-light': 'linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)',
-        'gradient-accent-dark': 'linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%)',
+        'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
+        'gradient-conic': 'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
       },
-      animation: {
-        'fade-in': 'fadeIn 0.5s ease-in-out',
-        'slide-up': 'slideUp 0.5s ease-out',
-        'slide-down': 'slideDown 0.5s ease-out',
-        'float': 'float 6s ease-in-out infinite',
-      },
-      keyframes: {
-        fadeIn: {
-          '0%': { opacity: '0' },
-          '100%': { opacity: '1' },
-        },
-        slideUp: {
-          '0%': { transform: 'translateY(20px)', opacity: '0' },
-          '100%': { transform: 'translateY(0)', opacity: '1' },
-        },
-        slideDown: {
-          '0%': { transform: 'translateY(-20px)', opacity: '0' },
-          '100%': { transform: 'translateY(0)', opacity: '1' },
-        },
-        float: {
-          '0%, 100%': { transform: 'translateY(0)' },
-          '50%': { transform: 'translateY(-6%)' },
-        },
+      boxShadow: {
+        'glow': '0 0 20px rgba(59, 130, 246, 0.5)',
+        'glow-purple': '0 0 20px rgba(139, 92, 246, 0.5)',
       },
     },
   },
