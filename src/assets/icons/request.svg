@@ -1,0 +1,28 @@
+<svg width="128" height="128" viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <g opacity="0.8">
+    <!-- Document -->
+    <rect x="25" y="20" width="60" height="80" rx="8" fill="currentColor" opacity="0.3"/>
+    <rect x="25" y="20" width="60" height="80" rx="8" stroke="currentColor" stroke-width="2" fill="none" opacity="0.7"/>
+    
+    <!-- Lines on document -->
+    <line x1="35" y1="35" x2="75" y2="35" stroke="currentColor" stroke-width="2" opacity="0.6"/>
+    <line x1="35" y1="45" x2="70" y2="45" stroke="currentColor" stroke-width="2" opacity="0.6"/>
+    <line x1="35" y1="55" x2="65" y2="55" stroke="currentColor" stroke-width="2" opacity="0.6"/>
+    <line x1="35" y1="65" x2="72" y2="65" stroke="currentColor" stroke-width="2" opacity="0.6"/>
+    
+    <!-- Arrow pointing to document -->
+    <path d="M95 50L110 35L95 20" stroke="currentColor" stroke-width="3" fill="none" opacity="0.8"/>
+    <line x1="90" y1="35" x2="105" y2="35" stroke="currentColor" stroke-width="3" opacity="0.8"/>
+    
+    <!-- Plus icon in corner -->
+    <circle cx="90" cy="85" r="18" fill="currentColor" opacity="0.4"/>
+    <circle cx="90" cy="85" r="18" stroke="currentColor" stroke-width="2" fill="none" opacity="0.8"/>
+    <line x1="90" y1="75" x2="90" y2="95" stroke="currentColor" stroke-width="3" opacity="0.9"/>
+    <line x1="80" y1="85" x2="100" y2="85" stroke="currentColor" stroke-width="3" opacity="0.9"/>
+    
+    <!-- Small decorative dots -->
+    <circle cx="40" cy="80" r="2" fill="currentColor" opacity="0.5"/>
+    <circle cx="50" cy="85" r="2" fill="currentColor" opacity="0.5"/>
+    <circle cx="60" cy="80" r="2" fill="currentColor" opacity="0.5"/>
+  </g>
+</svg>

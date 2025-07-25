@@ -1,5 +1,6 @@
 import React from 'react'
 import { motion } from 'framer-motion'
+import { CenterUnderline, ComesInGoesOutUnderline, GoesOutComesInUnderline } from './AnimatedUnderlines'
 
 const socialLinks = [
   {
@@ -71,27 +72,37 @@ export const Footer: React.FC = () => {
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: 0.3 }}
-                className="space-y-2"
+                className="space-y-3"
               >
                 <li>
-                  <a href="/about" className="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-purple-400 transition-colors text-sm">
-                    About Me
-                  </a>
+                  <CenterUnderline
+                    label="About Me"
+                    onClick={() => window.location.href = '/about'}
+                    className="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-purple-400 transition-colors text-sm"
+                  />
                 </li>
                 <li>
-                  <a href="/writing" className="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-purple-400 transition-colors text-sm">
-                    Writing
-                  </a>
+                  <ComesInGoesOutUnderline
+                    label="Writing"
+                    direction="right"
+                    onClick={() => window.location.href = '/writing'}
+                    className="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-purple-400 transition-colors text-sm"
+                  />
                 </li>
                 <li>
-                  <a href="/resources" className="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-purple-400 transition-colors text-sm">
-                    Resources
-                  </a>
+                  <GoesOutComesInUnderline
+                    label="Resources"
+                    direction="left"
+                    onClick={() => window.location.href = '/resources'}
+                    className="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-purple-400 transition-colors text-sm"
+                  />
                 </li>
                 <li>
-                  <a href="/art" className="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-purple-400 transition-colors text-sm">
-                    Art Gallery
-                  </a>
+                  <CenterUnderline
+                    label="Photos"
+                    onClick={() => window.location.href = '/photos'}
+                    className="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-purple-400 transition-colors text-sm"
+                  />
                 </li>
               </motion.ul>
             </div>
@@ -145,13 +156,19 @@ export const Footer: React.FC = () => {
               <p className="text-gray-600 dark:text-gray-400 text-sm">
                 © {new Date().getFullYear()} Portfolio. All rights reserved.
               </p>
-              <div className="flex space-x-6">
-                <a href="#" className="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-purple-400 transition-colors text-sm">
-                  Privacy Policy
-                </a>
-                <a href="#" className="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-purple-400 transition-colors text-sm">
-                  Terms of Service
-                </a>
+              <div className="flex space-x-8">
+                <ComesInGoesOutUnderline
+                  label="Privacy Policy"
+                  direction="left"
+                  onClick={() => {}}
+                  className="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-purple-400 transition-colors text-sm"
+                />
+                <GoesOutComesInUnderline
+                  label="Terms of Service"
+                  direction="right"
+                  onClick={() => {}}
+                  className="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-purple-400 transition-colors text-sm"
+                />
               </div>
             </div>
           </motion.div>

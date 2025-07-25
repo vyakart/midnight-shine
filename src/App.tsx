@@ -1,37 +1,53 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import { ThemeProvider } from './contexts/ThemeContext'
+import { TransitionProvider } from './contexts/TransitionContext'
 import { Layout } from './components/Layout'
+import { SpiralDemo } from './components/SpiralDemo'
 import { Home } from './pages/Home'
 import { About } from './pages/About'
-
-// Placeholder pages - will be implemented later
-const Writing = () => <div className="min-h-screen bg-slate-50 dark:bg-slate-900 p-8"><h1 className="text-3xl font-bold text-slate-800 dark:text-slate-100">Writing Page</h1></div>
-const Resources = () => <div className="min-h-screen bg-slate-50 dark:bg-slate-900 p-8"><h1 className="text-3xl font-bold text-slate-800 dark:text-slate-100">Resources Page</h1></div>
-const Photos = () => <div className="min-h-screen bg-slate-50 dark:bg-slate-900 p-8"><h1 className="text-3xl font-bold text-slate-800 dark:text-slate-100">Photos Gallery</h1></div>
-const Dana = () => <div className="min-h-screen bg-slate-50 dark:bg-slate-900 p-8"><h1 className="text-3xl font-bold text-slate-800 dark:text-slate-100">Dāna - Support Page</h1></div>
-const Terminal = () => <div className="min-h-screen bg-slate-50 dark:bg-slate-900 p-8"><h1 className="text-3xl font-bold text-slate-800 dark:text-slate-100">Terminal</h1></div>
-const Chat = () => <div className="min-h-screen bg-slate-50 dark:bg-slate-900 p-8"><h1 className="text-3xl font-bold text-slate-800 dark:text-slate-100">Chat</h1></div>
-const Feed = () => <div className="min-h-screen bg-slate-50 dark:bg-slate-900 p-8"><h1 className="text-3xl font-bold text-slate-800 dark:text-slate-100">Feed</h1></div>
+import { Writing } from './pages/Writing'
+import { Resources } from './pages/Resources'
+import { Photos } from './pages/Photos'
+import { Terminal } from './pages/Terminal'
+import { Chat } from './pages/Chat'
+import { Feed } from './pages/Feed'
+import { Dana } from './pages/Dana'
+import { EntropyDemo } from './components/EntropyDemo'
+import { CommitsGridDemo } from './components/CommitsGridDemo'
 
 function App() {
+  const [showLoading, setShowLoading] = useState(true)
+
+  const handleLoadingComplete = () => {
+    setShowLoading(false)
+  }
+
   return (
     <ThemeProvider>
-      <Router>
-        <Layout>
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/writing" element={<Writing />} />
-            <Route path="/resources" element={<Resources />} />
-            <Route path="/photos" element={<Photos />} />
-            <Route path="/dana" element={<Dana />} />
-            <Route path="/terminal" element={<Terminal />} />
-            <Route path="/chat" element={<Chat />} />
-            <Route path="/feed" element={<Feed />} />
-          </Routes>
-        </Layout>
-      </Router>
+      {showLoading ? (
+        <SpiralDemo onComplete={handleLoadingComplete} />
+      ) : (
+        <TransitionProvider>
+          <Router>
+            <Layout>
+              <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/about" element={<About />} />
+                <Route path="/writing" element={<Writing />} />
+                <Route path="/resources" element={<Resources />} />
+                <Route path="/photos" element={<Photos />} />
+                <Route path="/dana" element={<Dana />} />
+                <Route path="/terminal" element={<Terminal />} />
+                <Route path="/chat" element={<Chat />} />
+                <Route path="/feed" element={<Feed />} />
+                <Route path="/entropy" element={<EntropyDemo />} />
+                <Route path="/commits-grid" element={<CommitsGridDemo />} />
+              </Routes>
+            </Layout>
+          </Router>
+        </TransitionProvider>
+      )}
     </ThemeProvider>
   )
 }

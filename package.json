@@ -16,10 +16,13 @@
     "@react-three/drei": "^10.5.0",
     "@react-three/fiber": "^9.2.0",
     "@types/react-router-dom": "^5.3.3",
+    "clsx": "^2.1.1",
     "framer-motion": "^12.23.0",
+    "gsap": "^3.13.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-router-dom": "^7.6.3",
+    "tailwind-merge": "^3.3.1",
     "three": "^0.178.0"
   },
   "devDependencies": {

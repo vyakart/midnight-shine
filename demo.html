@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BentoGrid Demo</title>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .col-span-1 { grid-column: span 1 / span 1; }
+        .col-span-2 { grid-column: span 2 / span 2; }
+        .col-span-3 { grid-column: span 3 / span 3; }
+        .row-span-1 { grid-row: span 1 / span 1; }
+        .row-span-2 { grid-row: span 2 / span 2; }
+        .row-span-3 { grid-row: span 3 / span 3; }
+    </style>
+</head>
+<body class="bg-gray-100 p-8">
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState } = React;
+
+        // Simple BentoGrid component
+        function BentoGrid({ items, columns = { base: 1, md: 2, lg: 3 }, rowHeight = { base: 120, md: 140, lg: 150 }, gap = 4 }) {
+            const gridClass = [
+                "grid",
+                `auto-rows-[${rowHeight.base}px]`,
+                `grid-cols-${columns.base}`,
+                `gap-${gap}`,
+                `md:auto-rows-[${rowHeight.md}px] md:grid-cols-${columns.md}`,
+                `lg:auto-rows-[${rowHeight.lg}px] lg:grid-cols-${columns.lg}`,
+            ].join(" ");
+
+            return (
+                <div className={gridClass}>
+                    {items.map((item) => (
+                        <Tile key={item.id} {...item} />
+                    ))}
+                </div>
+            );
+        }
+
+        function Tile({ colSpan = 1, rowSpan = 1, element, className = "", onClick, ...rest }) {
+            const colClass = `col-span-${colSpan}`;
+            const rowClass = `row-span-${rowSpan}`;
+
+            return (
+                <div
+                    className={[
+                        "relative overflow-hidden rounded-2xl",
+                        "border border-neutral-200 bg-white/60 backdrop-blur-sm",
+                        "dark:border-neutral-700 dark:bg-slate-800/60",
+                        "hover:-translate-y-1 transition-transform duration-200",
+                        colClass,
+                        rowClass,
+                        onClick ? "cursor-pointer" : "",
+                        className,
+                    ].join(" ")}
+                    onClick={onClick}
+                >
+                    {element ? element : <DefaultCard {...rest} />}
+                </div>
+            );
+        }
+
+        function DefaultCard({ title, subtitle, href, icon, image }) {
+            const body = (
+                <div className="flex w-full items-center space-x-3 px-4 py-3 md:space-x-4">
+                    {image ? (
+                        <img
+                            src={image}
+                            alt={title}
+                            className="h-12 w-12 rounded-xl object-cover md:h-14 md:w-14"
+                        />
+                    ) : (
+                        icon && <span className="text-xl md:text-2xl">{icon}</span>
+                    )}
+
+                    <div className="flex flex-col truncate">
+                        {title && (
+                            <span className="truncate text-sm font-medium md:text-base dark:text-white">
+                                {title}
+                            </span>
+                        )}
+                        {subtitle && (
+                            <span className="truncate text-xs text-neutral-500 md:text-sm dark:text-neutral-400">
+                                {subtitle}
+                            </span>
+                        )}
+                    </div>
+                </div>
+            );
+
+            return href ? (
+                <a
+                    href={href}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="block h-full w-full transition-colors hover:bg-neutral-100/40 dark:hover:bg-slate-700/40"
+                >
+                    {body}
+                </a>
+            ) : (
+                body
+            );
+        }
+
+        // Demo data
+        function App() {
+            const bentoItems = [
+                {
+                    id: 'profile',
+                    colSpan: 1,
+                    rowSpan: 3,
+                    element: (
+                        <div className="flex h-full flex-col items-center justify-center space-y-4 p-4">
+                            <div className="h-24 w-24 rounded-full bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center">
+                                <span className="text-2xl font-bold text-white">VS</span>
+                            </div>
+                            <h2 className="text-lg font-semibold">Vyakart</h2>
+                            <p className="text-sm text-neutral-500">Curious generalist</p>
+                        </div>
+                    ),
+                },
+                {
+                    id: 'cv',
+                    title: 'Vyakat — Read.cv',
+                    subtitle: 'read.cv',
+                    href: 'https://read.cv',
+                    icon: '📄',
+                },
+                {
+                    id: 'anon',
+                    title: 'Anonymous Feedback',
+                    subtitle: 'tally.so',
+                    href: 'https://tally.so',
+                    icon: '💬',
+                },
+                {
+                    id: 'cal',
+                    title: 'Appointments',
+                    subtitle: 'calendar.google.com',
+                    icon: '📅',
+                    rowSpan: 1,
+                    colSpan: 2,
+                },
+                {
+                    id: 'map',
+                    colSpan: 2,
+                    rowSpan: 2,
+                    element: (
+                        <div className="h-full w-full bg-gradient-to-br from-green-200 to-blue-200 flex items-center justify-center">
+                            <div className="text-center">
+                                <span className="text-4xl">🗺️</span>
+                                <p className="text-sm font-medium mt-2">Interactive Map</p>
+                                <p className="text-xs text-neutral-600">Aizawl, Mizoram</p>
+                            </div>
+                        </div>
+                    ),
+                },
+            ];
+
+            return (
+                <div className="mx-auto max-w-6xl">
+                    <h1 className="text-3xl font-bold text-center mb-8">Bento.me Style Grid</h1>
+                    <BentoGrid items={bentoItems} />
+                </div>
+            );
+        }
+
+        ReactDOM.render(<App />, document.getElementById('root'));
+    </script>
+</body>
+</html>
