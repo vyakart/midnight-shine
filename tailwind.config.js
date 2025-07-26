@@ -7,40 +7,105 @@ export default {
     "./components/**/*.{js,ts,jsx,tsx,mdx}",
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
-  darkMode: 'class',
+  darkMode: ['class', '[data-theme="dark"]'],
   theme: {
     extend: {
       colors: {
-        // Theme variables for dynamic theming
+        // OSCS Design System
         background: "var(--background)",
         foreground: "var(--foreground)",
-        primary: "var(--text-primary)",
-        secondary: "var(--text-secondary)",
-        // New bento design system colors
-        slate: {
-          50: '#f8fafc',
-          100: '#f1f5f9',
-          200: '#e2e8f0',
-          300: '#cbd5e1',
-          400: '#94a3b8',
-          500: '#64748b',
-          600: '#475569',
-          700: '#334155',
-          750: '#2a3441', // Custom intermediate shade
-          800: '#1e293b',
-          900: '#0f172a',
+        card: "var(--card)",
+        "card-foreground": "var(--card-foreground)",
+        popover: "var(--popover)",
+        "popover-foreground": "var(--popover-foreground)",
+        primary: "var(--primary)",
+        "primary-foreground": "var(--primary-foreground)",
+        secondary: "var(--secondary)",
+        "secondary-foreground": "var(--secondary-foreground)",
+        muted: "var(--muted)",
+        "muted-foreground": "var(--muted-foreground)",
+        accent: "var(--accent)",
+        "accent-foreground": "var(--accent-foreground)",
+        destructive: "var(--destructive)",
+        "destructive-foreground": "var(--destructive-foreground)",
+        border: "var(--border)",
+        input: "var(--input)",
+        ring: "var(--ring)",
+        
+        // OSCS Neutral Scale
+        neutral: {
+          50: "var(--neutral-50)",
+          100: "var(--neutral-100)",
+          200: "var(--neutral-200)",
+          300: "var(--neutral-300)",
+          400: "var(--neutral-400)",
+          500: "var(--neutral-500)",
+          600: "var(--neutral-600)",
+          700: "var(--neutral-700)",
+          800: "var(--neutral-800)",
+          900: "var(--neutral-900)",
         },
-        blue: {
-          300: '#93c5fd',
-          500: '#3b82f6',
+        
+        // OSCS Accent Hierarchies
+        "accent-primary": {
+          300: "var(--accent-primary-300)",
+          400: "var(--accent-primary-400)",
+          500: "var(--accent-primary-500)",
+          600: "var(--accent-primary-600)",
+          700: "var(--accent-primary-700)",
         },
-        purple: {
-          500: '#8b5cf6',
+        "accent-success": {
+          300: "var(--accent-success-300)",
+          400: "var(--accent-success-400)",
+          500: "var(--accent-success-500)",
+          600: "var(--accent-success-600)",
+          700: "var(--accent-success-700)",
         },
-        green: {
-          400: '#4ade80',
-          500: '#22c55e',
-        }
+        "accent-info": {
+          300: "var(--accent-info-300)",
+          400: "var(--accent-info-400)",
+          500: "var(--accent-info-500)",
+          600: "var(--accent-info-600)",
+          700: "var(--accent-info-700)",
+        },
+        "accent-warning": {
+          300: "var(--accent-warning-300)",
+          400: "var(--accent-warning-400)",
+          500: "var(--accent-warning-500)",
+          600: "var(--accent-warning-600)",
+          700: "var(--accent-warning-700)",
+        },
+        "accent-error": {
+          300: "var(--accent-error-300)",
+          400: "var(--accent-error-400)",
+          500: "var(--accent-error-500)",
+          600: "var(--accent-error-600)",
+          700: "var(--accent-error-700)",
+        },
+        
+        // Semantic shortcuts
+        success: "var(--success)",
+        warning: "var(--warning)",
+        error: "var(--error)",
+        info: "var(--info)",
+        
+        // Chart colors for GitHub-style tiles
+        chart: {
+          1: "var(--chart-1)",
+          2: "var(--chart-2)",
+          3: "var(--chart-3)",
+          4: "var(--chart-4)",
+          5: "var(--chart-5)",
+        },
+        
+        // Legacy support - backward compatibility
+        "text-primary": "var(--text-primary)",
+        "text-secondary": "var(--text-secondary)",
+      },
+      borderRadius: {
+        lg: "var(--radius)",
+        md: "calc(var(--radius) - 2px)",
+        sm: "calc(var(--radius) - 4px)",
       },
       fontFamily: {
         sans: ['var(--font-noto)', 'Inter', 'system-ui', '-apple-system', 'sans-serif'],
@@ -127,5 +192,7 @@ export default {
       },
     },
   },
-  plugins: [],
-} 
+  plugins: [
+    require("tailwindcss-animate"),
+  ],
+}
