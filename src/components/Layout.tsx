@@ -1,73 +1,52 @@
-import React from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
-import { useLocation } from 'react-router-dom'
-import { useTransition } from '../contexts/TransitionContext'
-import { Header } from './Header'
-import { Footer } from './Footer'
-import { NavigationDock } from './NavigationDock'
+import React from 'react';
+import { Outlet } from 'react-router-dom';
+import { Dock, DockItem, DockIcon, DockLabel } from './Dock';
+import { User, PenTool, Heart, BookOpen } from 'lucide-react';
+import { useNavigate, useLocation } from 'react-router-dom';
 
-interface LayoutProps {
-  children: React.ReactNode
-}
+const Layout: React.FC = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
 
-export const Layout: React.FC<LayoutProps> = ({ children }) => {
-  const location = useLocation()
-  const { isTransitioning, sourceCard, clearTransition } = useTransition()
-  const isHomePage = location.pathname === '/'
-
-  React.useEffect(() => {
-    if (isTransitioning) {
-      const timer = setTimeout(() => {
-        clearTransition()
-      }, 600)
-      return () => clearTimeout(timer)
-    }
-  }, [isTransitioning, clearTransition])
+  const dockItems = [
+    { path: '/about', icon: User, label: 'About' },
+    { path: '/writing', icon: PenTool, label: 'Writing' },
+    { path: '/dana', icon: Heart, label: 'Dana' },
+    { path: '/resources', icon: BookOpen, label: 'Resources' },
+  ];
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-900 transition-colors duration-300">
-      {/* Navigation Dock only shows on internal pages, not on home page */}
-      {!isHomePage && <NavigationDock />}
+    <div className="min-h-screen bg-white relative">
+      <div className="pb-32">
+        <Outlet />
+      </div>
       
-      {/* Header only shows on internal pages, not on home page */}
-      {!isHomePage && <Header />}
-      
-      <AnimatePresence mode="wait">
-        <motion.main
-          key={location.pathname}
-          initial={{
-            opacity: 0,
-            scale: isTransitioning ? 0.8 : 1,
-            y: isTransitioning ? 0 : 20
-          }}
-          animate={{
-            opacity: 1,
-            scale: 1,
-            y: 0
-          }}
-          exit={{
-            opacity: 0,
-            scale: 1.1,
-            y: -20
-          }}
-          transition={{
-            duration: 0.6,
-            ease: "easeInOut",
-            scale: { duration: isTransitioning ? 0.8 : 0.4 }
-          }}
-          className={`min-h-screen ${!isHomePage ? 'pt-16' : ''}`}
-          onAnimationComplete={() => {
-            if (isTransitioning) {
-              clearTransition()
-            }
-          }}
-        >
-          {children}
-        </motion.main>
-      </AnimatePresence>
-      
-      {/* Footer only shows on internal pages */}
-      {!isHomePage && <Footer />}
+      <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2 z-50">
+        <Dock>
+          {dockItems.map((item) => {
+            const Icon = item.icon;
+            const isActive = location.pathname === item.path;
+            
+            return (
+              <DockItem key={item.path}>
+                <DockLabel>{item.label}</DockLabel>
+                <DockIcon>
+                  <div
+                    onClick={() => navigate(item.path)}
+                    className={`w-full h-full flex items-center justify-center cursor-pointer rounded-lg transition-colors ${
+                      isActive ? 'bg-black text-white' : 'text-black hover:bg-gray-200'
+                    }`}
+                  >
+                    <Icon size={24} />
+                  </div>
+                </DockIcon>
+              </DockItem>
+            );
+          })}
+        </Dock>
+      </div>
     </div>
-  )
-}
+  );
+};
+
+export default Layout;
