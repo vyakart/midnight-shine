@@ -32,6 +32,30 @@ export default {
         input: "var(--input)",
         ring: "var(--ring)",
         
+        // Cyberpunk Terminal Colors
+        cyberpunk: {
+          background: "#0A0A0F",
+          surface: "#12121A",
+          primary: "#00E6FE",
+          secondary: "#A020F0",
+          accent: "#39FF14",
+          "text-light": "#EAEAEA",
+          "text-muted": "#7A7A8C",
+          error: "#FF5555",
+        },
+        
+        // Terminal specific colors
+        terminal: {
+          bg: "#0A0A0F",
+          surface: "#12121A",
+          green: "#39FF14",
+          cyan: "#00E6FE",
+          purple: "#A020F0",
+          red: "#FF5555",
+          text: "#EAEAEA",
+          muted: "#7A7A8C",
+        },
+        
         // OSCS Neutral Scale
         neutral: {
           50: "var(--neutral-50)",

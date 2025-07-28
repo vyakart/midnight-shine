@@ -217,9 +217,9 @@ class AnimationController {
         // Draw trail
         this.drawTrail(t1)
         
-        // Draw stars - set green color
-        ctx.fillStyle = '#00ff00'
+        // Draw stars with individual colors
         for (const star of this.stars) {
+            ctx.fillStyle = star.getColor()
             star.render(t1, this)
         }
         
@@ -235,8 +235,13 @@ class AnimationController {
             const f = this.map(i, 0, this.trailLength, 1.1, 0.1)
             const sw = (1.3 * (1 - t1) + 3.0 * Math.sin(Math.PI * t1)) * f
             
-            // Set green trail color
-            this.ctx.fillStyle = '#00ff00'
+            // Generate dynamic trail colors with rainbow effect
+            const hueBase = (this.time * 360 + i * 4.5) % 360
+            const saturation = 70 + Math.sin(this.time * 2 + i * 0.1) * 20
+            const lightness = 60 + Math.sin(this.time * 3 + i * 0.2) * 15
+            const opacity = f * 0.9 // Fade with distance
+            
+            this.ctx.fillStyle = `hsla(${hueBase}, ${saturation}%, ${lightness}%, ${opacity})`
             this.ctx.lineWidth = sw
             
             const pathTime = t1 - 0.00015 * i
@@ -286,6 +291,7 @@ class Star {
     private rotationDirection: number // Rotation direction
     private expansionRate: number // Expansion rate
     private finalScale: number // Final scale ratio
+    private color: string // Individual star color
     
     constructor(cameraZ: number, cameraTravelDistance: number) {
         this.angle = Math.random() * Math.PI * 2
@@ -303,6 +309,32 @@ class Star {
         const lerp = (start: number, end: number, t: number) => start * (1 - t) + end * t
         this.z = lerp(this.z, cameraTravelDistance / 2, 0.3 * this.spiralLocation)
         this.strokeWeightFactor = Math.pow(Math.random(), 2.0)
+        
+        // Generate random color for this star
+        this.color = this.generateRandomColor()
+    }
+    
+    // Generate a random color for the star
+    private generateRandomColor(): string {
+        // Option 1: Vibrant color palette
+        const colors = [
+            '#ff6b6b', '#4ecdc4', '#45b7d1', '#96ceb4', '#ffeaa7',
+            '#dda0dd', '#98d8c8', '#f7dc6f', '#bb8fce', '#85c1e9',
+            '#ff8a80', '#80d8ff', '#a7ffeb', '#ccff90', '#ffcc02',
+            '#f8bbd9', '#e1bee7', '#c5e1a5', '#ffab91', '#80cbc4'
+        ]
+        return colors[Math.floor(Math.random() * colors.length)]
+        
+        // Option 2: HSL for more controlled color harmony (alternative)
+        // const hue = Math.random() * 360
+        // const saturation = 60 + Math.random() * 40 // 60-100%
+        // const lightness = 50 + Math.random() * 30  // 50-80%
+        // return `hsl(${hue}, ${saturation}%, ${lightness}%)`
+    }
+    
+    // Getter for the star's color
+    public getColor(): string {
+        return this.color
     }
     
     render(p: number, controller: AnimationController) {
