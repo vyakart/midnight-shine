@@ -1,5 +1,4 @@
 import React from 'react';
-import CyberpunkTerminal from '../components/CyberpunkTerminal';
 
 const About: React.FC = () => {
   return (
@@ -7,20 +6,7 @@ const About: React.FC = () => {
       <div className="max-w-7xl mx-auto p-8">
         <h1 className="text-4xl font-bold mb-8 text-center">About Me</h1>
         
-        <div className="grid lg:grid-cols-2 gap-8">
-          {/* Left Side - Terminal */}
-          <div className="lg:sticky lg:top-8 h-fit">
-            <div className="mb-4">
-              <h2 className="text-2xl font-semibold mb-2 text-cyberpunk-primary">Cyberpunk CLI Chat</h2>
-              <p className="text-gray-600 dark:text-gray-400 text-sm">
-                Interact with the terminal to learn more about me
-              </p>
-            </div>
-            <CyberpunkTerminal />
-          </div>
-
-          {/* Right Side - Content */}
-          <div className="space-y-8">
+        <div className="space-y-8">
             {/* Profile Section */}
             <section>
               <div className="flex items-center space-x-4 mb-6">
@@ -100,7 +86,6 @@ const About: React.FC = () => {
               </div>
             </section>
           </div>
-        </div>
       </div>
     </div>
   );
