@@ -4,7 +4,7 @@ import { Dock, DockItem, DockIcon, DockLabel } from './Dock';
 import { User, PenTool, Heart, BookOpen } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 
-const Layout: React.FC = () => {
+const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -18,7 +18,7 @@ const Layout: React.FC = () => {
   return (
     <div className="min-h-screen bg-white relative">
       <div className="pb-32">
-        <Outlet />
+        {children}
       </div>
       
       <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2 z-50">

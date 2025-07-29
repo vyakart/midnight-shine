@@ -1,6 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { ChatTerminal } from '../components/ChatTerminal';
 
 const About: React.FC = () => {
+  const [showTerminal, setShowTerminal] = useState(false);
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900 text-black dark:text-white">
       <div className="max-w-7xl mx-auto p-8">
@@ -68,8 +70,35 @@ const About: React.FC = () => {
               </div>
             </section>
 
+            {/* Terminal Section */}
+            <section>
+              <h3 className="text-xl font-semibold mb-3">Chat with AI Assistant</h3>
+              <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-4">
+                <p className="text-gray-700 dark:text-gray-300 mb-4">
+                  Want to learn more about me? Chat with my AI assistant Nishito!
+                  You can ask questions about my experience, skills, or just have a conversation.
+                </p>
+                <button
+                  onClick={() => setShowTerminal(!showTerminal)}
+                  className="px-4 py-2 bg-black dark:bg-white text-white dark:text-black rounded-lg font-semibold hover:opacity-90 transition-opacity"
+                >
+                  {showTerminal ? 'Hide Terminal' : 'Open Terminal'}
+                </button>
+              </div>
+              
+              {showTerminal && (
+                <div className="mt-4">
+                  <ChatTerminal
+                    className="h-[500px]"
+                    initialTheme="dark"
+                    soundEnabled={true}
+                  />
+                </div>
+              )}
+            </section>
+
             {/* Actions Section */}
-            <section className="flex flex-wrap gap-4">
+            <section className="flex flex-wrap gap-4 mt-8">
               <button className="px-6 py-2 bg-black dark:bg-white text-white dark:text-black rounded-lg font-semibold hover:opacity-90 transition-opacity">
                 Download Resume
               </button>
