@@ -24,7 +24,7 @@ const MODE_LABELS: Record<Mode, string> = {
   [Mode.Observatory]: 'Observatory'
 };
 
-export default function ModeSwitcher(_props: ModeSwitcherProps): JSX.Element {
+export default function ModeSwitcher(_props: ModeSwitcherProps): React.JSX.Element {
   // Accessibility:
   // - Implement using native select or ARIA radiogroup pattern.
   // - Ensure keyboard navigation and visible focus.

@@ -20,7 +20,7 @@ export interface WhatIDoGridProps {
   [dataAttr: `data-${string}`]: unknown;
 }
 
-export default function WhatIDoGrid(_props: WhatIDoGridProps): JSX.Element {
+export default function WhatIDoGrid(_props: WhatIDoGridProps): React.JSX.Element {
   // Accessibility:
   // - Use a list/grid semantics; ensure keyboard activation via Enter/Space.
   // - Provide aria-labels for icons if they convey meaning.

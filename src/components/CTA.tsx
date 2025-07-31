@@ -15,7 +15,7 @@ export interface CTAProps {
   [dataAttr: `data-${string}`]: unknown;
 }
 
-export default function CTA(_props: CTAProps): JSX.Element {
+export default function CTA(_props: CTAProps): React.ReactElement {
   // Accessibility:
   // - Ensure link vs button semantics are correct (navigation vs action).
   // - Maintain visible focus and adequate contrast.

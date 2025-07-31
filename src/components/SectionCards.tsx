@@ -28,7 +28,7 @@ export interface SectionCardsProps {
   [dataAttr: `data-${string}`]: unknown;
 }
 
-export default function SectionCards(_props: SectionCardsProps): JSX.Element {
+export default function SectionCards(_props: SectionCardsProps): React.JSX.Element {
   // Accessibility:
   // - Use list semantics (ul/li) and ensure keyboard activation.
   // - Images must include alt text unless decorative.

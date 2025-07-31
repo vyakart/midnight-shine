@@ -24,7 +24,7 @@ export interface ChatOverlayProps {
   [dataAttr: `data-${string}`]: unknown;
 }
 
-export default function ChatOverlay(_props: ChatOverlayProps): JSX.Element {
+export default function ChatOverlay(_props: ChatOverlayProps): React.ReactElement {
   // Accessibility:
   // - role="dialog" aria-modal="true" with aria-labelledby
   // - role="log" with aria-live="polite" for transcript updates

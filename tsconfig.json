@@ -13,6 +13,7 @@
     "strict": true,
     "noUncheckedIndexedAccess": true,
     "baseUrl": ".",
+    "types": ["react"],
     "paths": {
       "@analytics/*": ["src/analytics/*"],
       "@ai/*": ["src/ai/*"],

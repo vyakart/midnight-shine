@@ -1,8 +1,17 @@
 # Netlify configuration generated for Vyakart
 # Build
 [build]
-  command = "npm run build"
+  command = "npm run build:netlify"
   publish = "dist"
+
+# Ensure devDependencies are available during build (defensive)
+[build.environment]
+  NPM_FLAGS = "--include=dev"
+  NPM_CONFIG_PRODUCTION = "false"
+
+# Force Netlify to honor this file (avoid framework auto-detection overrides)
+[functions]
+  node_bundler = "esbuild"
 
 # Deploy Previews
 [build.processing]

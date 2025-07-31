@@ -19,7 +19,7 @@ export interface HeroProps {
   [dataAttr: `data-${string}`]: unknown;
 }
 
-export default function Hero(_props: HeroProps): JSX.Element {
+export default function Hero(_props: HeroProps): React.ReactElement {
   // Accessibility:
   // - Render as section with role="region"
   // - aria-labelledby should point to internal heading id

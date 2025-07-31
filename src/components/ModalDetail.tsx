@@ -17,7 +17,7 @@ export interface ModalDetailProps {
   [dataAttr: `data-${string}`]: unknown;
 }
 
-export default function ModalDetail(_props: ModalDetailProps): JSX.Element {
+export default function ModalDetail(_props: ModalDetailProps): React.ReactElement {
   // Accessibility:
   // - role="dialog" aria-modal="true" with aria-labelledby/aria-describedby
   // - Focus trap and Escape to close (wired in implementation)
