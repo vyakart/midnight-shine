@@ -1,13 +1,20 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-import { BrowserRouter } from 'react-router-dom'
-import './index.css'
-import App from './App.tsx'
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import App from './App';
 
-createRoot(document.getElementById('root')!).render(
-  <StrictMode>
-    <BrowserRouter>
+// Import tokens and globals to ensure CSS variables and base styles are available early.
+import './styles/tokens.css';
+import './styles/globals.css';
+
+/**
+ * SPA entry point.
+ * Mounts the App component into the root element.
+ */
+const rootEl = document.getElementById('root');
+if (rootEl) {
+  ReactDOM.createRoot(rootEl).render(
+    <React.StrictMode>
       <App />
-    </BrowserRouter>
-  </StrictMode>,
-)
+    </React.StrictMode>
+  );
+}

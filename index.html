@@ -1,12 +1,27 @@
 <!doctype html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vite + React + TS</title>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+
+    <title>Oliemannetje — Operate at midnight, shine at dawn</title>
+    <meta name="description" content="Single-page site with chat overlay across six modes: Guide, Studio, Lab, Ops Deck, Dojo, Observatory." />
+    <meta name="robots" content="index, follow" />
+
+    <meta property="og:title" content="Oliemannetje" />
+    <meta property="og:description" content="Operate at midnight, shine at dawn." />
+    <meta property="og:image" content="/assets/og-image.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <link rel="preload" href="/assets/hero-bg.webp" as="image" imagesrcset="/assets/hero-bg.webp" />
+    <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml" />
+
+    <link rel="stylesheet" href="/src/styles/tokens.css" />
+    <link rel="stylesheet" href="/src/styles/globals.css" />
   </head>
   <body>
+    <a href="#main" class="skip-link">Skip to content</a>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>

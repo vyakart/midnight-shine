@@ -1,0 +1,28 @@
+# Netlify configuration generated for Vyakart
+# Build
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+# Deploy Previews
+[build.processing]
+  skip_processing = true
+
+# Redirects from config
+[[redirects]]
+  from = "/old-path"
+  to = "/new-path"
+  status = 301
+
+# Global Security/Performance Headers
+[[headers]]
+  for = "/*"
+  [headers.values]
+    Strict-Transport-Security = "max-age=63072000; includeSubDomains; preload"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "geolocation=(), microphone=(), camera=()"
+    # CSP: aligned with appConfig.deploy.headers.contentSecurityPolicy
+    Content-Security-Policy = "default-src 'self'; img-src 'self' data: https:; style-src 'self' 'unsafe-inline' https:; script-src 'self' 'unsafe-inline' https:; connect-src 'self' https:; font-src 'self' https: data:"
+
+# Form handling: no special config needed; Netlify auto-detects forms in HTML

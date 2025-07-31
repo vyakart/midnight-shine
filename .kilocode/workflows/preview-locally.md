@@ -1,8 +1,2 @@
-# preview-locally.md
-
-Workflow description here...
-
-## Steps
-
-1. Step 1
-2. Step 2
+npm run dev
+Verify formatting at http://localhost:3000/<your-page>

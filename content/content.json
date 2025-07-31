@@ -1,0 +1,146 @@
+{
+  "hero": {
+    "title": "Nishit Sanil",
+    "subtitle": "The Oliemannetje of Ideas & Exploration",
+    "description": "I’m a modern-day “little oil man”: a connector, organizer, and creative generalist greasing the wheels of innovation and culture. From Brazilian Jiu-Jitsu mats to the far reaches of deep-space photography, I bring diverse passions together to spark new insights—and share them with you.",
+    "backgroundImageSrc": "/assets/hero-bg.webp",
+    "backgroundAlt": "Abstract minimal gradient evoking night sky transitioning to dawn light",
+    "primaryCta": { "label": "Let’s Connect", "href": "#connect" },
+    "secondaryCta": { "label": "Explore Modes", "href": "#modes" }
+  },
+  "sections": [
+    {
+      "id": "design-art",
+      "title": "Design & Art",
+      "summary": "I craft visual stories—whether through bold motion graphics or subtle phenomenological sketches—drawing from Indian artistic traditions and contemporary minimalism.",
+      "highlights": [
+        "Motion cues aligned with attention, not distraction",
+        "Phenomenological sketches to clarify felt intent",
+        "Aesthetics: Indian motifs, modern minimalism"
+      ],
+      "links": [{ "label": "View Examples", "href": "#design-examples" }],
+      "image": {
+        "src": "/assets/design-motif.webp",
+        "alt": "Minimal linework inspired by Indian motifs"
+      }
+    },
+    {
+      "id": "research-math-physics",
+      "title": "Research & Math/Physics",
+      "summary": "My curiosity spans from abstract algebra to celestial mechanics. I build models, analyze patterns, and ask “What’s beyond the horizon?”—whether in equations or through my telescope lens.",
+      "highlights": [
+        "Modeling workflows with explicit assumptions",
+        "From intuition to equations to observation",
+        "Bias and error checks as first-class steps"
+      ],
+      "links": [{ "label": "See Models", "href": "#models" }],
+      "image": {
+        "src": "/assets/research-graph.webp",
+        "alt": "Graph curves with annotated turning points"
+      }
+    },
+    {
+      "id": "operations-ea",
+      "title": "Operations & EA",
+      "summary": "I’ve led event productions, coordinated cross-disciplinary teams, and helped Effective Altruism communities flourish—always with an eye toward impact, transparency, and long-term flourishing.",
+      "highlights": [
+        "Clear SOPs, cadences, and transparent metrics",
+        "Cross-disciplinary coordination and retros",
+        "Impact-oriented planning under uncertainty"
+      ],
+      "links": [{ "label": "Ops Templates", "href": "#ops-templates" }],
+      "image": {
+        "src": "/assets/ops-board.webp",
+        "alt": "Kanban board with color-coded swimlanes"
+      }
+    },
+    {
+      "id": "meditation-phenomenology",
+      "title": "Meditation & Phenomenology",
+      "summary": "Rooted in mindfulness practice, I explore how we experience the world. That depth of attention informs every project, making each interaction more humane and meaningful.",
+      "highlights": [
+        "Guided attention: notice, allow, investigate",
+        "Design microcopy that reduces cognitive load",
+        "Human-centered tempo and clarity"
+      ],
+      "links": [{ "label": "Practice Notes", "href": "#practice-notes" }],
+      "image": {
+        "src": "/assets/meditation-still.webp",
+        "alt": "Calm gradient evoking breath and presence"
+      }
+    },
+    {
+      "id": "bjj",
+      "title": "Brazilian Jiu-Jitsu",
+      "summary": "On the mats, I learn resilience, flow, and creative problem-solving—principles that translate directly into design sprints, research pivots, and team dynamics.",
+      "highlights": [
+        "Posture → position → submission as strategy",
+        "Flow-state transitions and pressure testing",
+        "Lessons mapped to project execution"
+      ],
+      "links": [{ "label": "Dojo Notes", "href": "#dojo-notes" }],
+      "image": {
+        "src": "/assets/bjj-kuzushi.webp",
+        "alt": "Silhouettes demonstrating off-balancing"
+      }
+    },
+    {
+      "id": "astrophotography",
+      "title": "Astrophotography",
+      "summary": "Capturing nebulae and galaxies reminds me that even the vastest systems hinge on delicate interconnections—much like the networks I help build on Earth.",
+      "highlights": [
+        "Target planning, capture, calibration, processing",
+        "Story arcs from raw photons to meaning",
+        "Macro–micro analogies for systems thinking"
+      ],
+      "links": [{ "label": "Gallery", "href": "#gallery" }],
+      "image": {
+        "src": "/assets/astro-nebula.webp",
+        "alt": "Color-mapped nebula with star field"
+      }
+    }
+  ],
+  "cta": {
+    "headline": "Let’s Connect",
+    "body": "I believe in stories that unfold through conversation and exploration. Feel free to scroll, click, or even “chat” your way through this page to discover more.",
+    "primary": { "label": "Start a Chat", "href": "#chat" },
+    "secondary": { "label": "Email Me", "href": "mailto:hello@example.com" }
+  },
+  "modes": [
+    {
+      "mode": "Guide",
+      "tip": "Ask for a clear next step. The Guide will clarify goals and constraints and propose a light plan.",
+      "examples": ["Help me plan an evening astrophotography session", "Outline steps for a design sprint retro"]
+    },
+    {
+      "mode": "Studio",
+      "tip": "Co-create visuals, motion cues, and microcopy. Provide vibe, constraints, and examples you like.",
+      "examples": ["Draft motion cues for a landing hero", "Critique this layout with a phenomenological lens"]
+    },
+    {
+      "mode": "Lab",
+      "tip": "Frame a hypothesis and evidence you have. The Lab will suggest assumptions, tests, and models.",
+      "examples": ["Model a simple orbital resonance toy example", "Design a quick sensitivity test"]
+    },
+    {
+      "mode": "Ops Deck",
+      "tip": "Bring your objective and available resources. Get SOPs, cadences, risks, and metrics.",
+      "examples": ["Spin up a community event cadence", "Create a weekly execution checklist"]
+    },
+    {
+      "mode": "Dojo",
+      "tip": "Translate BJJ strategy into project flow. Expect posture→position→submission metaphors.",
+      "examples": ["Unblock a stuck initiative using BJJ lenses", "Design a pressure-test for our plan"]
+    },
+    {
+      "mode": "Observatory",
+      "tip": "Plan captures and narratives; discuss gear, sky conditions, and processing timelines.",
+      "examples": ["Plan an Andromeda session from a Bortle 6 site", "Create a processing order of operations"]
+    }
+  ],
+  "a11yNotes": [
+    "Every image includes alt text unless decorative",
+    "Color contrast ≥ 4.5:1 for body text; focus states always visible",
+    "Chat overlay remains keyboard navigable with focus trap"
+  ]
+}

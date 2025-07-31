@@ -1,1 +1,0 @@
-export { ChatTerminal as default, ChatTerminal } from './ChatTerminal';

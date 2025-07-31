@@ -1,8 +1,12 @@
-# performance-audit.md
+**Run Lighthouse**  
+   npx lighthouse https://staging.your-site.com \
+     --output=json --output-path=./reports/lighthouse.json
 
-Workflow description here...
+**Compare Against Baseline**  
+   npm run compare-lighthouse --report=./reports/lighthouse.json
 
-## Steps
+**Extract Action Items**  
+   npm run generate-action-items --report=./reports/lighthouse.json
 
-1. Step 1
-2. Step 2
+**Fail on Regression**
+Exit non‑zero if any vital metric degrades.
