@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Minimal peacock-teal bindu favicon with marigold core -->
+<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 256 256">
+  <defs>
+    <radialGradient id="g" cx="35%" cy="35%" r="70%">
+      <stop offset="0%" stop-color="#F59E0B"/>
+      <stop offset="48%" stop-color="#F59E0B"/>
+      <stop offset="49%" stop-color="#0F766E"/>
+      <stop offset="100%" stop-color="#0F766E"/>
+    </radialGradient>
+  </defs>
+  <rect width="256" height="256" rx="56" fill="#FAF7EF"/>
+  <circle cx="128" cy="128" r="64" fill="url(#g)"/>
+</svg>

@@ -1,28 +1,182 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
+<head>
+  <meta charset="utf-8">
+  <title>Explorations at the Edge of Form and Meaning</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Brazilian Jiu-Jitsu, astrophotography, mathematics, physics, effective altruism, phenomenology, meditation, and design—woven into a single practice.">
+  <meta name="robots" content="index, follow">
 
-    <title>Oliemannetje — Operate at midnight, shine at dawn</title>
-    <meta name="description" content="Single-page site with chat overlay across six modes: Guide, Studio, Lab, Ops Deck, Dojo, Observatory." />
-    <meta name="robots" content="index, follow" />
+  <!-- Canonical (update href after deploy if using a custom domain) -->
+  <link rel="canonical" href="https://example.netlify.app/">
 
-    <meta property="og:title" content="Oliemannetje" />
-    <meta property="og:description" content="Operate at midnight, shine at dawn." />
-    <meta property="og:image" content="/assets/og-image.png" />
-    <meta name="twitter:card" content="summary_large_image" />
+  <!-- Open Graph -->
+  <meta property="og:title" content="Explorations at the Edge of Form and Meaning">
+  <meta property="og:description" content="Brazilian Jiu-Jitsu, astrophotography, mathematics, physics, effective altruism, phenomenology, meditation, and design—woven into a single practice.">
+  <meta property="og:image" content="https://example.netlify.app/assets/og/og-image.png">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://example.netlify.app/">
 
-    <link rel="preload" href="/assets/hero-bg.webp" as="image" imagesrcset="/assets/hero-bg.webp" />
-    <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml" />
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Explorations at the Edge of Form and Meaning">
+  <meta name="twitter:description" content="Brazilian Jiu-Jitsu, astrophotography, mathematics, physics, effective altruism, phenomenology, meditation, and design—woven into a single practice.">
+  <meta name="twitter:image" content="https://example.netlify.app/assets/og/og-image.png">
 
-    <link rel="stylesheet" href="/src/styles/tokens.css" />
-    <link rel="stylesheet" href="/src/styles/globals.css" />
-  </head>
-  <body>
-    <a href="#main" class="skip-link">Skip to content</a>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
+  <link rel="icon" href="/assets/icons/favicon.svg" type="image/svg+xml">
+
+  <!-- Performance: preload critical CSS; keep as same-origin path -->
+  <link rel="preload" href="./css/styles.css" as="style">
+  <link rel="stylesheet" href="./css/styles.css">
+
+  <!-- Fonts (consider self-hosting in production) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header" role="banner">
+    <div class="container header-inner">
+      <div class="brand" aria-label="Site brand">
+        <span class="brand-mark" aria-hidden="true">●</span>
+        <span class="brand-name">Explorations</span>
+      </div>
+      <nav class="site-nav" aria-label="Primary">
+        <ul>
+          <li><a href="#about">About</a></li>
+          <li><a href="#practice">Practice</a></li>
+          <li><a href="#video">Video</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main" class="site-main" role="main">
+    <section class="section hero" aria-labelledby="hero-title">
+      <div class="container">
+        <h1 id="hero-title">Explorations at the Edge of Form and Meaning</h1>
+        <p class="subheadline">Brazilian Jiu‑Jitsu, astrophotography, mathematics, physics, effective altruism, phenomenology, meditation, and design—woven into a single practice.</p>
+        <p><a class="button primary" href="#contact">Contact</a></p>
+      </div>
+    </section>
+
+    <section class="section about" id="about" aria-labelledby="about-title">
+      <div class="container narrow">
+        <h2 id="about-title">About</h2>
+        <p>I build a life of inquiry across body, mind, and world. On the mat, under a sky full of signal, at the whiteboard, and in the studio, I iterate. My work blends rigor and intuition: test, observe, refine. Minimal surfaces, bold edges, clear structure—then a single detail that turns the image.</p>
+      </div>
+    </section>
+
+    <section class="section topics" aria-labelledby="topics-title">
+      <div class="container narrow">
+        <h2 id="topics-title" class="visually-hidden">Domains</h2>
+
+        <article class="topic" aria-labelledby="bjj-title">
+          <h3 id="bjj-title">Brazilian Jiu‑Jitsu</h3>
+          <p>I return to first principles: frames, levers, timing. BJJ is embodied problem‑solving—reducing complexity to posture, connection, and pressure. It’s a moving proof: if an idea survives resistance, it earns the right to stay.</p>
+        </article>
+
+        <article class="topic" aria-labelledby="astro-title">
+          <h3 id="astro-title">Astrophotography</h3>
+          <p>Night work slows the mind. Tracking faint light across hours teaches patience and calibration. The reward is more than an image; it’s a lived sense of scale—quiet distances, color older than language, chaos that resolves with enough exposure.</p>
+        </article>
+
+        <article class="topic" aria-labelledby="mathphys-title">
+          <h3 id="mathphys-title">Mathematics & Physics</h3>
+          <p>I’m drawn to models that vanish into clarity. The elegance of a proof, the humility of a wrong assumption, the relief of a constraint that unlocks the solution. I look for structures that compress reality without flattening it.</p>
+        </article>
+
+        <article class="topic" aria-labelledby="ea-title">
+          <h3 id="ea-title">Effective Altruism</h3>
+          <p>I care about outcomes. Evidence matters, as do counterfactuals and tractability. I try to place effort where it compounds—choosing projects by expected value, not social momentum. It’s a practice of attention, honesty, and iteration.</p>
+        </article>
+
+        <article class="topic" aria-labelledby="pheno-title">
+          <h3 id="pheno-title">Phenomenology</h3>
+          <p>Before ideas, there is experience. I study how meaning shows up: the feel of attention, the grain of perception, the way a problem “opens.” Phenomenology makes my work more precise and my design more human—it keeps me close to the thing itself.</p>
+        </article>
+
+        <article class="topic" aria-labelledby="meditation-title">
+          <h3 id="meditation-title">Meditation</h3>
+          <p>Meditation is maintenance for perception. A lab for noticing bias, reactivity, and the habits that steer choices. Quiet is not escape; it’s performance enhancement for learning, making, and relating.</p>
+        </article>
+
+        <article class="topic" aria-labelledby="design-title">
+          <h3 id="design-title">Art & Design</h3>
+          <p>I prefer minimalism with saturated edges—economy of form, then a strike of color. Design makes thought legible: structure, rhythm, whitespace, contrast. Good design lets content breathe and the user rest.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section practice" id="practice" aria-labelledby="practice-title">
+      <div class="container narrow">
+        <h2 id="practice-title">Practice</h2>
+        <ul class="principles">
+          <li>Reduce to essentials.</li>
+          <li>Test in reality.</li>
+          <li>Keep the channel clear.</li>
+          <li>Align beauty with truth.</li>
+          <li>Choose what compounds.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="section video-band" id="video" aria-labelledby="video-title">
+      <div class="container">
+        <h2 id="video-title">Feature Video</h2>
+        <p class="muted">Short reel or astrophotography timelapse. Captions/transcript recommended.</p>
+        <div class="video-wrap">
+          <video
+            id="hero-video"
+            class="video"
+            controls
+            preload="metadata"
+            poster="./assets/video/poster.png"
+            width="1280"
+            height="720"
+            aria-label="Feature video: exploration reel"
+          >
+            <source src="./assets/video/hero.mp4" type="video/mp4">
+            Your browser does not support the video tag. A transcript is available below.
+          </video>
+        </div>
+        <details class="transcript">
+          <summary>Transcript / Description</summary>
+          <p>Placeholder transcript. Describe the visual content and any narration for accessibility.</p>
+        </details>
+      </div>
+    </section>
+
+    <section class="section contact" id="contact" aria-labelledby="contact-title">
+      <div class="container narrow">
+        <h2 id="contact-title">Contact</h2>
+        <p>Open to collaborations, learning exchanges, and projects that demand both depth and play.</p>
+        <p>
+          <a class="button outline" href="mailto:your.vyakart@tutanota.com" aria-label="Email: your.vyakart@tutanota.com">
+            your.vyakart@tutanota.com
+          </a>
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer" role="contentinfo">
+    <div class="container footer-inner">
+      <p>&copy; <span id="year"></span> Explorations. All rights reserved.</p>
+      <nav aria-label="Footer">
+        <ul class="footer-links">
+          <li><a href="#about">About</a></li>
+          <li><a href="#practice">Practice</a></li>
+          <li><a href="#video">Video</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </nav>
+    </div>
+  </footer>
+
+  <!-- Defer main script for better first paint -->
+  <script src="./js/main.js" defer></script>
+</body>
 </html>

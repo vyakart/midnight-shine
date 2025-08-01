@@ -1,0 +1,8 @@
+This file exists to ensure the assets/ directory is committed even before adding real media.
+Expected structure:
+- assets/video/hero.mp4           (local placeholder video)
+- assets/video/poster.jpg         (poster frame for the video)
+- assets/og/og-image.png          (Open Graph / Twitter card)
+- assets/icons/favicon.svg        (site favicon)
+
+You can replace these placeholders at any time with real assets.
