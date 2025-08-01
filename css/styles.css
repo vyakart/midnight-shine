@@ -1,0 +1,237 @@
+/* 
+  styles.css
+  - Baseline, accessible-first styles
+  - Meets focus visibility, color contrast, and layout stability guidelines
+  - Indentation: 2 spaces
+*/
+
+/* CSS Reset (minimal, preserve useful defaults) */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+html:focus-within {
+  scroll-behavior: smooth;
+}
+html, body {
+  margin: 0;
+  padding: 0;
+}
+body {
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial, sans-serif;
+  line-height: 1.6;
+  color: #0e0e0e;
+  background: #ffffff;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Typography */
+h1, h2, h3 {
+  line-height: 1.2;
+  margin: 0 0 0.75rem;
+  font-family: "Fraunces", serif;
+  letter-spacing: -0.01em;
+}
+p {
+  margin: 0 0 1rem;
+}
+.subheadline {
+  color: #444;
+  max-width: 60ch;
+}
+
+/* Layout containers */
+.container {
+  width: min(1100px, 92vw);
+  margin-inline: auto;
+}
+.container.narrow {
+  width: min(800px, 92vw);
+}
+
+/* Sections */
+.section {
+  padding: 56px 0;
+}
+.section.hero {
+  padding-top: 80px;
+  padding-bottom: 64px;
+}
+
+/* Header */
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: #fff;
+  border-bottom: 1px solid #eee;
+}
+.header-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 56px;
+}
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+.brand-mark {
+  color: #0057ff;
+}
+.site-nav ul,
+.footer-links {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  gap: 16px;
+}
+.site-nav a,
+.footer-links a {
+  text-decoration: none;
+  color: #0e0e0e;
+}
+.site-nav a:hover,
+.footer-links a:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* Buttons */
+.button {
+  display: inline-block;
+  padding: 10px 16px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 600;
+  border: 2px solid transparent;
+}
+.button.primary {
+  background: #0e0e0e;
+  color: #fff;
+}
+.button.primary:hover {
+  background: #1b1b1b;
+}
+.button.outline {
+  background: transparent;
+  color: #0e0e0e;
+  border-color: #0e0e0e;
+}
+.button.outline:hover {
+  background: #0e0e0e;
+  color: #fff;
+}
+
+/* Topics */
+.topic + .topic {
+  margin-top: 16px;
+}
+.principles {
+  padding-left: 1.25rem;
+}
+
+/* Video area */
+.video-wrap {
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #f4f6f8; /* helps avoid layout shift before poster paints */
+}
+.video {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 9;
+  background: #000; /* solid background for contrast with poster */
+}
+
+/* Transcript disclosure */
+.transcript summary {
+  cursor: pointer;
+  font-weight: 600;
+  margin-top: 12px;
+}
+
+/* Footer */
+.site-footer {
+  border-top: 1px solid #eee;
+  padding: 24px 0;
+  color: #444;
+}
+.footer-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+@media (max-width: 640px) {
+  .footer-inner {
+    flex-direction: column;
+    gap: 12px;
+  }
+}
+
+/* Skip link */
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: auto;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+.skip-link:focus-visible {
+  position: static;
+  width: auto;
+  height: auto;
+  margin: 8px;
+  padding: 8px 12px;
+  background: #0057ff;
+  color: #fff;
+  border-radius: 8px;
+  outline: none;
+}
+
+/* Focus styles: visible and high-contrast */
+:focus-visible {
+  outline: 3px solid #0057ff;
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+a:focus-visible,
+button:focus-visible,
+.button:focus-visible,
+summary:focus-visible {
+  outline: 3px solid #ff7a00;
+  outline-offset: 3px;
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Utility */
+.muted {
+  color: #666;
+}
+
+/* Visually hidden (but accessible) */
+.visually-hidden {
+  position: absolute !important;
+  height: 1px; width: 1px;
+  overflow: hidden;
+  clip: rect(1px, 1px, 1px, 1px);
+  white-space: nowrap;
+}
