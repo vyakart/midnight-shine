@@ -39,16 +39,24 @@
   <header class="site-header" role="banner">
     <div class="container header-inner">
       <div class="brand" aria-label="Site brand">
-        <span class="brand-mark" aria-hidden="true">●</span>
-        <span class="brand-name">Explorations</span>
+        <!-- Favicon PNG as logo -->
+        <img class="brand-logo" src="./assets/icons/favicon.png" alt="Nishit logo" width="28" height="28" decoding="async">
+        <!-- Title only; move animation to hero corner to avoid baseline/font mismatch -->
+        <h1 class="brand-title" aria-live="off">
+          <span class="brand-fixed">Nishit</span>
+        </h1>
       </div>
-      <nav class="site-nav" aria-label="Primary">
-        <ul>
-          <li><a href="#about">About</a></li>
-          <li><a href="#practice">Practice</a></li>
-          <li><a href="#video">Video</a></li>
-          <li><a href="#contact">Contact</a></li>
-        </ul>
+      <nav class="site-nav" aria-label="Theme">
+        <button id="theme-toggle" class="theme-toggle" aria-pressed="false" aria-label="Toggle dark mode">
+          <span class="toggle-track" aria-hidden="true">
+            <!-- tick marks purely decorative -->
+            <span class="tick-marks"></span>
+          </span>
+          <span class="toggle-thumb" aria-hidden="true">
+            <!-- icon changes via CSS -->
+            <span class="icon"></span>
+          </span>
+        </button>
       </nav>
     </div>
   </header>
@@ -56,18 +64,6 @@
   <main id="main" class="site-main" role="main">
     <section class="section hero" aria-label="Hero">
       <div class="hero-media">
-        <picture>
-          <source type="image/png" srcset="./assets/video/poster.png" media="(prefers-reduced-motion: reduce)">
-          <!-- When reduced motion is preferred, the <img> poster will be used instead of autoplaying video -->
-          <img
-            src="./assets/video/poster.png"
-            alt="Abstract motion poster frame"
-            width="1280"
-            height="720"
-            loading="eager"
-            style="width:100%;height:auto;aspect-ratio:16/9;object-fit:cover;display:none"
-          >
-        </picture>
         <video
           id="hero-video"
           class="hero-video"
@@ -75,44 +71,16 @@
           muted
           loop
           playsinline
-          preload="auto"
-          poster="./assets/video/poster.png"
+          preload="metadata"
           aria-label="Hero background video"
           width="1920"
           height="1080"
         >
-          <source src="./assets/video/hero.mp4" type="video/mp4">
+          <source src="./assets/video/hero_post.mp4" type="video/mp4">
           Your browser does not support the video tag.
         </video>
 
-        <!-- Retro Terminal Toggle Button (always visible as icon) -->
-        <button id="terminal-toggle" class="terminal-toggle" aria-expanded="false" aria-controls="terminal" title="Open terminal" aria-label="Open terminal">⌘</button>
 
-        <!-- Retro Terminal (collapsed by default) -->
-        <section
-          id="terminal"
-          class="terminal collapsed retro"
-          aria-label="Interactive terminal"
-          role="region"
-        >
-          <header class="terminal-header" aria-label="Terminal header and controls">
-            <div class="traffic-lights" aria-hidden="true">
-              <span class="btn close"></span>
-              <span class="btn min"></span>
-              <span class="btn max"></span>
-            </div>
-            <div class="terminal-title">guest@explorations: ~</div>
-          </header>
-          <div class="terminal-body" role="log" aria-live="polite" aria-relevant="additions text" aria-atomic="false">
-            <div class="line intro">Type 'help' to get started.</div>
-          </div>
-          <div class="terminal-input-row">
-            <label for="terminal-input" class="visually-hidden">Terminal input</label>
-            <span class="prompt" aria-hidden="true">$</span>
-            <input id="terminal-input" class="terminal-input" type="text" autocomplete="off" spellcheck="false" aria-label="Terminal command input">
-          </div>
-          <button class="terminal-resize" aria-label="Resize terminal" title="Drag to resize"></button>
-        </section>
       </div>
     </section>
 
@@ -127,69 +95,25 @@
       <div class="container">
         <h2 id="topics-title">Interests</h2>
 
-        <div class="bento">
-          <article class="bento-card" aria-labelledby="bjj-title">
-            <div class="gif-corner" aria-hidden="true" data-topic="bjj">
-              <img src="/assets/gifs/bjj.gif" alt="Brazilian Jiu‑Jitsu study of frames, levers, and timing." loading="lazy">
-            </div>
-            <div class="bento-body">
-              <h3 id="bjj-title">Brazilian Jiu‑Jitsu</h3>
-              <p>I return to first principles: frames, levers, timing. BJJ is embodied problem‑solving—reducing complexity to posture, connection, and pressure. It’s a moving proof: if an idea survives resistance, it earns the right to stay.</p>
-            </div>
-          </article>
+        <!-- Accessible Media Carousel -->
+        <section id="showcase-carousel" class="carousel" role="region" aria-roledescription="carousel" aria-label="Interests carousel">
+          <div class="carousel-viewport" aria-live="polite">
+            <!-- Slides are injected by JS for proper poster/GIF behavior -->
+          </div>
 
-          <article class="bento-card" aria-labelledby="astro-title">
-            <div class="gif-corner" aria-hidden="true" data-topic="astro">
-              <img src="/assets/gifs/astro.gif" alt="Astrophotography sequences revealing faint structures over time." loading="lazy">
-            </div>
-            <div class="bento-body">
-              <h3 id="astro-title">Astrophotography</h3>
-              <p>Night work slows the mind. Tracking faint light across hours teaches patience and calibration. The reward is more than an image; it’s a lived sense of scale—quiet distances, color older than language, chaos that resolves with enough exposure.</p>
-            </div>
-          </article>
+          <div class="carousel-controls">
+            <button class="carousel-btn prev" type="button" aria-label="Previous slide">
+              <span aria-hidden="true">◀</span>
+            </button>
+            <button class="carousel-btn next" type="button" aria-label="Next slide">
+              <span aria-hidden="true">▶</span>
+            </button>
+          </div>
 
-          <article class="bento-card" aria-labelledby="mathphys-title">
-            <div class="gif-corner" aria-hidden="true" data-topic="mathphys">
-              <img src="/assets/gifs/mathphys.gif" alt="Mathematics and physics visual problem‑solving." loading="lazy" width="64" height="64">
-            </div>
-            <div class="bento-body">
-              <h3 id="mathphys-title">Mathematics & Physics</h3>
-              <p>I’m drawn to models that vanish into clarity. The elegance of a proof, the humility of a wrong assumption, the relief of a constraint that unlocks the solution. I look for structures that compress reality without flattening it.</p>
-            </div>
-          </article>
-
-          <article class="bento-card" aria-labelledby="ea-title">
-            <div class="gif-corner" aria-hidden="true" data-topic="ea">
-              <img src="/assets/gifs/ea.gif" alt="Effective altruism: prioritization and impact over optics." loading="lazy">
-            </div>
-            <div class="bento-body">
-              <h3 id="ea-title">Effective Altruism</h3>
-              <p>I care about outcomes. Evidence matters, as do counterfactuals and tractability. I try to place effort where it compounds—choosing projects by expected value, not social momentum. It’s a practice of attention, honesty, and iteration.</p>
-            </div>
-          </article>
-
-          <!-- Phenomenology card removed per request -->
- 
-          <article class="bento-card" aria-labelledby="meditation-title">
-            <div class="gif-corner" aria-hidden="true" data-topic="meditation">
-              <img src="/assets/gifs/meditation.gif" alt="Meditation as lab for attention and perception." loading="lazy">
-            </div>
-            <div class="bento-body">
-              <h3 id="meditation-title">Meditation</h3>
-              <p>Meditation is maintenance for perception. A lab for noticing bias, reactivity, and the habits that steer choices. Quiet is not escape; it’s performance enhancement for learning, making, and relating.</p>
-            </div>
-          </article>
-
-          <article class="bento-card" aria-labelledby="design-title">
-            <div class="gif-corner" aria-hidden="true" data-topic="art_design">
-              <img src="/assets/gifs/art&design.gif" alt="Art and design exploration with minimal surfaces and bold edges." loading="lazy" width="64" height="64">
-            </div>
-            <div class="bento-body">
-              <h3 id="design-title">Art & Design</h3>
-              <p>I prefer minimalism with saturated edges—economy of form, then a strike of color. Design makes thought legible: structure, rhythm, whitespace, contrast. Good design lets content breathe and the user rest.</p>
-            </div>
-          </article>
-        </div>
+          <div class="carousel-dots" role="tablist" aria-label="Slide navigation">
+            <!-- Dots injected by JS -->
+          </div>
+        </section>
       </div>
     </section>
 
