@@ -123,9 +123,10 @@ p {
 /* Bento grid for Practice */
 .bento {
   display: grid;
-  grid-template-columns: repeat(6, 1fr);
+  grid-template-columns: repeat(6, minmax(0, 1fr));
   gap: 16px;
   margin-top: 16px;
+  align-items: stretch; /* ensure equal heights */
 }
 .bento-card {
   background: var(--surface-card, #fff);
@@ -135,7 +136,10 @@ p {
   padding: 16px;
   display: grid;
   align-content: start;
-  min-height: 120px;
+  /* Uniform card sizing: enforce fixed aspect and consistent height */
+  aspect-ratio: 1 / 1;
+  min-height: 160px;
+  max-height: 220px;
   box-shadow:
     0 8px 20px rgba(0,0,0,0.06),
     0 1px 0 rgba(255,255,255,0.6) inset;
@@ -151,28 +155,30 @@ p {
   font: 400 0.98rem/1.45 var(--font-sans);
 }
 
-/* Spans to create the “bento” layout feel */
-.bento-card.span-2 { grid-column: span 2; }   /* wide */
-.bento-card.tall   { grid-row: span 2; }      /* tall */
+/* Uniform grid: remove custom spans for equal sizing */
+.bento-card.span-2,
+.bento-card.tall {
+  grid-column: auto;
+  grid-row: auto;
+}
 
-/* Default placement for 5 cards on 6-col grid for visual rhythm */
-.bento > .bento-card:nth-child(1) { grid-column: span 3; }
-.bento > .bento-card:nth-child(2) { grid-column: span 2; }
-.bento > .bento-card:nth-child(3) { grid-column: span 1; }
-.bento > .bento-card:nth-child(4) { grid-column: span 3; }
-.bento > .bento-card:nth-child(5) { grid-column: span 3; }
+/* Even distribution of cards across 6 columns */
+.bento > .bento-card:nth-child(n) { grid-column: auto; }
 
 /* Small screens: stack nicely */
 @media (max-width: 880px) {
   .bento {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 12px;
   }
   .bento-card,
   .bento-card.span-2,
   .bento-card.tall {
-    grid-column: span 2;
+    grid-column: auto;
     grid-row: auto;
+    aspect-ratio: 1 / 1; /* maintain uniform squares on small screens */
+    min-height: 140px;
+    max-height: 200px;
   }
 }
 
@@ -184,6 +190,8 @@ p {
   }
   .bento-card {
     grid-column: 1 / -1;
+    aspect-ratio: 1 / 1;
+    min-height: 160px;
   }
 }
 
