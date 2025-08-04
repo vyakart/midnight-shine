@@ -1,10 +1,8 @@
 /**
  * main.js
  * - Baseline enhancements (year, theme, hero, terminal).
- * - Replaces bento with an accessible carousel:
- *   • Poster PNG shown by default for every slide.
- *   • Active slide swaps to animated GIF and plays (if not reduced-motion).
- *   • Adjacent slides' GIFs are preloaded for smoothness.
+ * - Accessible carousel reworked to poster-first then timed video.
+ *   Poster placeholder path now points to a known file to avoid 404s.
  */
 (function () {
   // Update year in footer
@@ -67,178 +65,389 @@
     });
   }
 
-  // CAROUSEL
+  // CAROUSEL — poster first (5s), then video plays for 10s; fix filenames with '&', distinct posters, robust fallbacks
   var carouselRoot = document.getElementById('showcase-carousel');
   if (carouselRoot) {
-    // Desired custom order
-    var order = ['meditation','bjj','astro','art&design','ea','mathematics&physics'];
-
-    // Minimal slide copy; adjust later as needed
+    var order = ['meditation','bjj','astro','art&design','ea'];
     var copy = {
-      'meditation': {
-        title: 'Meditation',
-        sub: 'Perception Lab',
-        desc: 'Quiet attention as performance tool for learning, making, and relating.'
-      },
-      'bjj': {
-        title: 'Brazilian Jiu‑Jitsu',
-        sub: 'Frames • Levers • Timing',
-        desc: 'Embodied problem‑solving under resistance; ideas earn survival.'
-      },
-      'astro': {
-        title: 'Astrophotography',
-        sub: 'Scale in Long Exposure',
-        desc: 'Tracking faint light across hours for structure and color beyond habit.'
-      },
-      'art&design': {
-        title: 'Art & Design',
-        sub: 'Minimal Surfaces, Bold Edges',
-        desc: 'Economy of form, then a saturated strike that turns the image.'
-      },
-      'ea': {
-        title: 'Effective Altruism',
-        sub: 'Impact Over Optics',
-        desc: 'Evidence, counterfactuals, tractability—effort where it compounds.'
-      },
-      'mathematics&physics': {
-        title: 'Mathematics & Physics',
-        sub: 'Models That Disappear',
-        desc: 'Clarity through constraints; structure that compresses without flattening.'
-      }
+      'meditation': { title: 'Meditation', sub: 'Awareness as Craft', desc: 'Cultivating quiet attention and making space to listen deeply; perceive clearly with equanimity; be aware of the present moment.' },
+      'bjj':        { title: 'Brazilian Jiu‑Jitsu', sub: 'Dialogue in Movement', desc: 'A physical conversation of frames, levers, and timing; finding flow in resistance, truth in technique.' },
+      'astro':      { title: 'Photography', sub: 'The Art of Noticing', desc: 'Patiently observing and capturing visually striking images, from intimate micro details to expansive cosmic views.' },
+      'art&design': { title: 'Art & Design', sub: 'Form That Speaks', desc: 'Balancing minimal surfaces and bold edges so that design is distilled to clarity, art articulated with courage.' },
+      'ea':         { title: 'Effective Altruism', sub: 'Depth of Impact', desc: 'Navigating complexity with evidence and compassion, directing resources where thoughtful effort multiplies meaningfully.' }
     };
 
-    // Build DOM
-    var viewport = carouselRoot.querySelector('.carousel-viewport');
-    var track = document.createElement('div');
-    track.className = 'carousel-track';
-    viewport.appendChild(track);
+    var mediaFrame = carouselRoot.querySelector('.media-frame');
+    var tickerWrap = carouselRoot.querySelector('.carousel-ticker');
+    var capWrap = carouselRoot.querySelector('.carousel-aside');
+    var capTitle = capWrap ? capWrap.querySelector('.carousel-cap-title') : null;
+    var capSub = capWrap ? capWrap.querySelector('.carousel-cap-sub') : null;
+    var capDesc = capWrap ? capWrap.querySelector('.carousel-cap-desc') : null;
 
-    var dotsWrap = carouselRoot.querySelector('.carousel-dots');
+    // Path helpers with URL-encoding for special characters like '&'
+    function encodeFile(name) { return encodeURIComponent(name); }
+    function moviePath(name) { return '/assets/movies/' + encodeFile(name) + '.mp4'; }
+    function posterPath(name){ return '/assets/posters/' + encodeFile(name) + '.png'; }
 
-    // Helpers to paths
-    function posterPath(name) { return '/assets/posters/' + name + '.png'; }
-    function gifPath(name) { return '/assets/gifs/' + name + '.gif'; }
+    if (!mediaFrame) return;
+    mediaFrame.innerHTML = '';
 
-    // Slides
-    var slides = order.map(function(name, idx) {
+    // Stage container
+    var stage = document.createElement('div');
+    stage.className = 'stage-viewport';
+    mediaFrame.appendChild(stage);
+
+    // Prev/Next controls
+    var prevBtn = document.createElement('button');
+    prevBtn.type = 'button';
+    prevBtn.className = 'button outline';
+    prevBtn.setAttribute('aria-label', 'Previous slide');
+    prevBtn.textContent = 'Prev';
+
+    var nextBtn = document.createElement('button');
+    nextBtn.type = 'button';
+    nextBtn.className = 'button outline';
+    nextBtn.setAttribute('aria-label', 'Next slide');
+    nextBtn.textContent = 'Next';
+
+    // Place controls above ticker
+    var controlsWrap = document.createElement('div');
+    controlsWrap.style.display = 'flex';
+    controlsWrap.style.gap = '12px';
+    controlsWrap.style.justifyContent = 'center';
+    controlsWrap.style.paddingTop = '6px';
+
+    controlsWrap.appendChild(prevBtn);
+    controlsWrap.appendChild(nextBtn);
+
+    // Insert controls before ticker if possible
+    if (tickerWrap && tickerWrap.parentElement) {
+      tickerWrap.parentElement.insertBefore(controlsWrap, tickerWrap);
+    } else if (mediaFrame && mediaFrame.parentElement) {
+      mediaFrame.parentElement.appendChild(controlsWrap);
+    }
+
+    // Create slides using per-topic posters, then a video element
+    var slides = order.map(function(name, idx){
       var data = copy[name] || { title: name, sub: '', desc: '' };
-      var slide = document.createElement('article');
-      slide.className = 'carousel-slide';
+      var slide = document.createElement('figure');
+      slide.className = 'stage-slide';
       slide.setAttribute('role', 'group');
-      slide.setAttribute('aria-roledescription', 'slide');
-      slide.setAttribute('aria-label', (idx+1) + ' of ' + order.length);
-
-      // Media: start with poster <img>. When active we replace with <video> (GIF) using <img src=gif> is enough,
-      // but using <video> gives future flexibility; however GIF doesn’t play in video. So we swap <img src> to GIF.
-      var media = document.createElement('div');
-      media.className = 'carousel-media';
+      slide.setAttribute('aria-label', data.title);
+      // Make slide focusable for keyboard hover-preview parity
+      slide.tabIndex = 0;
 
       var img = document.createElement('img');
       img.alt = data.title + ' poster';
-      img.loading = 'lazy';
       img.decoding = 'async';
+      img.loading = idx === 0 ? 'eager' : 'lazy';
       img.src = posterPath(name);
-      img.setAttribute('data-gif', gifPath(name));
-      img.setAttribute('data-poster', posterPath(name));
-      media.appendChild(img);
 
-      var content = document.createElement('div');
-      content.className = 'carousel-content';
-      var h3 = document.createElement('h3'); h3.textContent = data.title;
-      var sub = document.createElement('div'); sub.className = 'carousel-sub'; sub.textContent = data.sub;
-      var p = document.createElement('p'); p.className = 'carousel-desc'; p.textContent = data.desc;
-      content.appendChild(h3); content.appendChild(sub); content.appendChild(p);
+      var video = document.createElement('video');
+      video.setAttribute('playsinline', '');
+      video.setAttribute('muted', '');
+      video.setAttribute('preload', 'metadata');
+      video.setAttribute('loop', '');
+      // Looping enabled; carousel timing still controls slide advance
+      video.className = 'stage-video';
+      video.style.display = 'none';
+      // Hint mobile Safari to allow inline playback
+      video.playsInline = true;
+      video.muted = true;
+      video.loop = true;
 
-      slide.appendChild(media);
-      slide.appendChild(content);
-      track.appendChild(slide);
+      var src = document.createElement('source');
+      src.src = moviePath(name);
+      src.type = 'video/mp4';
+      video.appendChild(src);
 
-      // Dot
-      var dot = document.createElement('button');
-      dot.className = 'carousel-dot';
-      dot.type = 'button';
-      dot.setAttribute('role', 'tab');
-      dot.setAttribute('aria-controls', ''); // not strictly needed without IDs
-      dot.setAttribute('aria-selected', idx === 0 ? 'true' : 'false');
-      dot.addEventListener('click', function(){ goTo(idx); });
-      dotsWrap.appendChild(dot);
+      // If the poster fails for some reason, keep layout stable
+      img.addEventListener('error', function(){
+        img.removeAttribute('src'); // prevents continuous error loop
+        img.style.background = '#000';
+      });
 
-      return { slide: slide, img: img, dot: dot };
+      // Robust error handling for video load
+      var videoFailed = false;
+      video.addEventListener('error', function(){ videoFailed = true; });
+      src.addEventListener('error', function(){ videoFailed = true; });
+
+      var alt = document.createElement('span');
+      alt.className = 'visually-hidden';
+      alt.textContent = data.title + ' preview video';
+
+      slide.appendChild(img);
+      slide.appendChild(video);
+      slide.appendChild(alt);
+      stage.appendChild(slide);
+      return { el: slide, img: img, video: video, key: name, idx: idx, failed: function(){ return videoFailed; } };
     });
 
-    // Controls
-    var prevBtn = carouselRoot.querySelector('.carousel-btn.prev');
-    var nextBtn = carouselRoot.querySelector('.carousel-btn.next');
+    function updateCaption(idx) {
+      if (!capWrap) return;
+      var key = order[idx] || order[0];
+      var data = copy[key];
+      if (capTitle) capTitle.textContent = data.title;
+      if (capSub) capSub.textContent = data.sub;
+      if (capDesc) capDesc.textContent = data.desc;
+    }
 
-    var index = 0;
-    function clamp(i){ var n = order.length; return (i + n) % n; }
+    var prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var activeIdx = 0;
 
-    function swapMedia(activeIdx) {
-      slides.forEach(function(s, i){
-        var img = s.img;
-        var poster = img.getAttribute('data-poster');
-        var gif = img.getAttribute('data-gif');
+    // Timers for poster phase and video phase
+    var PHASE_POSTER_MS = 5000; // 5s poster
+    var PHASE_VIDEO_MS = 10000; // 10s video
+    var phaseTimer = null;
 
-        if (i === activeIdx && !reduceMotion) {
-          // show gif
-          if (img.src !== location.origin + gif && img.src.indexOf(gif) === -1) {
-            img.src = gif;
-          }
+    function clearPhaseTimer() {
+      if (phaseTimer) { clearTimeout(phaseTimer); phaseTimer = null; }
+    }
+
+    function showPoster(s) {
+      s.video.pause();
+      s.video.currentTime = 0;
+      s.video.style.display = 'none';
+      s.img.style.display = '';
+    }
+
+    function showVideo(s) {
+      s.img.style.display = 'none';
+      s.video.style.display = '';
+      if (!prefersReduced) s.video.play().catch(function(){});
+    }
+
+    function setActive(idx) {
+      if (idx === activeIdx) return;
+      // Reset previous
+      var prev = slides[activeIdx];
+      if (prev) showPoster(prev);
+
+      activeIdx = (idx + slides.length) % slides.length;
+      slides.forEach(function(s, i) {
+        s.el.classList.toggle('is-active', i === activeIdx);
+      });
+      updateCaption(activeIdx);
+      setActiveTicker(activeIdx);
+      schedulePhases();
+    }
+
+    // Phase scheduling: poster 5s, then video 10s, then advance
+    function schedulePhases() {
+      clearPhaseTimer();
+      var s = slides[activeIdx];
+      if (!s) return;
+      showPoster(s);
+
+      // Prime autoplay pipeline on iOS/Safari: muted + playsinline + quick play/pause
+      try {
+        s.video.muted = true;
+        s.video.setAttribute('muted', '');
+        s.video.setAttribute('playsinline', '');
+        var p = s.video.play();
+        if (p && typeof p.then === 'function') {
+          p.then(function(){ s.video.pause(); s.video.currentTime = 0; }).catch(function(){ /* ignore */ });
         } else {
-          // revert to poster
-          if (img.src !== location.origin + poster && img.src.indexOf(poster) === -1) {
-            img.src = poster;
-          }
+          s.video.pause();
+          s.video.currentTime = 0;
         }
-      });
+      } catch (_) {}
 
-      // Preload neighbors' GIFs
-      [clamp(activeIdx+1), clamp(activeIdx-1)].forEach(function(i){
-        var pre = new Image();
-        pre.src = slides[i].img.getAttribute('data-gif');
-      });
+      // If video load fails, skip video phase quickly to next slide
+      var posterDeadline = Date.now() + PHASE_POSTER_MS;
+
+      phaseTimer = setTimeout(function(){
+        // If this slide's video failed to load, jump to next slide
+        if (typeof s.failed === 'function' && s.failed()) {
+          setActive((activeIdx + 1) % slides.length);
+          return;
+        }
+
+        showVideo(s);
+
+        // As an extra guard, if play() was blocked, try again shortly
+        setTimeout(function(){
+          if (!prefersReduced && s.video.paused) {
+            s.video.play().catch(function(){});
+          }
+        }, 150);
+
+        // If the video still won’t play after 1s, don’t stall the carousel
+        setTimeout(function(){
+          if (s.video.paused) {
+            setActive((activeIdx + 1) % slides.length);
+          }
+        }, 1000);
+
+        clearPhaseTimer();
+        phaseTimer = setTimeout(function(){
+          // advance to next
+          setActive((activeIdx + 1) % slides.length);
+        }, PHASE_VIDEO_MS);
+      }, Math.max(0, posterDeadline - Date.now()));
     }
 
-    function updateUI() {
-      track.style.transform = 'translateX(' + (-100 * index) + '%)';
-      slides.forEach(function(s, i){
-        s.dot.setAttribute('aria-selected', i === index ? 'true' : 'false');
+    // Init first slide
+    slides.forEach(function(s, i) {
+      s.el.classList.toggle('is-active', i === 0);
+      // Ensure every slide starts on poster so we always see poster before video
+      showPoster(s);
+    });
+    updateCaption(activeIdx);
+    // Kick scheduling after a short delay to make sure first poster paints
+    setTimeout(schedulePhases, 250);
+
+    // Dots
+    var tickerItems = [];
+    function setActiveTicker(idx) {
+      tickerItems.forEach(function(el, i){
+        var selected = (i === idx);
+        el.setAttribute('aria-selected', String(selected));
+        el.tabIndex = selected ? 0 : -1;
       });
-      swapMedia(index);
     }
+    (function createTicker(){
+      if (!tickerWrap) return;
+      tickerWrap.innerHTML = '';
+      tickerItems = order.map(function(_key, i){
+        var btn = document.createElement('button');
+        btn.className = 'ticker-item';
+        btn.type = 'button';
+        btn.setAttribute('role', 'tab');
+        btn.setAttribute('aria-label', 'Go to slide ' + (i + 1));
+        btn.addEventListener('click', function(){
+          if (i === activeIdx) return;
+          setActive(i);
+          schedulePhases();
+        });
+        btn.addEventListener('keydown', function(e){
+          if (e.key === 'ArrowRight') { e.preventDefault(); setActive((activeIdx + 1) % slides.length); schedulePhases(); }
+          if (e.key === 'ArrowLeft')  { e.preventDefault(); setActive((activeIdx - 1 + slides.length) % slides.length); schedulePhases(); }
+          if (e.key === 'Home')       { e.preventDefault(); setActive(0); schedulePhases(); }
+          if (e.key === 'End')        { e.preventDefault(); setActive(slides.length - 1); schedulePhases(); }
+        });
+        tickerWrap.appendChild(btn);
+        return btn;
+      });
+      setActiveTicker(activeIdx);
+    })();
 
-    function goTo(i) { index = clamp(i); updateUI(); }
-    function next() { goTo(index + 1); }
-    function prev() { goTo(index - 1); }
-
-    if (nextBtn) nextBtn.addEventListener('click', next);
-    if (prevBtn) prevBtn.addEventListener('click', prev);
-
-    // Keyboard support
-    carouselRoot.addEventListener('keydown', function(e){
-      if (e.key === 'ArrowRight') { e.preventDefault(); next(); }
-      if (e.key === 'ArrowLeft') { e.preventDefault(); prev(); }
+    // Prev/Next handlers
+    prevBtn.addEventListener('click', function(){
+      setActive(activeIdx - 1);
+    });
+    nextBtn.addEventListener('click', function(){
+      setActive(activeIdx + 1);
     });
 
-    // Initialize
-    updateUI();
+    // Ensure auto-run even if timers were interrupted by quick navigations or tab restore
+    window.addEventListener('pageshow', function(){
+      // Safari bfcache restore can skip timers; restart them
+      setTimeout(schedulePhases, 50);
+    });
 
-    // Pause GIFs when offscreen by reverting to posters (optional optimization)
-    if ('IntersectionObserver' in window) {
-      var io2 = new IntersectionObserver(function(entries){
-        entries.forEach(function(entry){
-          if (!entry.isIntersecting) {
-            slides.forEach(function(s){
-              var poster = s.img.getAttribute('data-poster');
-              if (s.img.src.indexOf('.gif') !== -1) s.img.src = poster;
-            });
-          } else {
-            swapMedia(index);
+    // Hover-to-preview: play video while hovering over the poster; pause on leave
+    function wireHoverPreview(slide){
+      if (!slide) return;
+      var el = slide.el;
+      var vid = slide.video;
+      var img = slide.img;
+      el.addEventListener('pointerenter', function(){
+        // Show video immediately for preview
+        img.style.display = 'none';
+        vid.style.display = '';
+        // Ensure playback flags are set for autoplay policies
+        vid.muted = true;
+        vid.playsInline = true;
+        // If not sufficiently loaded, nudge buffering before play
+        if (vid.readyState < 2) {
+          try { vid.load(); } catch (_) {}
+        }
+        // Skip initial black frame by seeking a tiny offset once metadata is ready
+        var startPlayback = function() {
+          try {
+            if (vid.currentTime < 0.05) vid.currentTime = 0.05;
+          } catch (_) {}
+          if (!prefersReduced) {
+            var p = vid.play();
+            if (p && typeof p.then === 'function') {
+              p.catch(function(){
+                requestAnimationFrame(function(){ vid.play().catch(function(){}); });
+              });
+            }
           }
-        });
-      }, { rootMargin: '0px' });
-      io2.observe(carouselRoot);
+        };
+        if (vid.readyState >= 1) {
+          startPlayback();
+        } else {
+          var onceCanPlay = function() {
+            vid.removeEventListener('loadedmetadata', onceCanPlay);
+            startPlayback();
+          };
+          vid.addEventListener('loadedmetadata', onceCanPlay);
+        }
+        clearPhaseTimer(); // don't fight the user's hover
+      });
+      el.addEventListener('pointerleave', function(){
+        // Return to poster and resume carousel scheduling
+        try { vid.pause(); } catch(_) {}
+        try { vid.currentTime = 0; } catch(_) {}
+        vid.style.display = 'none';
+        img.style.display = '';
+        schedulePhases();
+      });
+      // Keyboard focus also previews; blur restores
+      el.addEventListener('focusin', function(){
+        img.style.display = 'none';
+        vid.style.display = '';
+        vid.muted = true;
+        vid.playsInline = true;
+        if (vid.readyState < 2) {
+          try { vid.load(); } catch (_) {}
+        }
+        var startPlayback2 = function() {
+          try {
+            if (vid.currentTime < 0.05) vid.currentTime = 0.05;
+          } catch (_) {}
+          if (!prefersReduced) {
+            var p2 = vid.play();
+            if (p2 && typeof p2.then === 'function') {
+              p2.catch(function(){
+                requestAnimationFrame(function(){ vid.play().catch(function(){}); });
+              });
+            }
+          }
+        };
+        if (vid.readyState >= 1) {
+          startPlayback2();
+        } else {
+          var onceMeta = function(){
+            vid.removeEventListener('loadedmetadata', onceMeta);
+            startPlayback2();
+          };
+          vid.addEventListener('loadedmetadata', onceMeta);
+        }
+        clearPhaseTimer();
+      });
+      el.addEventListener('focusout', function(){
+        vid.pause();
+        vid.currentTime = 0;
+        vid.style.display = 'none';
+        img.style.display = '';
+        schedulePhases();
+      });
     }
+    slides.forEach(wireHoverPreview);
+
+    // Visibility handling
+    document.addEventListener('visibilitychange', function(){
+      if (document.hidden) {
+        clearPhaseTimer();
+        slides.forEach(function(s){ s.video.pause(); });
+      } else {
+        schedulePhases();
+      }
+    });
   }
 
   // Header rotator (kept)

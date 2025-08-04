@@ -25,8 +25,7 @@
 
   <link rel="icon" href="/assets/icons/favicon.png" type="image/png">
 
-  <!-- Performance: preload critical CSS; keep as same-origin path -->
-  <link rel="preload" href="./css/styles.css" as="style">
+  <!-- Styles -->
   <link rel="stylesheet" href="./css/styles.css">
 
   <!-- Fonts (consider self-hosting in production) -->
@@ -36,17 +35,17 @@
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
-  <header class="site-header" role="banner">
+  <header class="site-header">
     <div class="container header-inner">
-      <div class="brand" aria-label="Site brand">
+      <div class="brand">
         <!-- Favicon PNG as logo -->
         <img class="brand-logo" src="./assets/icons/favicon.png" alt="Nishit logo" width="28" height="28" decoding="async">
         <!-- Title only; move animation to hero corner to avoid baseline/font mismatch -->
-        <h1 class="brand-title" aria-live="off">
+        <h1 class="brand-title">
           <span class="brand-fixed">Nishit</span>
         </h1>
       </div>
-      <nav class="site-nav" aria-label="Theme">
+      <nav class="site-nav" aria-label="Theme switcher">
         <button id="theme-toggle" class="theme-toggle" aria-pressed="false" aria-label="Toggle dark mode">
           <span class="toggle-track" aria-hidden="true">
             <!-- tick marks purely decorative -->
@@ -61,8 +60,9 @@
     </div>
   </header>
 
-  <main id="main" class="site-main" role="main">
-    <section class="section hero" aria-label="Hero">
+  <main id="main" class="site-main">
+    <section class="section hero" aria-labelledby="hero-title">
+      <h2 id="hero-title" class="visually-hidden">Hero</h2>
       <div class="hero-media">
         <video
           id="hero-video"
@@ -72,7 +72,7 @@
           loop
           playsinline
           preload="metadata"
-          aria-label="Hero background video"
+          aria-hidden="true"
           width="1920"
           height="1080"
         >
@@ -96,22 +96,27 @@
         <h2 id="topics-title">Interests</h2>
 
         <!-- Accessible Media Carousel -->
-        <section id="showcase-carousel" class="carousel" role="region" aria-roledescription="carousel" aria-label="Interests carousel">
-          <div class="carousel-viewport" aria-live="polite">
-            <!-- Slides are injected by JS for proper poster/GIF behavior -->
-          </div>
+        <section id="showcase-carousel" class="carousel" aria-labelledby="topics-title">
+          <div class="carousel-grid">
+            <div class="carousel-media">
+              <!-- Main stage strictly contained in a smaller frame -->
+              <div class="media-frame" aria-live="polite">
+                <!-- Slides injected by JS should now mount <video> tags instead of GIFs -->
+                <!-- Example fallback markup if JS is disabled (safe placeholder) -->
+                <img src="./assets/posters/meditation.png" alt="" decoding="async" loading="lazy">
+              </div>
+              <!-- Minimal dots -->
+              <div class="carousel-ticker" role="tablist" aria-label="Slide navigation">
+                <!-- Ticker items injected by JS -->
+              </div>
+            </div>
 
-          <div class="carousel-controls">
-            <button class="carousel-btn prev" type="button" aria-label="Previous slide">
-              <span aria-hidden="true">◀</span>
-            </button>
-            <button class="carousel-btn next" type="button" aria-label="Next slide">
-              <span aria-hidden="true">▶</span>
-            </button>
-          </div>
-
-          <div class="carousel-dots" role="tablist" aria-label="Slide navigation">
-            <!-- Dots injected by JS -->
+            <!-- Descriptor on the right -->
+            <aside class="carousel-aside" aria-live="polite">
+              <h3 class="carousel-cap-title"></h3>
+              <p class="carousel-cap-sub"></p>
+              <p class="carousel-cap-desc"></p>
+            </aside>
           </div>
         </section>
       </div>
@@ -144,7 +149,7 @@
     </section>
   </main>
 
-  <footer class="site-footer" role="contentinfo">
+  <footer class="site-footer">
     <div class="container footer-inner">
       <p>&copy; <span id="year"></span> Explorations. All rights reserved.</p>
       <nav aria-label="Footer">
