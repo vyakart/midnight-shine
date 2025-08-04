@@ -33,6 +33,15 @@ html, body {
   font-style: normal;
   font-display: swap;
 }
+/* Nishit brand: RecMonoSemicasual Bold */
+@font-face {
+  font-family: "Recursive Mono Semicasual";
+  src: url("../assets/Typography/ArrowType-Recursive-1.085/Recursive_Web/woff2_static/RecursiveMonoCslSt-Bold.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+/* Keep mono casual regular for terminal/code */
 @font-face {
   font-family: "Recursive Mono Casual";
   src: url("../assets/Typography/ArrowType-Recursive-1.085/Recursive_Web/woff2_static/RecursiveMonoCslSt-Regular.woff2") format("woff2");
@@ -45,13 +54,20 @@ html, body {
 :root {
   --font-sans: "Recursive Sans Linear", system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial, sans-serif;
   --font-mono: "Recursive Mono Casual", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  --font-brand: "Recursive Mono Semicasual", "Recursive Mono Casual", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+  /* Theme tokens (light by default) */
+  --bg: #ffffff;
+  --fg: #0e0e0e;
+  --border: #eeeeee;
+  --link: #0b5fff;
 }
 
 body {
   font-family: var(--font-sans);
   line-height: 1.6;
-  color: #0e0e0e;
-  background: #ffffff;
+  color: var(--fg);
+  background: var(--bg);
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   min-height: 100%;
@@ -137,7 +153,10 @@ p {
   line-height: 1.1;
 }
 .brand-fixed {
-  color: #0e0e0e;
+  color: var(--fg);
+  font-family: var(--font-brand);
+  font-weight: 700;
+  letter-spacing: 0.005em; /* slightly looser for RecMonoSemicasual */
 }
 .brand-rotate {
   position: relative;
@@ -199,10 +218,9 @@ p {
 .footer-links a {
   text-decoration: none;
   /* Ensure link contrast in light and dark themes (>=4.5:1) */
-  --link: #0b5fff;
   color: var(--link);
 }
-html.dark .footer-links a { --link: #9ad1ff; }
+html.dark :root { --link: #9ad1ff; }
 .site-nav a:hover,
 .footer-links a:hover {
   text-decoration: underline;
@@ -295,6 +313,7 @@ html.dark {
   --bg: #0f2a26;
   --fg: #e6f2ed;
   --border: #1a3a33;
+  --link: #9ad1ff;
 }
 html.dark body {
   background: var(--bg);
@@ -838,9 +857,9 @@ html:not(.dark) .ticker-item[aria-selected="true"] {
 
 /* Footer */
 .site-footer {
-  border-top: 1px solid #eee;
+  border-top: 1px solid var(--border);
   padding: 24px 0;
-  color: #444;
+  color: var(--fg);
 }
 .footer-inner {
   display: flex;

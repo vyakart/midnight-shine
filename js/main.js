@@ -9,22 +9,48 @@
   var yearEl = document.getElementById('year');
   if (yearEl) yearEl.textContent = new Date().getFullYear();
 
-  // Theme init
+  // Theme init: accessible, persists, respects system, syncs aria state
   (function initTheme() {
     try {
-      var stored = localStorage.getItem('theme');
-      var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
       var html = document.documentElement;
-      var isDark = stored ? stored === 'dark' : prefersDark;
-      html.classList.toggle('dark', isDark);
+      var stored = localStorage.getItem('theme');
+      var mql = window.matchMedia ? window.matchMedia('(prefers-color-scheme: dark)') : null;
+      var prefersDark = mql ? mql.matches : false;
+
+      function applyTheme(mode) {
+        var isDark = mode === 'dark';
+        html.classList.toggle('dark', isDark);
+        var btn = document.getElementById('theme-toggle');
+        if (btn) btn.setAttribute('aria-pressed', String(isDark));
+        // Dispatch a custom event for any listeners
+        var ev = new CustomEvent('theme-changed', { detail: { theme: mode } });
+        document.dispatchEvent(ev);
+      }
+
+      var initial = stored ? stored : (prefersDark ? 'dark' : 'light');
+      applyTheme(initial);
+
+      // React to system changes if user hasn't explicitly chosen
+      if (mql) {
+        mql.addEventListener && mql.addEventListener('change', function (e) {
+          var saved = localStorage.getItem('theme');
+          if (!saved) {
+            applyTheme(e.matches ? 'dark' : 'light');
+          }
+        });
+      }
+
       var btn = document.getElementById('theme-toggle');
       if (btn) {
-        btn.setAttribute('aria-pressed', String(isDark));
         btn.addEventListener('click', function () {
           var nowDark = !html.classList.contains('dark');
-          html.classList.toggle('dark', nowDark);
-          localStorage.setItem('theme', nowDark ? 'dark' : 'light');
-          btn.setAttribute('aria-pressed', String(nowDark));
+          var next = nowDark ? 'dark' : 'light';
+          applyTheme(next);
+          try { localStorage.setItem('theme', next); } catch (_) {}
+        });
+        // Keyboard operability is native for button, but ensure Space toggles in some browsers
+        btn.addEventListener('keydown', function (e) {
+          if (e.code === 'Space') { e.preventDefault(); btn.click(); }
         });
       }
     } catch (_) {}
@@ -495,4 +521,70 @@
     showNext();
     if (!reduceMotion) setInterval(showNext, intervalMs);
   }
+  // Dynamically render available 88x31 badges in footer by listing known filenames and checking existence
+  (function initBadges() {
+    try {
+      var footerList = document.querySelector('.site-footer .footer-links');
+      if (!footerList) return;
+
+      // Candidate assets (extendable). We’ll probe existence via HEAD requests.
+      var candidates = [
+        { file: '/assets/88x31/kilo.gif', alt: 'Kilo Code 88x31 badge' },
+        { file: '/assets/88x31/edit.gif', alt: 'Edit 88x31 badge' },
+        { file: '/assets/88x31/citizen.gif', alt: 'Citizen of the Web 88x31 badge' },
+        { file: '/assets/88x31/kilo-anim.mp4', alt: 'Kilo animated 88x31' } // will fallback to link text if mp4
+      ];
+
+      // Helper to check if an asset exists using HEAD (served by the same server)
+      function check(url) {
+        return fetch(url, { method: 'HEAD' }).then(function (res) {
+          return res.ok;
+        }).catch(function () { return false; });
+      }
+
+      // Clear any static badges we may have in markup to avoid duplicates
+      footerList.innerHTML = '';
+
+      // For each candidate, if exists, append appropriate element
+      Promise.all(candidates.map(function (c) { return check(c.file).then(function (ok) { return { ok: ok, meta: c }; }); }))
+        .then(function (results) {
+          results.filter(function (r) { return r.ok; }).forEach(function (r) {
+            var li = document.createElement('li');
+
+            if (r.meta.file.endsWith('.gif') || r.meta.file.endsWith('.png') || r.meta.file.endsWith('.jpg') || r.meta.file.endsWith('.webp')) {
+              var img = document.createElement('img');
+              img.src = r.meta.file;
+              img.width = 88;
+              img.height = 31;
+              img.decoding = 'async';
+              img.loading = 'lazy';
+              img.alt = r.meta.alt;
+              li.appendChild(img);
+            } else if (r.meta.file.endsWith('.mp4')) {
+              // Tiny video badge, muted inline looping; keep accessible name via aria-label
+              var vid = document.createElement('video');
+              vid.src = r.meta.file;
+              vid.width = 88;
+              vid.height = 31;
+              vid.muted = true;
+              vid.loop = true;
+              vid.playsInline = true;
+              vid.autoplay = true;
+              vid.setAttribute('aria-label', r.meta.alt);
+              vid.style.display = 'block';
+              li.appendChild(vid);
+            } else {
+              // Fallback to a link text if unexpected extension
+              var a = document.createElement('a');
+              a.href = r.meta.file;
+              a.textContent = r.meta.alt;
+              li.appendChild(a);
+            }
+
+            footerList.appendChild(li);
+          });
+        });
+    } catch (_) {}
+  })();
+
 })();
