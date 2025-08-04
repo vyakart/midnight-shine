@@ -1,0 +1,223 @@
+/*
+  themes.css
+  - Three Indian-inspired theme palettes with per-theme namespaces:
+    --spice-*, --holi-*, --heritage-*
+  - A shared mapping layer remaps the active theme’s namespaced vars to generic UI tokens:
+    --bg, --fg, --border, --link, --primary, --secondary, --accent, --success, --warning, --danger, --muted
+  - Activation via html[data-theme="spice" | "holi" | "heritage"].
+  - Accessibility: each palette includes contrast-conscious pairings.
+  - Does not modify existing styles; consumers continue using generic tokens.
+*/
+
+/* Base defaults (fallback if no data-theme is set). Keep close to current site palette. */
+:root {
+  --bg: #ffffff;
+  --fg: #0b1a34;
+  --border: #c9d6ff;
+  --link: #0057ff;
+
+  --primary: #0057ff;
+  --secondary: #1b1b1b;
+  --accent: #ff7a00;
+
+  --success: #1E7F4F;
+  --warning: #B26A00;
+  --danger: #B3202A;
+
+  --muted: #666666;
+
+  /* Focus and motion tokens (shared) */
+  --focus: #ff7a00;
+  --transition-fast: 180ms;
+
+  /* Typography color roles used by headings/brand/link accents */
+  --text-strong: var(--fg);
+  --text-muted: var(--muted);
+  --brand-fg: var(--fg);
+  --brand-accent: var(--link);
+
+  color-scheme: light;
+}
+
+/* ===========================
+   Theme 1: Spice Market Modern
+   Namespaced tokens (—spice-*)
+   =========================== */
+:root {
+  /* Spice tokens (do not use directly in components; mapped in the layer below) */
+  --spice-bg: #F7F2EA;      /* Jaggery Cream */
+  --spice-fg: #1B1B1B;      /* Kettle Black */
+  --spice-border: #8B7763;  /* Earthen Taupe */
+  --spice-link: #4E7D57;    /* Cardamom Green (links) */
+  --spice-primary: #E96C0B; /* Saffron Glow */
+  --spice-secondary: #D9A323; /* Turmeric Gold */
+  --spice-accent: #B3202A;  /* Chili Red */
+  --spice-success: #4E7D57; /* Cardamom Green */
+  --spice-warning: #D9A323; /* Turmeric */
+  --spice-danger: #B3202A;  /* Chili Red */
+  --spice-muted: #6E6358;   /* Softer taupe for muted text */
+
+  /* Spice typography accents */
+  --spice-text-strong: #1B1B1B;
+  --spice-text-muted: #6E6358;
+  --spice-brand-fg: #1B1B1B;
+  --spice-brand-accent: #E96C0B; /* saffron accent for headings/brand edge */
+}
+
+/* ===========================
+   Theme 2: Festive Holi Pop
+   Namespaced tokens (—holi-*)
+   =========================== */
+:root {
+  --holi-bg: #FCFAF5;       /* Sheer Off‑White */
+  --holi-fg: #2C0E37;       /* Deccan Plum (deep anchor) */
+  --holi-border: #8D9096;   /* Smoke Gray */
+  --holi-link: #007D81;     /* Peacock Teal */
+  --holi-primary: #E91E63;  /* Rani Pink */
+  --holi-secondary: #007D81;/* Peacock Teal */
+  --holi-accent: #FFA300;   /* Marigold Burst */
+  --holi-success: #2E8B57;  /* Sea Green variant for success */
+  --holi-warning: #B26A00;  /* Amber brown for warnings */
+  --holi-danger: #B3202A;   /* Strong red for errors */
+  --holi-muted: #6F6F76;    /* Muted gray-purple */
+
+  /* Holi typography accents */
+  --holi-text-strong: #2C0E37;
+  --holi-text-muted: #6F6F76;
+  --holi-brand-fg: #2C0E37;
+  --holi-brand-accent: #E91E63; /* rani pink accent for headings/brand edge */
+}
+
+/* ===========================
+   Theme 3: Heritage Stone & Silk
+   Namespaced tokens (—heritage-*)
+   =========================== */
+:root {
+  --heritage-bg: #FAF4E6;       /* Pale Sand */
+  --heritage-fg: #2A2A28;       /* Fort Shadow */
+  --heritage-border: #CBBFAE;   /* Worn Limestone */
+  --heritage-link: #0F6C6C;     /* Jaali Teal */
+  --heritage-primary: #B68E3A;  /* Sandstone Ochre */
+  --heritage-secondary: #0F6C6C;/* Jaali Teal */
+  --heritage-accent: #8E1F3F;   /* Ruby Silk */
+  --heritage-success: #1E6F5C;  /* Teal-lean success */
+  --heritage-warning: #996A1E;  /* Burnt ochre */
+  --heritage-danger: #8E1F3F;   /* Ruby */
+  --heritage-muted: #6B6457;    /* Stone-muted */
+
+  /* Heritage typography accents */
+  --heritage-text-strong: #2A2A28;
+  --heritage-text-muted: #6B6457;
+  --heritage-brand-fg: #2A2A28;
+  --heritage-brand-accent: #B68E3A; /* ochre accent for headings/brand edge */
+}
+
+/* ==============================================
+   Mapping Layer: remap chosen theme to generic UI tokens
+   Usage in components: var(--bg), var(--fg), var(--primary) etc.
+   ============================================== */
+
+/* Spice mapping */
+html[data-theme="spice"] {
+  --bg: var(--spice-bg);
+  --fg: var(--spice-fg);
+  --border: var(--spice-border);
+  --link: var(--spice-link);
+
+  --primary: var(--spice-primary);
+  --secondary: var(--spice-secondary);
+  --accent: var(--spice-accent);
+
+  --success: var(--spice-success);
+  --warning: var(--spice-warning);
+  --danger: var(--spice-danger);
+
+  --muted: var(--spice-muted);
+
+  /* Mapped typography for this theme */
+  --text-strong: var(--spice-text-strong);
+  --text-muted: var(--spice-text-muted);
+  --brand-fg: var(--spice-brand-fg);
+  --brand-accent: var(--spice-brand-accent);
+
+  color-scheme: light;
+}
+
+/* Holi mapping */
+html[data-theme="holi"] {
+  --bg: var(--holi-bg);
+  --fg: var(--holi-fg);
+  --border: var(--holi-border);
+  --link: var(--holi-link);
+
+  --primary: var(--holi-primary);
+  --secondary: var(--holi-secondary);
+  --accent: var(--holi-accent);
+
+  --success: var(--holi-success);
+  --warning: var(--holi-warning);
+  --danger: var(--holi-danger);
+
+  --muted: var(--holi-muted);
+
+  /* Mapped typography for this theme */
+  --text-strong: var(--holi-text-strong);
+  --text-muted: var(--holi-text-muted);
+  --brand-fg: var(--holi-brand-fg);
+  --brand-accent: var(--holi-brand-accent);
+
+  color-scheme: light;
+}
+
+/* Heritage mapping */
+html[data-theme="heritage"] {
+  --bg: var(--heritage-bg);
+  --fg: var(--heritage-fg);
+  --border: var(--heritage-border);
+  --link: var(--heritage-link);
+
+  --primary: var(--heritage-primary);
+  --secondary: var(--heritage-secondary);
+  --accent: var(--heritage-accent);
+
+  --success: var(--heritage-success);
+  --warning: var(--heritage-warning);
+  --danger: var(--heritage-danger);
+
+  --muted: var(--heritage-muted);
+
+  /* Mapped typography for this theme */
+  --text-strong: var(--heritage-text-strong);
+  --text-muted: var(--heritage-text-muted);
+  --brand-fg: var(--heritage-brand-fg);
+  --brand-accent: var(--heritage-brand-accent);
+
+  color-scheme: light;
+}
+
+/* ==============================================
+   Optional: sample component variables mapped from generic tokens
+   (Can be used by existing .button classes without structural changes)
+   ============================================== */
+
+:root, html[data-theme="spice"], html[data-theme="holi"], html[data-theme="heritage"] {
+  --button-bg: var(--primary);
+  --button-fg: #ffffff;
+  --button-border: transparent;
+
+  --button-outline-fg: var(--link);
+  --button-outline-border: var(--link);
+
+  --surface-card: #ffffff;
+  --surface-card-border: var(--border);
+}
+
+/* Ensure backgrounds and text apply site-wide where generic tokens are used */
+html[data-theme="spice"] body,
+html[data-theme="holi"] body,
+html[data-theme="heritage"] body {
+  background: var(--bg);
+  color: var(--fg);
+}
+
+/* Accessibility helpers: focus visibility remains driven by --focus already defined. */

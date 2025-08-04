@@ -6,6 +6,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="Brazilian Jiu-Jitsu, astrophotography, mathematics, physics, effective altruism, phenomenology, meditation, and design—woven into a single practice.">
   <meta name="robots" content="index, follow">
+  <meta name="color-scheme" content="light dark">
+  <script>
+    // Pre-paint theme setter to avoid flash; minimal and sync with main.js
+    (function () {
+      try {
+        var d = document.documentElement;
+        var stored = localStorage.getItem('theme');
+        var mql = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)');
+        var dark = stored ? stored === 'dark' : (mql ? mql.matches : false);
+        if (dark) d.classList.add('dark'); else d.classList.remove('dark');
+      } catch (_) {}
+    })();
+  </script>
 
   <!-- Canonical (update href after deploy if using a custom domain) -->
   <link rel="canonical" href="https://example.netlify.app/">
@@ -27,6 +40,7 @@
 
   <!-- Styles -->
   <link rel="stylesheet" href="./css/styles.css">
+  <link rel="stylesheet" href="./css/themes.css">
 
   <!-- Fonts (consider self-hosting in production) -->
   <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
@@ -45,15 +59,24 @@
           <span class="brand-fixed">Nishit</span>
         </h1>
       </div>
-      <nav class="site-nav" aria-label="Theme switcher">
-        <button id="theme-toggle" class="theme-toggle" aria-pressed="false" aria-label="Toggle color theme">
-          <span class="toggle-track" aria-hidden="true">
-            <span class="tick-marks"></span>
-          </span>
-          <span class="toggle-thumb" aria-hidden="true">
-            <span class="icon"></span>
-          </span>
-        </button>
+      <nav class="site-nav" aria-label="Site navigation">
+        <!-- Theme switcher moved to header (right aligned) -->
+        <div class="theme-switcher" aria-label="Theme switcher">
+          <div role="group" aria-label="Select color theme" class="theme-switcher-group">
+            <button type="button" class="button outline theme-btn" data-theme="spice" aria-pressed="false" aria-label="Use Spice theme">
+              <img src="/assets/icons/theme/indian%20spice.png" alt="" width="24" height="24" aria-hidden="true" decoding="async" loading="lazy">
+              <span class="visually-hidden">Spice</span>
+            </button>
+            <button type="button" class="button outline theme-btn" data-theme="holi" aria-pressed="false" aria-label="Use Holi theme">
+              <img src="/assets/icons/theme/holi.png" alt="" width="24" height="24" aria-hidden="true" decoding="async" loading="lazy">
+              <span class="visually-hidden">Holi</span>
+            </button>
+            <button type="button" class="button outline theme-btn" data-theme="heritage" aria-pressed="false" aria-label="Use Heritage theme">
+              <img src="/assets/icons/theme/heritage.png" alt="" width="24" height="24" aria-hidden="true" decoding="async" loading="lazy">
+              <span class="visually-hidden">Heritage</span>
+            </button>
+          </div>
+        </div>
       </nav>
     </div>
   </header>
@@ -134,22 +157,12 @@
     </section>
 
 
-    <section class="section contact" id="contact" aria-labelledby="contact-title">
-      <div class="container narrow">
-        <h2 id="contact-title">Contact</h2>
-        <p>Open to collaborations, learning exchanges, and projects that demand both depth and play.</p>
-        <p>
-          <a class="button outline" href="mailto:imayreply@vyakart.com" aria-label="Email: imayreply@vyakart.com">
-            imayreply@vyakart.com
-          </a>
-        </p>
-      </div>
-    </section>
   </main>
 
   <footer class="site-footer">
     <div class="container footer-inner">
       <p>Contact: <a href="mailto:imayreply@vyakart.com" aria-label="Email: imayreply@vyakart.com">imayreply@vyakart.com</a></p>
+
       <nav aria-label="88 by 31 badges">
         <ul class="footer-links">
           <li>

@@ -9,49 +9,50 @@
   var yearEl = document.getElementById('year');
   if (yearEl) yearEl.textContent = new Date().getFullYear();
 
-  // Theme init: accessible, persists, respects system, syncs aria state
+  // Theme init (final): three named themes via html[data-theme] + footer buttons, with persistence.
   (function initTheme() {
     try {
       var html = document.documentElement;
-      var stored = localStorage.getItem('theme');
-      var mql = window.matchMedia ? window.matchMedia('(prefers-color-scheme: dark)') : null;
-      var prefersDark = mql ? mql.matches : false;
 
-      function applyTheme(mode) {
-        var isDark = mode === 'dark';
-        html.classList.toggle('dark', isDark);
-        var btn = document.getElementById('theme-toggle');
-        if (btn) btn.setAttribute('aria-pressed', String(isDark));
-        // Dispatch a custom event for any listeners
-        var ev = new CustomEvent('theme-changed', { detail: { theme: mode } });
-        document.dispatchEvent(ev);
+      function applyNamedTheme(name) {
+        var allowed = { spice:1, holi:1, heritage:1 };
+        var finalName = allowed[name] ? name : 'spice';
+        html.setAttribute('data-theme', finalName);
+        html.classList.remove('dark'); // remove legacy class to avoid conflicts
+        setPressed(finalName);
+        try { localStorage.setItem('theme', finalName); } catch (_) {}
+        document.dispatchEvent(new CustomEvent('theme-changed', { detail: { theme: finalName } }));
       }
 
-      var initial = stored ? stored : (prefersDark ? 'dark' : 'light');
-      applyTheme(initial);
-
-      // React to system changes if user hasn't explicitly chosen
-      if (mql) {
-        mql.addEventListener && mql.addEventListener('change', function (e) {
-          var saved = localStorage.getItem('theme');
-          if (!saved) {
-            applyTheme(e.matches ? 'dark' : 'light');
-          }
+      function setPressed(active) {
+        var buttons = document.querySelectorAll('.theme-btn[data-theme]');
+        buttons.forEach(function(b) {
+          var isActive = b.getAttribute('data-theme') === active;
+          b.setAttribute('aria-pressed', String(isActive));
         });
       }
 
-      var btn = document.getElementById('theme-toggle');
-      if (btn) {
-        btn.addEventListener('click', function () {
-          var nowDark = !html.classList.contains('dark');
-          var next = nowDark ? 'dark' : 'light';
-          applyTheme(next);
-          try { localStorage.setItem('theme', next); } catch (_) {}
+      // Determine starting theme
+      var stored = null;
+      try { stored = localStorage.getItem('theme'); } catch (_) {}
+      applyNamedTheme(stored || 'spice');
+
+      // Wire up footer theme switcher buttons
+      var switcherButtons = document.querySelectorAll('.theme-btn[data-theme]');
+      switcherButtons.forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          var target = btn.getAttribute('data-theme');
+          applyNamedTheme(target);
         });
-        // Keyboard operability is native for button, but ensure Space toggles in some browsers
-        btn.addEventListener('keydown', function (e) {
-          if (e.code === 'Space') { e.preventDefault(); btn.click(); }
+        btn.addEventListener('keydown', function(e) {
+          if (e.code === 'Space' || e.key === ' ') { e.preventDefault(); btn.click(); }
         });
+      });
+
+      // Remove legacy header toggle listeners if element still exists (header slider removed)
+      var legacyToggle = document.getElementById('theme-toggle');
+      if (legacyToggle) {
+        legacyToggle.replaceWith(document.createComment('header theme toggle removed'));
       }
     } catch (_) {}
   })();

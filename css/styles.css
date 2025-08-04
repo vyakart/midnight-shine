@@ -56,17 +56,31 @@ html, body {
   --font-mono: "Recursive Mono Casual", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
   --font-brand: "Recursive Mono Semicasual", "Recursive Mono Casual", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 
-  /* Theme tokens (light by default) */
-  --bg: #ffffff;
-  --fg: #0e0e0e;
-  --border: #eeeeee;
-  --link: #0b5fff;
+  /* Theme tokens (light by default) — Electric Blue UI */
+  --bg: #ffffff;         /* white background */
+  --fg: #0b1a34;         /* deep navy text for comfortable reading on white */
+  --border: #c9d6ff;     /* light blue border to echo primary */
+  --link: #0057ff;       /* electric blue primary */
+
+  /* Focus + motion tokens */
+  --focus: #ff7a00;
+  --transition-fast: 180ms;
+
+  color-scheme: light dark; /* ensure native controls adapt */
+}
+
+/* Dark theme overrides via html.dark — Pure black/white minimalism */
+html.dark {
+  --bg: #000000;   /* pure black */
+  --fg: #ffffff;   /* pure white */
+  --border: #2a2a2a; /* subtle separators on black */
+  --link: #9ad1ff;   /* keep links readable with a soft blue */
 }
 
 body {
   font-family: var(--font-sans);
   line-height: 1.6;
-  color: var(--fg);
+  color: var(--text-strong, var(--fg));
   background: var(--bg);
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -85,7 +99,7 @@ p {
   margin: 0 0 1rem;
 }
 .subheadline {
-  color: #444;
+  color: var(--text-muted, #444);
   max-width: 60ch;
 }
 
@@ -113,6 +127,7 @@ p {
   z-index: 10;
   background: var(--bg, #fff);
   border-bottom: 1px solid var(--border, #eee);
+  color: var(--brand-fg, var(--text-strong, var(--fg)));
 }
 
 /* Full-viewport animated gradient canvas behind all content */
@@ -153,7 +168,7 @@ p {
   line-height: 1.1;
 }
 .brand-fixed {
-  color: var(--fg);
+  color: var(--brand-fg, var(--fg));
   font-family: var(--font-brand);
   font-weight: 700;
   letter-spacing: 0.005em; /* slightly looser for RecMonoSemicasual */
@@ -173,7 +188,7 @@ p {
   left: 0;
   top: 0;
   transform: translateY(0);
-  color: #0057ff;
+  color: var(--brand-accent, var(--link));
   animation: fadeSlideIn 0.4s ease forwards;
   will-change: transform, opacity;
   /* Avoid clipping for scripts with tall ascenders/descenders */
@@ -202,7 +217,7 @@ p {
   font-size: 18px;
 }
 .site-nav a:hover {
-  background: #f1f3f7;
+  background: #eaf1ff; /* light blue hover to match electric theme */
   text-decoration: none;
 }
 /* Remove default ul layout since theme toggle is a button */
@@ -217,10 +232,10 @@ p {
 .site-nav a,
 .footer-links a {
   text-decoration: none;
-  /* Ensure link contrast in light and dark themes (>=4.5:1) */
+  /* Ensure link contrast in active theme (>=4.5:1) */
   color: var(--link);
 }
-html.dark :root { --link: #9ad1ff; }
+/* removed redundant link override (handled above) */
 .site-nav a:hover,
 .footer-links a:hover {
   text-decoration: underline;
@@ -228,7 +243,7 @@ html.dark :root { --link: #9ad1ff; }
 }
 .site-nav a:focus-visible,
 .footer-links a:focus-visible {
-  outline: 3px solid #ff7a00;
+  outline: 3px solid var(--focus);
   outline-offset: 3px;
   border-radius: 6px;
 }
@@ -252,7 +267,7 @@ html.dark :root { --link: #9ad1ff; }
   cursor: pointer;
 }
 .theme-toggle:focus-visible {
-  outline: 3px solid #ff7a00;
+  outline: 3px solid var(--focus);
   outline-offset: 3px;
 }
 .theme-toggle .toggle-track {
@@ -286,7 +301,7 @@ html.dark :root { --link: #9ad1ff; }
     0 8px 16px rgba(0,0,0,0.18),
     0 0 0 1px rgba(0,0,0,0.05) inset;
   transform: translateX(0);
-  transition: transform 240ms ease;
+  transition: transform var(--transition-fast) ease;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -308,13 +323,7 @@ html.dark :root { --link: #9ad1ff; }
 html.dark .theme-toggle .toggle-thumb {
   transform: translateX(calc(140px - 40px));
 }
-/* Dark theme colors */
-html.dark {
-  --bg: #0f2a26;
-  --fg: #e6f2ed;
-  --border: #1a3a33;
-  --link: #9ad1ff;
-}
+/* Dark theme colors handled above; keep body fallback */
 html.dark body {
   background: var(--bg);
   color: var(--fg);
@@ -342,12 +351,12 @@ html.dark .theme-toggle {
   border: 2px solid transparent;
 }
 .button:focus-visible {
-  outline: 3px solid #ff7a00;
+  outline: 3px solid var(--focus);
   outline-offset: 3px;
 }
 .button.primary {
-  background: #0e0e0e;
-  color: #fff;
+  background: #0057ff;  /* electric blue button */
+  color: #ffffff;
 }
 /* Accessible disabled state */
 .button[aria-disabled="true"],
@@ -361,8 +370,8 @@ html.dark .theme-toggle {
 }
 .button.outline {
   background: transparent;
-  color: #0e0e0e;
-  border-color: #0e0e0e;
+  color: #0057ff;
+  border-color: #0057ff;
 }
 /* Dark theme outline button contrast */
 html.dark .button.outline {
@@ -370,8 +379,8 @@ html.dark .button.outline {
   border-color: #e6f2ed;
 }
 .button.outline:hover {
-  background: #0e0e0e;
-  color: #fff;
+  background: #0057ff;
+  color: #ffffff;
 }
 
 /* Topics (legacy) */
@@ -576,21 +585,21 @@ html.dark .button.outline {
 .carousel-cap-title {
   font: 700 1.2rem/1.25 var(--font-sans);
   margin: 0;
-  color: #0e0e0e;
+  color: var(--text-strong, var(--fg));
 }
 html.dark .carousel-cap-title { color: #e6f2ed; }
 
 .carousel-cap-sub {
   font: 600 1rem/1.3 var(--font-sans);
   margin: 0;
-  color: #2f2f2f;
+  color: var(--text-muted, #2f2f2f);
 }
 html.dark .carousel-cap-sub { color: #cfe5db; }
 
 .carousel-cap-desc {
   font: 400 0.98rem/1.45 var(--font-sans);
   margin: 0;
-  color: #1f1f1f;
+  color: var(--fg);
   max-width: 48ch;
 }
 html.dark .carousel-cap-desc { color: #e8f1ec; }
@@ -634,7 +643,7 @@ html:not(.dark) .ticker-item[aria-selected="true"] {
   border-color: #0e0e0e;
 }
 .ticker-item:focus-visible {
-  outline: 2px solid #ff7a00;
+  outline: 2px solid var(--focus);
   outline-offset: 3px;
 }
 
@@ -859,7 +868,7 @@ html:not(.dark) .ticker-item[aria-selected="true"] {
 .site-footer {
   border-top: 1px solid var(--border);
   padding: 24px 0;
-  color: var(--fg);
+  color: var(--text-strong, var(--fg));
 }
 .footer-inner {
   display: flex;
@@ -911,7 +920,7 @@ a:focus-visible,
 button:focus-visible,
 .button:focus-visible,
 summary:focus-visible {
-  outline: 3px solid #ff7a00;
+  outline: 3px solid var(--focus);
   outline-offset: 3px;
 }
 /* Ensure minimum 44px touch target for buttons; dots are visual-only small but still focusable */
@@ -1057,7 +1066,7 @@ html:not(.dark) .carousel-cap-sub { color: #4a4a4a; }
   opacity: 0.6;
 }
 .terminal-resize:focus-visible {
-  outline: 2px solid #ff7a00;
+  outline: 2px solid var(--focus);
   outline-offset: 2px;
 }
 
