@@ -110,28 +110,33 @@
       <div class="container">
         <h2 id="topics-title">Interests</h2>
 
-        <!-- Accessible Media Carousel -->
-        <section id="showcase-carousel" class="carousel" aria-labelledby="topics-title">
-          <div class="carousel-grid">
-            <div class="carousel-media">
-              <!-- Main stage strictly contained in a smaller frame -->
-              <div class="media-frame" aria-live="polite">
-                <!-- Slides injected by JS should now mount <video> tags instead of GIFs -->
-                <!-- Example fallback markup if JS is disabled (safe placeholder) -->
-                <img src="./assets/posters/meditation.png" alt="" decoding="async" loading="lazy">
+        <!-- Netflix-style Infinite Horizontal Scroller -->
+        <section id="showcase-carousel" class="nf-row" aria-labelledby="topics-title">
+          <div class="nf-viewport" role="region" aria-label="Interests carousel">
+            <div class="nf-track" role="list">
+              <!-- Cards injected by JS; fallback for no-JS: -->
+              <div class="nf-card" role="listitem" tabindex="0" aria-label="Meditation">
+                <img class="poster" src="./assets/posters/meditation.png" alt="Meditation poster" decoding="async" loading="eager">
+                <div class="nf-overlay">
+                  <div class="nf-title">Meditation</div>
+                  <div class="nf-sub">Awareness as Craft</div>
+                </div>
               </div>
-              <!-- Minimal dots -->
-              <div class="carousel-ticker" role="tablist" aria-label="Slide navigation">
-                <!-- Ticker items injected by JS -->
+              <div class="nf-card" role="listitem" tabindex="-1" aria-label="Brazilian Jiu‑Jitsu">
+                <img class="poster" src="./assets/posters/bjj.png" alt="Brazilian Jiu‑Jitsu poster" decoding="async" loading="lazy">
+                <div class="nf-overlay">
+                  <div class="nf-title">Brazilian Jiu‑Jitsu</div>
+                  <div class="nf-sub">Dialogue in Movement</div>
+                </div>
+              </div>
+              <div class="nf-card" role="listitem" tabindex="-1" aria-label="Photography">
+                <img class="poster" src="./assets/posters/astro.png" alt="Photography poster" decoding="async" loading="lazy">
+                <div class="nf-overlay">
+                  <div class="nf-title">Photography</div>
+                  <div class="nf-sub">The Art of Noticing</div>
+                </div>
               </div>
             </div>
-
-            <!-- Descriptor on the right -->
-            <aside class="carousel-aside" aria-live="polite">
-              <h3 class="carousel-cap-title"></h3>
-              <p class="carousel-cap-sub"></p>
-              <p class="carousel-cap-desc"></p>
-            </aside>
           </div>
         </section>
       </div>

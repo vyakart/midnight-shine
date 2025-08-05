@@ -466,346 +466,103 @@ html.dark .button.outline {
   padding-left: 1.25rem;
 }
 
-/* Carousel (Two‑column with horizontal title ticker) */
-.carousel {
-  position: relative;
-  margin-top: 8px;
-}
+/* Netflix-style Infinite Row (square cards, hover/focus overlay) */
+.nf-row { margin-top: 8px; }
 
-/* Reusable media frame to strictly contain posters and videos */
-.media-frame {
+.nf-viewport {
   position: relative;
   width: 100%;
-  max-width: 460px;      /* reduce overall visual size */
-  aspect-ratio: 1 / 1;   /* make square */
+  overflow: hidden;            /* clip vertical overflow */
   border-radius: 16px;
-  overflow: hidden;      /* clip children to rounded rect */
-  background: #000;      /* prevents page show-through while loading */
-  box-shadow:
-    0 8px 30px rgba(0,0,0,.15),
-    0 2px 6px rgba(0,0,0,.08);
-}
-
-/* Any media inside the frame fills and crops without distortion */
-.media-frame > img,
-.media-frame > video {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center;
   background: transparent;
 }
-.carousel-grid {
-  display: grid;
-  grid-template-columns: 1.1fr 0.9fr; /* rebalance a bit for square frame */
-  gap: 20px;
-  align-items: start; /* keep content aligned to top */
-}
-@media (max-width: 880px) {
-  .carousel-grid {
-    grid-template-columns: 1fr;
-  }
-}
-.carousel-media {
-  display: grid;
-  gap: 10px;
-  justify-items: center; /* center the square media frame horizontally */
+
+.nf-track {
+  display: inline-flex;        /* force horizontal layout */
+  flex-wrap: nowrap;           /* single row only */
+  gap: 14px;
+  padding: 8px;
+  will-change: transform;
+  transform: translateX(0);
+  white-space: nowrap;         /* prevent wrapping from fonts */
 }
 
-/* Layered single-slide stage updated to square 1:1 frame */
-.stage-viewport {
+.nf-card {
   position: relative;
-  width: 100%;
-  aspect-ratio: 1 / 1; /* square */
-  border-radius: 16px;
+  display: block;
+  flex: 0 0 auto;
+  width: clamp(140px, 22vw, 240px);
+  aspect-ratio: 1 / 1;         /* enforce perfect square */
+  height: auto;
+  border-radius: 12px;
   overflow: hidden;
-  background: #000; /* solid to avoid page show-through during load */
-  box-shadow:
-    0 8px 30px rgba(0,0,0,0.15),
-    0 2px 6px rgba(0,0,0,0.08);
-  contain: layout paint size;
-  backface-visibility: hidden;
+  background: #000;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.18), 0 1px 3px rgba(0,0,0,0.12);
+  outline: none;
 }
 
-/* Each slide stacked; no crossfade/translate — instant swap via opacity only */
-.stage-slide {
+.nf-card .poster,
+.nf-card .preview {
   position: absolute;
   inset: 0;
-  display: grid;
-  place-items: center;
-  opacity: 0;
-  transition: opacity 80ms linear; /* keep a tiny fade to avoid harsh flash */
-  will-change: opacity;
-  backface-visibility: hidden;
-}
-
-/* Media fills the frame with no letterboxing */
-.stage-slide img,
-.stage-slide video {
+  width: 100%;
+  height: 100%;
   display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;   /* crop to frame, no letterboxing */
-  object-position: center;
-  background: transparent;
-}
-
-/* Active state: visible only (no translate) */
-.stage-slide.is-active {
-  opacity: 1;
-  z-index: 2;
-}
-.stage-video {
-  width: 100%;
-  height: 100%;
-}
-
-/* Outgoing slide: immediately behind */
-.stage-slide.is-exit {
-  opacity: 0;
-  z-index: 1;
-}
-
-/* Reduced motion: only impact these stage transitions (disable even the tiny fade) */
-@media (prefers-reduced-motion: reduce) {
-  .stage-slide {
-    transition: none !important;
-  }
-}
-/* Legacy viewport (kept for structure, but stage-viewport is used now) */
-.carousel-viewport {
-  position: relative;
-  overflow: visible;
-  border-radius: 0;
-  background: transparent;
-  box-shadow: none;
-  padding: 0;
-}
-
-/* Horizontal row is no longer used for the main stage */
-.row-viewport {
-  display: none;
-}
-.row-track {
-  display: grid;
-  grid-auto-flow: column;
-  /* Single-card viewport width, no extra margins */
-  grid-auto-columns: 100%;
-  gap: 0;
-  padding-bottom: 0;
-}
-@media (min-width: 520px) { .row-track { grid-auto-columns: 60%; } }
-@media (min-width: 768px) { .row-track { grid-auto-columns: 48%; } }
-@media (min-width: 1024px){ .row-track { grid-auto-columns: 40%; } }
-
-.row-card {
-  position: relative;
-  scroll-snap-align: start;
-  border-radius: 14px;
-  overflow: hidden;
-  /* No background so edges are exactly the media bounds */
-  background: transparent;
-  /* Square cards per request */
-  aspect-ratio: 1 / 1;
-  width: 100%;
-  box-shadow:
-    0 20px 40px rgba(0,0,0,0.25);
-  cursor: pointer;
-}
-.row-card button {
-  all: unset;
-  display: contents; /* keep semantics, children handle visuals */
-}
-
-/* Poster / Preview (legacy row cards) */
-.row-poster,
-.row-preview {
-  width: 100%;
-  height: 100%;
   object-fit: cover;
   object-position: center;
-  display: block;
-  transition: opacity 200ms ease;
   border-radius: inherit;
   background: transparent;
 }
-.row-preview {
-  position: absolute;
-  inset: 0;
+
+.nf-card .preview {
   opacity: 0;
-  pointer-events: none;
+  transition: opacity 200ms ease;
 }
-.row-card.is-active .row-preview { opacity: 1; }
-.row-card.is-active .row-poster { opacity: 0; }
 
-/* Remove overlay text on posters/gifs (descriptor lives on right) */
-.row-overlay { display: none; }
-.row-title { display: none; }
-.row-desc { display: none; }
-
-/* Descriptor (right column) — centered per request with strong contrast */
-.carousel-aside {
-  padding: 12px 8px 0;
-  color: var(--fg, #0e0e0e);
-  display: grid;
-  /* Center vertically, then nudge slightly upward per feedback */
-  align-content: center;
-  justify-items: center;   /* center horizontally */
-  text-align: center;      /* center text */
-  gap: 8px;
-  min-height: 100%;
-  transform: translateY(-10px);
+.nf-card:hover .preview,
+.nf-card:focus-visible .preview {
+  opacity: 1;
 }
-.carousel-cap-title {
-  font: 700 1.2rem/1.25 var(--font-sans);
-  margin: 0;
-  color: var(--text-strong, var(--fg));
-}
-html.dark .carousel-cap-title { color: #e6f2ed; }
 
-.carousel-cap-sub {
-  font: 600 1rem/1.3 var(--font-sans);
-  margin: 0;
-  color: var(--text-muted, #2f2f2f);
-}
-html.dark .carousel-cap-sub { color: #cfe5db; }
-
-.carousel-cap-desc {
-  font: 400 0.98rem/1.45 var(--font-sans);
-  margin: 0;
-  color: var(--fg);
-  max-width: 48ch;
-}
-html.dark .carousel-cap-desc { color: #e8f1ec; }
-
-/* Stage overlay text inside each slide: always visible; non-blocking */
-.stage-overlay {
+.nf-overlay {
   position: absolute;
   left: 0;
   right: 0;
   bottom: 0;
-  z-index: 3;
   padding: 10px 12px;
   display: grid;
   gap: 2px;
   color: #fff;
   text-shadow: 0 1px 2px rgba(0,0,0,.5);
-  background:
-    linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,.45) 55%, rgba(0,0,0,.65) 100%);
-  pointer-events: none; /* do not block interactions */
-}
-.stage-overlay-title {
-  font: 700 0.95rem/1.2 var(--font-sans);
-}
-.stage-overlay-sub {
-  font: 600 0.8rem/1.2 var(--font-sans);
-  opacity: 0.9;
-}
-
-/* Conveyor belt below main stage */
-.conveyor-viewport {
-  position: relative;
-  width: 100%;
-  max-width: 460px;
-  overflow: hidden;
-  border-radius: 12px;
-  margin-top: 10px;
-  background: #000;
-  box-shadow:
-    0 6px 18px rgba(0,0,0,0.18),
-    0 1px 3px rgba(0,0,0,0.08);
-}
-.conveyor-track {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px;
-  will-change: transform;
-  animation: conveyor-scroll 30s linear infinite;
-}
-.conveyor-item {
-  position: relative;
-  flex: 0 0 auto;
-  width: 110px;
-  height: 110px;
-  border-radius: 10px;
-  overflow: hidden;
-  background: #111;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.35);
-}
-.conveyor-item video {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-}
-.conveyor-label {
-  position: absolute;
-  left: 6px;
-  bottom: 6px;
-  right: 6px;
-  color: #fff;
-  font: 700 0.65rem/1.1 var(--font-sans);
-  text-shadow: 0 1px 2px rgba(0,0,0,.6);
+  background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,.45) 55%, rgba(0,0,0,.65) 100%);
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity 180ms ease, transform 180ms ease;
   pointer-events: none;
 }
 
-/* Smaller on narrow screens */
-@media (max-width: 480px) {
-  .conveyor-item { width: 88px; height: 88px; }
+.nf-card:hover .nf-overlay,
+.nf-card:focus-visible .nf-overlay {
+  opacity: 1;
+  transform: translateY(0);
 }
 
-/* Continuous left scrolling; ensure long enough loop for seamless appearance */
-@keyframes conveyor-scroll {
-  from { transform: translateX(0); }
-  to   { transform: translateX(-50%); }
-}
+.nf-title { font: 700 0.95rem/1.2 var(--font-sans); }
+.nf-sub   { font: 600 0.8rem/1.2 var(--font-sans); opacity: 0.92; }
 
-/* Minimal dots (replaces title ticker) */
-.carousel-ticker {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 10px;
-  padding-top: 10px;
-  overflow: visible;
-}
-.ticker-item {
-  width: 8px;
-  height: 8px;
-  min-width: 8px; /* override 44px touch target; container still accessible via keyboard */
-  min-height: 8px;
-  border-radius: 50%;
-  background: rgba(255,255,255,0.35);
-  border: 1px solid rgba(255,255,255,0.55);
-  padding: 0;
-  line-height: 0;
-  display: inline-block;
-  cursor: pointer;
-}
-.ticker-item:hover {
-  transform: scale(1.1);
-}
-.ticker-item[aria-selected="true"] {
-  background: #ffffff;
-  border-color: #ffffff;
-  transform: scale(1.2);
-}
-html:not(.dark) .ticker-item {
-  background: rgba(0,0,0,0.18);
-  border-color: rgba(0,0,0,0.35);
-}
-html:not(.dark) .ticker-item[aria-selected="true"] {
-  background: #0e0e0e;
-  border-color: #0e0e0e;
-}
-.ticker-item:focus-visible {
-  outline: 2px solid var(--focus);
+.nf-card:focus-visible {
+  outline: 3px solid var(--focus);
   outline-offset: 3px;
+  border-radius: 14px;
+}
+
+@media (max-width: 480px) {
+  .nf-track { gap: 10px; }
+  .nf-card { width: clamp(120px, 48vw, 180px); }
 }
 
 /* Focus rings remain via global :focus-visible */
+/* Remove legacy carousel UI (ticker, stage, conveyor, aside) references now unused */
 
 /* Reduced motion: disable GIF swap animation */
 @media (prefers-reduced-motion: reduce) {
