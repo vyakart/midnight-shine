@@ -61,13 +61,23 @@
         </h1>
       </div>
       <nav class="site-nav" aria-label="Site navigation">
-        <!-- Theme switcher moved to header (right aligned) -->
-        <div class="theme-switcher" aria-label="Theme switcher">
-          <div role="group" aria-label="Select color theme" class="theme-switcher-group" style="display:flex;gap:14px;align-items:center;">
-            <img src="./assets/icons/theme/spice.svg" alt="Use Spice theme" class="theme-icon" width="56" height="56" data-theme="spice" role="button" tabindex="0" style="cursor:pointer;filter: drop-shadow(0 1px 1px rgba(0,0,0,.15));">
-            <img src="./assets/icons/theme/holi.svg" alt="Use Holi theme" class="theme-icon" width="56" height="56" data-theme="holi" role="button" tabindex="0" style="cursor:pointer;filter: drop-shadow(0 1px 1px rgba(0,0,0,.15));">
-            <img src="./assets/icons/theme/heritage.svg" alt="Use Heritage theme" class="theme-icon" width="56" height="56" data-theme="heritage" role="button" tabindex="0" style="cursor:pointer;filter: drop-shadow(0 1px 1px rgba(0,0,0,.15));">
+        <div class="site-actions" style="display:flex;align-items:center;gap:18px;">
+          <!-- Theme switcher (left within actions) -->
+          <div class="theme-switcher" aria-label="Theme switcher">
+            <div role="group" aria-label="Select color theme" class="theme-switcher-group" style="display:flex;gap:14px;align-items:center;">
+              <img src="./assets/icons/theme/spice.svg" alt="Use Spice theme" class="theme-icon" width="56" height="56" data-theme="spice" role="button" tabindex="0" style="cursor:pointer;filter: drop-shadow(0 1px 1px rgba(0,0,0,.15));">
+              <img src="./assets/icons/theme/holi.svg" alt="Use Holi theme" class="theme-icon" width="56" height="56" data-theme="holi" role="button" tabindex="0" style="cursor:pointer;filter: drop-shadow(0 1px 1px rgba(0,0,0,.15));">
+              <img src="./assets/icons/theme/heritage.svg" alt="Use Heritage theme" class="theme-icon" width="56" height="56" data-theme="heritage" role="button" tabindex="0" style="cursor:pointer;filter: drop-shadow(0 1px 1px rgba(0,0,0,.15));">
+            </div>
           </div>
+          <!-- CV link (right-most) -->
+          <a href="/assets/Nishit_cv.pdf"
+             class="cv-link-header"
+             target="_blank"
+             rel="noopener noreferrer"
+             aria-label="Open CV PDF in a new tab">
+            CV
+          </a>
         </div>
       </nav>
     </div>
@@ -171,7 +181,16 @@
 
     <section class="section practice" id="practice" aria-labelledby="practice-title">
       <div class="container narrow">
-        <h2 id="practice-title">Practice</h2>
+        <div class="practice-header">
+          <h2 id="practice-title">Practice</h2>
+          <a href="/assets/Nishit_cv.pdf"
+             class="btn cv-btn"
+             target="_blank"
+             rel="noopener noreferrer"
+             aria-label="Open CV PDF in a new tab">
+            CV
+          </a>
+        </div>
         <ul class="principles">
           <li>Reduce to essentials.</li>
           <li>Test in reality.</li>

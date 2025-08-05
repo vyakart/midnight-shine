@@ -433,6 +433,41 @@ html.dark .theme-toggle {
   background: #0057ff;  /* electric blue button */
   color: #ffffff;
 }
+
+/* Practice header: title left, CV button right */
+.practice-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 12px;
+}
+
+/* Reuse existing .button styles to create a subtle outline CV button */
+.cv-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 8px 14px;
+  border-radius: 8px;
+  border: 1px solid currentColor;
+  background: transparent;
+  color: inherit;
+  text-decoration: none;
+  font-weight: 600;
+  line-height: 1.2;
+  transition: background .2s ease, color .2s ease, border-color .2s ease, transform .05s ease;
+}
+.cv-btn:hover {
+  background: rgba(0,0,0,0.05);
+}
+html.dark .cv-btn:hover {
+  background: rgba(255,255,255,0.08);
+}
+.cv-btn:active {
+  transform: translateY(1px);
+}
 /* Accessible disabled state */
 .button[aria-disabled="true"],
 .button[disabled] {
