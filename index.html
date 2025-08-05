@@ -41,6 +41,7 @@
   <!-- Styles -->
   <link rel="stylesheet" href="./css/styles.css">
   <link rel="stylesheet" href="./css/themes.css">
+  <link rel="stylesheet" href="./css/utilities.css">
 
   <!-- Fonts (consider self-hosting in production) -->
   <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
@@ -62,24 +63,17 @@
       <nav class="site-nav" aria-label="Site navigation">
         <!-- Theme switcher moved to header (right aligned) -->
         <div class="theme-switcher" aria-label="Theme switcher">
-          <div role="group" aria-label="Select color theme" class="theme-switcher-group">
-            <button type="button" class="button outline theme-btn" data-theme="spice" aria-pressed="false" aria-label="Use Spice theme">
-              <img src="/assets/icons/theme/indian%20spice.png" alt="" width="24" height="24" aria-hidden="true" decoding="async" loading="lazy">
-              <span class="visually-hidden">Spice</span>
-            </button>
-            <button type="button" class="button outline theme-btn" data-theme="holi" aria-pressed="false" aria-label="Use Holi theme">
-              <img src="/assets/icons/theme/holi.png" alt="" width="24" height="24" aria-hidden="true" decoding="async" loading="lazy">
-              <span class="visually-hidden">Holi</span>
-            </button>
-            <button type="button" class="button outline theme-btn" data-theme="heritage" aria-pressed="false" aria-label="Use Heritage theme">
-              <img src="/assets/icons/theme/heritage.png" alt="" width="24" height="24" aria-hidden="true" decoding="async" loading="lazy">
-              <span class="visually-hidden">Heritage</span>
-            </button>
+          <div role="group" aria-label="Select color theme" class="theme-switcher-group" style="display:flex;gap:14px;align-items:center;">
+            <img src="./assets/icons/theme/spice.svg" alt="Use Spice theme" class="theme-icon" width="56" height="56" data-theme="spice" role="button" tabindex="0" style="cursor:pointer;filter: drop-shadow(0 1px 1px rgba(0,0,0,.15));">
+            <img src="./assets/icons/theme/holi.svg" alt="Use Holi theme" class="theme-icon" width="56" height="56" data-theme="holi" role="button" tabindex="0" style="cursor:pointer;filter: drop-shadow(0 1px 1px rgba(0,0,0,.15));">
+            <img src="./assets/icons/theme/heritage.svg" alt="Use Heritage theme" class="theme-icon" width="56" height="56" data-theme="heritage" role="button" tabindex="0" style="cursor:pointer;filter: drop-shadow(0 1px 1px rgba(0,0,0,.15));">
           </div>
         </div>
       </nav>
     </div>
   </header>
+
+  <!-- Floating Theme Toggle Button removed per request -->
 
   <main id="main" class="site-main">
     <section class="section hero" aria-labelledby="hero-title">
@@ -140,6 +134,33 @@
             </aside>
           </div>
         </section>
+      </div>
+    </section>
+
+    <!-- Values section inserted before Practice -->
+    <section class="section values" id="values" aria-labelledby="values-title">
+      <div class="container narrow">
+        <h2 id="values-title">Values</h2>
+
+        <article class="value">
+          <h3>Innocence — a Beginner’s Mindset</h3>
+          <p>Curiosity is my compass. I approach every project as if it were my first, free of bias, full of wonder, and open to possibility. This innocence fuels experimentation and keeps my work fresh, inviting a sense of discovery.</p>
+        </article>
+
+        <article class="value">
+          <h3>Integrity — doing the right thing when no one’s watching</h3>
+          <p>My actions align with my words, and my decisions reflect my deepest beliefs, even when it's difficult or unpopular. I take ownership of my mistakes, honor my commitments, and speak truthfully with kindness. Integrity is my compass—it guides me when the path isn't clear and keeps me grounded in who I want to be.</p>
+        </article>
+
+        <article class="value">
+          <h3>Care — design with empathy, craft with love</h3>
+          <p>Great experiences start with listening. As someone great said, “Amongst real people there are no hierarchies.” I cater to needs, contexts, and emotions, then build thoughtfully, prioritizing inclusivity and sustainability. Every small detail is a quiet act of care.</p>
+        </article>
+
+        <article class="value">
+          <h3>Resilience — iterate, adapt, grow</h3>
+          <p>I've learned that resilience isn't about avoiding difficulty, but about developing the inner strength to navigate it with grace. I find ways to grow from setbacks, to maintain hope during uncertain times, and to support others facing their own struggles. Progress isn’t a straight line—it’s a resilient loop of learning.</p>
+        </article>
       </div>
     </section>
 

@@ -679,6 +679,89 @@ html.dark .carousel-cap-sub { color: #cfe5db; }
 }
 html.dark .carousel-cap-desc { color: #e8f1ec; }
 
+/* Stage overlay text inside each slide: always visible; non-blocking */
+.stage-overlay {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 3;
+  padding: 10px 12px;
+  display: grid;
+  gap: 2px;
+  color: #fff;
+  text-shadow: 0 1px 2px rgba(0,0,0,.5);
+  background:
+    linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,.45) 55%, rgba(0,0,0,.65) 100%);
+  pointer-events: none; /* do not block interactions */
+}
+.stage-overlay-title {
+  font: 700 0.95rem/1.2 var(--font-sans);
+}
+.stage-overlay-sub {
+  font: 600 0.8rem/1.2 var(--font-sans);
+  opacity: 0.9;
+}
+
+/* Conveyor belt below main stage */
+.conveyor-viewport {
+  position: relative;
+  width: 100%;
+  max-width: 460px;
+  overflow: hidden;
+  border-radius: 12px;
+  margin-top: 10px;
+  background: #000;
+  box-shadow:
+    0 6px 18px rgba(0,0,0,0.18),
+    0 1px 3px rgba(0,0,0,0.08);
+}
+.conveyor-track {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px;
+  will-change: transform;
+  animation: conveyor-scroll 30s linear infinite;
+}
+.conveyor-item {
+  position: relative;
+  flex: 0 0 auto;
+  width: 110px;
+  height: 110px;
+  border-radius: 10px;
+  overflow: hidden;
+  background: #111;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.35);
+}
+.conveyor-item video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.conveyor-label {
+  position: absolute;
+  left: 6px;
+  bottom: 6px;
+  right: 6px;
+  color: #fff;
+  font: 700 0.65rem/1.1 var(--font-sans);
+  text-shadow: 0 1px 2px rgba(0,0,0,.6);
+  pointer-events: none;
+}
+
+/* Smaller on narrow screens */
+@media (max-width: 480px) {
+  .conveyor-item { width: 88px; height: 88px; }
+}
+
+/* Continuous left scrolling; ensure long enough loop for seamless appearance */
+@keyframes conveyor-scroll {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
 /* Minimal dots (replaces title ticker) */
 .carousel-ticker {
   display: flex;

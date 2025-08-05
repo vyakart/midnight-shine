@@ -1,0 +1,86 @@
+/*
+  utilities.css
+  - Tailwind-like utility classes mapped to CSS variables defined in css/themes.css
+  - Scope: background, text, primary/accent/muted colors, borders
+  - Includes hover variants and focus-visible compatibility
+  - Naming mirrors Tailwind semantics so migration later is trivial
+  - Accessibility: maintains visible focus rings via existing global styles
+*/
+
+/* Background + Text semantics */
+.bg-bg { background-color: var(--bg) !important; }
+.text-text, .text-fg { color: var(--fg) !important; }
+
+/* Brand/Link semantic */
+.text-link { color: var(--link) !important; }
+
+/* Primary button-like utilities */
+.bg-primary { background-color: var(--primary) !important; color: #fff !important; }
+.hover\:bg-primary-hover:hover { background-color: var(--secondary, var(--primary)) !important; }
+
+/* Accent (callouts, highlights) */
+.bg-accent { background-color: var(--accent) !important; color: #fff !important; }
+.text-accent { color: var(--accent) !important; }
+
+/* Muted text/background */
+.text-muted { color: var(--muted) !important; }
+.bg-muted { background-color: var(--muted) !important; color: #fff !important; }
+
+/* Surface helpers (mapped in themes.css) */
+.bg-surface { background-color: var(--surface-card, #fff) !important; }
+.border-surface { border-color: var(--surface-card-border, var(--border)) !important; }
+
+/* Borders */
+.border { border-width: 1px !important; border-style: solid !important; border-color: var(--border) !important; }
+.border-0 { border: 0 !important; }
+.border-2 { border-width: 2px !important; }
+.rounded { border-radius: 0.5rem !important; }
+.rounded-full { border-radius: 9999px !important; }
+
+/* Text helpers */
+.text-invert { color: #fff !important; }
+.text-brand { color: var(--brand-fg, var(--fg)) !important; }
+.text-brand-accent { color: var(--brand-accent, var(--link)) !important; }
+
+/* Button composition (utility-first) */
+.btn { display: inline-block; padding: 0.625rem 1rem; font-weight: 600; border-radius: 0.5rem; border: 2px solid transparent; text-decoration: none; }
+.btn:focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; }
+.btn-primary { background-color: var(--primary); color: #fff; }
+.btn-primary:hover { background-color: var(--secondary, var(--primary)); }
+.btn-outline { background: transparent; color: var(--link); border-color: var(--link); }
+.btn-outline:hover { background: var(--link); color: #fff; }
+
+/* Opacity helpers */
+.opacity-60 { opacity: 0.6 !important; }
+.opacity-70 { opacity: 0.7 !important; }
+.opacity-80 { opacity: 0.8 !important; }
+
+/* Backdrop + translucency */
+.bg-bg\/70 { background-color: color-mix(in srgb, var(--bg) 70%, transparent) !important; }
+.border-muted\/40 { border-color: color-mix(in srgb, var(--muted) 40%, transparent) !important; }
+
+/* Spacing (minimal set likely needed for the toggle button) */
+.px-3 { padding-left: 0.75rem !important; padding-right: 0.75rem !important; }
+.py-2 { padding-top: 0.5rem !important; padding-bottom: 0.5rem !important; }
+.gap-2 { gap: 0.5rem !important; }
+
+/* Layout helpers */
+.flex { display: flex !important; }
+.items-center { align-items: center !important; }
+.backdrop-blur { backdrop-filter: blur(6px) !important; -webkit-backdrop-filter: blur(6px) !important; }
+
+/* Position helpers (for fixed toggle corner placement) */
+.fixed { position: fixed !important; }
+.bottom-4 { bottom: 1rem !important; }
+.right-4 { right: 1rem !important; }
+.z-50 { z-index: 50 !important; }
+
+/* Transition + micro-interactions (CSS-based framer-motion-lite) */
+.transition-transform { transition: transform var(--transition-fast, 180ms) ease; }
+.scale-90 { transform: scale(0.9); }
+.rotate-15 { transform: rotate(15deg); }
+
+/* Reduced motion guard—keep interactions light */
+@media (prefers-reduced-motion: reduce) {
+  .transition-transform { transition: none !important; }
+}
