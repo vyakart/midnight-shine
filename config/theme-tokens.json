@@ -1,0 +1,62 @@
+{
+  "themes": {
+    "saffronSunrise": {
+      "scheme": "light",
+      "colors": {
+        "background": "#FFF8E7",
+        "surface": "#FFFFFF",
+        "primary": "#FF9933",
+        "secondary": "#096C6C",
+        "accent": "#9A031E",
+        "accentSoft": "#D4AF37",
+        "textPrimary": "#3B2E2A",
+        "textSecondary": "#5C4F4B",
+        "textMuted": "#7A6D69",
+        "textInverse": "#FFFFFF",
+        "success": "#138000",
+        "warning": "#B26500",
+        "error": "#C41E3A",
+        "info": "#0066CC",
+        "border": "#E8DFC8",
+        "borderHover": "#D4C9A8",
+        "shadowRGB": "139, 69, 19",
+        "overlayRGB": "255, 248, 231"
+      },
+      "fonts": {
+        "display": "'Hind', 'Noto Sans Devanagari', sans-serif",
+        "heading": "'Merriweather', serif",
+        "body": "'Recursive', sans-serif",
+        "mono": "'Recursive Mono Casual', monospace"
+      }
+    },
+    "indigoMidnight": {
+      "scheme": "dark",
+      "colors": {
+        "background": "#0B1D3F",
+        "surface": "#18264D",
+        "primary": "#B98A2A",
+        "secondary": "#149C9C",
+        "accent": "#9C1149",
+        "accentSoft": "#DC921A",
+        "textPrimary": "#E6E5EB",
+        "textSecondary": "#C4C4CF",
+        "textMuted": "#9A9AA8",
+        "textInverse": "#0B1D3F",
+        "success": "#4ADE80",
+        "warning": "#FBB040",
+        "error": "#F87171",
+        "info": "#60A5FA",
+        "border": "#2F3B5A",
+        "borderHover": "#3D4A6B",
+        "shadowRGB": "0, 0, 0",
+        "overlayRGB": "11, 29, 63"
+      },
+      "fonts": {
+        "display": "'Hind', 'Noto Sans Devanagari', sans-serif",
+        "heading": "'Recursive', sans-serif",
+        "body": "'Recursive', sans-serif",
+        "mono": "'Recursive Mono Casual', monospace"
+      }
+    }
+  }
+}

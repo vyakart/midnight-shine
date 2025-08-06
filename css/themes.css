@@ -1,223 +1,524 @@
 /*
   themes.css
-  - Three Indian-inspired theme palettes with per-theme namespaces:
-    --spice-*, --holi-*, --heritage-*
-  - A shared mapping layer remaps the active theme’s namespaced vars to generic UI tokens:
-    --bg, --fg, --border, --link, --primary, --secondary, --accent, --success, --warning, --danger, --muted
-  - Activation via html[data-theme="spice" | "holi" | "heritage"].
-  - Accessibility: each palette includes contrast-conscious pairings.
-  - Does not modify existing styles; consumers continue using generic tokens.
+  - Culturally-inspired theme system: saffronSunrise & indigoMidnight
+  - CSS custom properties with semantic mappings
+  - Smooth transitions and accessibility support
 */
 
-/* Base defaults (fallback if no data-theme is set). Keep close to current site palette. */
+/* Font imports */
+@import url('https://fonts.googleapis.com/css2?family=Hind:wght@400;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&display=swap');
+
+/* Base theme tokens */
 :root {
-  --bg: #ffffff;
-  --fg: #0b1a34;
-  --border: #c9d6ff;
-  --link: #0057ff;
+  /* Animation tokens */
+  --duration-instant: 0ms;
+  --duration-fast: 150ms;
+  --duration-base: 300ms;
+  --duration-moderate: 500ms;
+  --duration-slow: 700ms;
+  --duration-slower: 1000ms;
+  
+  --ease-linear: linear;
+  --ease-in: cubic-bezier(0.4, 0, 1, 1);
+  --ease-out: cubic-bezier(0, 0, 0.2, 1);
+  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-in-out-cubic: cubic-bezier(0.645, 0.045, 0.355, 1);
+  --ease-out-back: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  --ease-spring: cubic-bezier(0.175, 0.885, 0.32, 1.05);
+  
+  /* Spacing scale */
+  --space-0: 0;
+  --space-px: 1px;
+  --space-0-5: 0.125rem;
+  --space-1: 0.25rem;
+  --space-1-5: 0.375rem;
+  --space-2: 0.5rem;
+  --space-2-5: 0.625rem;
+  --space-3: 0.75rem;
+  --space-3-5: 0.875rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 1.5rem;
+  --space-7: 1.75rem;
+  --space-8: 2rem;
+  --space-9: 2.25rem;
+  --space-10: 2.5rem;
+  --space-12: 3rem;
+  --space-14: 3.5rem;
+  --space-16: 4rem;
+  --space-20: 5rem;
+  --space-24: 6rem;
+  
+  /* Border radius scale */
+  --radius-none: 0;
+  --radius-sm: 0.125rem;
+  --radius-base: 0.25rem;
+  --radius-md: 0.375rem;
+  --radius-lg: 0.5rem;
+  --radius-xl: 0.75rem;
+  --radius-2xl: 1rem;
+  --radius-3xl: 1.5rem;
+  --radius-full: 9999px;
+  
+  /* Typography scale */
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-md: 1.125rem;
+  --text-lg: 1.333rem;
+  --text-xl: 1.777rem;
+  --text-2xl: 2.369rem;
+  --text-3xl: 3.157rem;
+  --text-4xl: 4.209rem;
+  
+  /* Line heights */
+  --leading-tight: 1.1;
+  --leading-snug: 1.25;
+  --leading-normal: 1.5;
+  --leading-relaxed: 1.625;
+  --leading-loose: 1.75;
+  
+  /* Font weights */
+  --font-light: 300;
+  --font-regular: 400;
+  --font-medium: 500;
+  --font-semibold: 600;
+  --font-bold: 700;
+  --font-black: 900;
+  
+  /* Letter spacing */
+  --tracking-tighter: -0.05em;
+  --tracking-tight: -0.025em;
+  --tracking-normal: 0;
+  --tracking-wide: 0.025em;
+  --tracking-wider: 0.05em;
+  --tracking-widest: 0.1em;
+}
 
-  --primary: #0057ff;
-  --secondary: #1b1b1b;
-  --accent: #ff7a00;
-
-  --success: #1E7F4F;
-  --warning: #B26A00;
-  --danger: #B3202A;
-
-  --muted: #666666;
-
-  /* Focus and motion tokens (shared) */
-  --focus: #ff7a00;
-  --transition-fast: 180ms;
-
-  /* Typography color roles used by headings/brand/link accents */
-  --text-strong: var(--fg);
-  --text-muted: var(--muted);
-  --brand-fg: var(--fg);
-  --brand-accent: var(--link);
-
+/* ===========================
+   saffronSunrise Theme (Light)
+   =========================== */
+:root[data-theme="saffronSunrise"] {
+  /* Core colors */
+  --color-background: #FFF8E7;
+  --color-surface: #FFFFFF;
+  --color-primary: #FF9933;
+  --color-secondary: #096C6C;
+  --color-accent: #9A031E;
+  --color-accent-soft: #D4AF37;
+  
+  /* Text colors */
+  --color-text-primary: #3B2E2A;
+  --color-text-secondary: #5C4F4B;
+  --color-text-muted: #7A6D69;
+  --color-text-inverse: #FFFFFF;
+  
+  /* Semantic colors */
+  --color-success: #138000;
+  --color-warning: #B26500;
+  --color-error: #C41E3A;
+  --color-info: #0066CC;
+  
+  /* Borders and surfaces */
+  --color-border: #E8DFC8;
+  --color-border-hover: #D4C9A8;
+  
+  /* Shadows */
+  --shadow-color: 139, 69, 19;
+  --shadow-sm: 0 1px 2px 0 rgba(var(--shadow-color), 0.05);
+  --shadow-base: 0 1px 3px 0 rgba(var(--shadow-color), 0.1), 
+                 0 1px 2px 0 rgba(var(--shadow-color), 0.06);
+  --shadow-md: 0 4px 6px -1px rgba(var(--shadow-color), 0.1), 
+               0 2px 4px -1px rgba(var(--shadow-color), 0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(var(--shadow-color), 0.1), 
+               0 4px 6px -2px rgba(var(--shadow-color), 0.05);
+  --shadow-xl: 0 20px 25px -5px rgba(var(--shadow-color), 0.1), 
+               0 10px 10px -5px rgba(var(--shadow-color), 0.04);
+  --shadow-2xl: 0 25px 50px -12px rgba(var(--shadow-color), 0.25);
+  --shadow-inner: inset 0 2px 4px 0 rgba(var(--shadow-color), 0.06);
+  
+  /* Overlays */
+  --overlay-color: 255, 248, 231;
+  --overlay-light: rgba(var(--overlay-color), 0.5);
+  --overlay-medium: rgba(var(--overlay-color), 0.75);
+  --overlay-heavy: rgba(var(--overlay-color), 0.95);
+  
+  /* Typography */
+  --font-display: 'Hind', 'Noto Sans Devanagari', sans-serif;
+  --font-heading: 'Merriweather', serif;
+  --font-body: 'Recursive', sans-serif;
+  --font-mono: 'Recursive Mono Casual', monospace;
+  
+  /* Component tokens */
+  --button-primary-bg: var(--color-primary);
+  --button-primary-fg: var(--color-surface);
+  --button-primary-hover: #E67A00;
+  --button-secondary-bg: var(--color-secondary);
+  --button-secondary-fg: var(--color-surface);
+  --button-secondary-hover: #075959;
+  
+  --card-bg: var(--color-surface);
+  --card-border: var(--color-border);
+  --card-shadow: var(--shadow-base);
+  --card-hover-shadow: var(--shadow-lg);
+  
+  --input-bg: var(--color-surface);
+  --input-border: var(--color-border);
+  --input-focus-border: var(--color-primary);
+  --input-placeholder: var(--color-text-muted);
+  
+  --link-color: var(--color-secondary);
+  --link-hover: var(--color-primary);
+  
+  /* Focus ring */
+  --focus-ring-color: var(--color-primary);
+  --focus-ring-offset: 2px;
+  --focus-ring-width: 3px;
+  
   color-scheme: light;
 }
 
 /* ===========================
-   Theme 1: Spice Market Modern
-   Namespaced tokens (—spice-*)
+   indigoMidnight Theme (Dark)
    =========================== */
-:root {
-  /* Spice tokens (do not use directly in components; mapped in the layer below) */
-  --spice-bg: #F7F2EA;      /* Jaggery Cream */
-  --spice-fg: #1B1B1B;      /* Kettle Black */
-  --spice-border: #8B7763;  /* Earthen Taupe */
-  --spice-link: #4E7D57;    /* Cardamom Green (links) */
-  --spice-primary: #E96C0B; /* Saffron Glow */
-  --spice-secondary: #D9A323; /* Turmeric Gold */
-  --spice-accent: #B3202A;  /* Chili Red */
-  --spice-success: #4E7D57; /* Cardamom Green */
-  --spice-warning: #D9A323; /* Turmeric */
-  --spice-danger: #B3202A;  /* Chili Red */
-  --spice-muted: #6E6358;   /* Softer taupe for muted text */
-
-  /* Spice typography accents */
-  --spice-text-strong: #1B1B1B;
-  --spice-text-muted: #6E6358;
-  --spice-brand-fg: #1B1B1B;
-  --spice-brand-accent: #E96C0B; /* saffron accent for headings/brand edge */
+:root[data-theme="indigoMidnight"] {
+  /* Core colors */
+  --color-background: #0B1D3F;
+  --color-surface: #18264D;
+  --color-primary: #B98A2A;
+  --color-secondary: #149C9C;
+  --color-accent: #9C1149;
+  --color-accent-soft: #DC921A;
+  
+  /* Text colors */
+  --color-text-primary: #E6E5EB;
+  --color-text-secondary: #C4C4CF;
+  --color-text-muted: #9A9AA8;
+  --color-text-inverse: #0B1D3F;
+  
+  /* Semantic colors */
+  --color-success: #4ADE80;
+  --color-warning: #FBB040;
+  --color-error: #F87171;
+  --color-info: #60A5FA;
+  
+  /* Borders and surfaces */
+  --color-border: #2F3B5A;
+  --color-border-hover: #3D4A6B;
+  
+  /* Shadows */
+  --shadow-color: 0, 0, 0;
+  --shadow-sm: 0 1px 2px 0 rgba(var(--shadow-color), 0.2);
+  --shadow-base: 0 1px 3px 0 rgba(var(--shadow-color), 0.3), 
+                 0 1px 2px 0 rgba(var(--shadow-color), 0.24);
+  --shadow-md: 0 4px 6px -1px rgba(var(--shadow-color), 0.3), 
+               0 2px 4px -1px rgba(var(--shadow-color), 0.24);
+  --shadow-lg: 0 10px 15px -3px rgba(var(--shadow-color), 0.3), 
+               0 4px 6px -2px rgba(var(--shadow-color), 0.2);
+  --shadow-xl: 0 20px 25px -5px rgba(var(--shadow-color), 0.3), 
+               0 10px 10px -5px rgba(var(--shadow-color), 0.16);
+  --shadow-2xl: 0 25px 50px -12px rgba(var(--shadow-color), 0.5);
+  --shadow-inner: inset 0 2px 4px 0 rgba(var(--shadow-color), 0.24);
+  
+  /* Overlays */
+  --overlay-color: 11, 29, 63;
+  --overlay-light: rgba(var(--overlay-color), 0.5);
+  --overlay-medium: rgba(var(--overlay-color), 0.75);
+  --overlay-heavy: rgba(var(--overlay-color), 0.95);
+  
+  /* Typography */
+  --font-display: 'Hind', 'Noto Sans Devanagari', sans-serif;
+  --font-heading: 'Recursive', sans-serif;
+  --font-body: 'Recursive', sans-serif;
+  --font-mono: 'Recursive Mono Casual', monospace;
+  
+  /* Component tokens */
+  --button-primary-bg: var(--color-primary);
+  --button-primary-fg: var(--color-text-inverse);
+  --button-primary-hover: #A67A1A;
+  --button-secondary-bg: var(--color-secondary);
+  --button-secondary-fg: var(--color-text-inverse);
+  --button-secondary-hover: #0F8A8A;
+  
+  --card-bg: var(--color-surface);
+  --card-border: var(--color-border);
+  --card-shadow: var(--shadow-base);
+  --card-hover-shadow: var(--shadow-lg);
+  
+  --input-bg: var(--color-surface);
+  --input-border: var(--color-border);
+  --input-focus-border: var(--color-primary);
+  --input-placeholder: var(--color-text-muted);
+  
+  --link-color: var(--color-secondary);
+  --link-hover: var(--color-primary);
+  
+  /* Focus ring */
+  --focus-ring-color: var(--color-primary);
+  --focus-ring-offset: 2px;
+  --focus-ring-width: 3px;
+  
+  color-scheme: dark;
 }
 
 /* ===========================
-   Theme 2: Festive Holi Pop
-   Namespaced tokens (—holi-*)
+   Generic UI Token Mappings
    =========================== */
-:root {
-  --holi-bg: #FCFAF5;       /* Sheer Off‑White */
-  --holi-fg: #2C0E37;       /* Deccan Plum (deep anchor) */
-  --holi-border: #8D9096;   /* Smoke Gray */
-  --holi-link: #007D81;     /* Peacock Teal */
-  --holi-primary: #E91E63;  /* Rani Pink */
-  --holi-secondary: #007D81;/* Peacock Teal */
-  --holi-accent: #FFA300;   /* Marigold Burst */
-  --holi-success: #2E8B57;  /* Sea Green variant for success */
-  --holi-warning: #B26A00;  /* Amber brown for warnings */
-  --holi-danger: #B3202A;   /* Strong red for errors */
-  --holi-muted: #6F6F76;    /* Muted gray-purple */
-
-  /* Holi typography accents */
-  --holi-text-strong: #2C0E37;
-  --holi-text-muted: #6F6F76;
-  --holi-brand-fg: #2C0E37;
-  --holi-brand-accent: #E91E63; /* rani pink accent for headings/brand edge */
+:root[data-theme="saffronSunrise"],
+:root[data-theme="indigoMidnight"] {
+  /* Map to generic tokens for backward compatibility */
+  --bg: var(--color-background);
+  --fg: var(--color-text-primary);
+  --border: var(--color-border);
+  --link: var(--link-color);
+  
+  --primary: var(--color-primary);
+  --secondary: var(--color-secondary);
+  --accent: var(--color-accent);
+  
+  --success: var(--color-success);
+  --warning: var(--color-warning);
+  --danger: var(--color-error);
+  
+  --muted: var(--color-text-muted);
+  
+  --text-strong: var(--color-text-primary);
+  --text-muted: var(--color-text-muted);
+  --brand-fg: var(--color-text-primary);
+  --brand-accent: var(--color-primary);
+  
+  --focus: var(--focus-ring-color);
+  --transition-fast: var(--duration-fast);
+  
+  --surface-card: var(--card-bg);
+  --surface-card-border: var(--card-border);
 }
 
 /* ===========================
-   Theme 3: Heritage Stone & Silk
-   Namespaced tokens (—heritage-*)
+   Theme Transition Animations
    =========================== */
-:root {
-  --heritage-bg: #FAF4E6;       /* Pale Sand */
-  --heritage-fg: #2A2A28;       /* Fort Shadow */
-  --heritage-border: #CBBFAE;   /* Worn Limestone */
-  --heritage-link: #0F6C6C;     /* Jaali Teal */
-  --heritage-primary: #B68E3A;  /* Sandstone Ochre */
-  --heritage-secondary: #0F6C6C;/* Jaali Teal */
-  --heritage-accent: #8E1F3F;   /* Ruby Silk */
-  --heritage-success: #1E6F5C;  /* Teal-lean success */
-  --heritage-warning: #996A1E;  /* Burnt ochre */
-  --heritage-danger: #8E1F3F;   /* Ruby */
-  --heritage-muted: #6B6457;    /* Stone-muted */
-
-  /* Heritage typography accents */
-  --heritage-text-strong: #2A2A28;
-  --heritage-text-muted: #6B6457;
-  --heritage-brand-fg: #2A2A28;
-  --heritage-brand-accent: #B68E3A; /* ochre accent for headings/brand edge */
+* {
+  transition: 
+    background-color var(--duration-base) var(--ease-in-out),
+    border-color var(--duration-base) var(--ease-in-out),
+    color var(--duration-base) var(--ease-in-out);
 }
 
-/* ==============================================
-   Mapping Layer: remap chosen theme to generic UI tokens
-   Usage in components: var(--bg), var(--fg), var(--primary) etc.
-   ============================================== */
-
-/* Spice mapping */
-html[data-theme="spice"] {
-  --bg: var(--spice-bg);
-  --fg: var(--spice-fg);
-  --border: var(--spice-border);
-  --link: var(--spice-link);
-
-  --primary: var(--spice-primary);
-  --secondary: var(--spice-secondary);
-  --accent: var(--spice-accent);
-
-  --success: var(--spice-success);
-  --warning: var(--spice-warning);
-  --danger: var(--spice-danger);
-
-  --muted: var(--spice-muted);
-
-  /* Mapped typography for this theme */
-  --text-strong: var(--spice-text-strong);
-  --text-muted: var(--spice-text-muted);
-  --brand-fg: var(--spice-brand-fg);
-  --brand-accent: var(--spice-brand-accent);
-
-  color-scheme: light;
+/* Prevent transitions on page load */
+.no-transitions * {
+  transition: none !important;
 }
 
-/* Holi mapping */
-html[data-theme="holi"] {
-  --bg: var(--holi-bg);
-  --fg: var(--holi-fg);
-  --border: var(--holi-border);
-  --link: var(--holi-link);
-
-  --primary: var(--holi-primary);
-  --secondary: var(--holi-secondary);
-  --accent: var(--holi-accent);
-
-  --success: var(--holi-success);
-  --warning: var(--holi-warning);
-  --danger: var(--holi-danger);
-
-  --muted: var(--holi-muted);
-
-  /* Mapped typography for this theme */
-  --text-strong: var(--holi-text-strong);
-  --text-muted: var(--holi-text-muted);
-  --brand-fg: var(--holi-brand-fg);
-  --brand-accent: var(--holi-brand-accent);
-
-  color-scheme: light;
+/* Theme toggle animations */
+@keyframes sunRise {
+  0% {
+    transform: rotate(-180deg) scale(0);
+    opacity: 0;
+  }
+  50% {
+    transform: rotate(-90deg) scale(1.1);
+    opacity: 0.7;
+  }
+  100% {
+    transform: rotate(0deg) scale(1);
+    opacity: 1;
+  }
 }
 
-/* Heritage mapping */
-html[data-theme="heritage"] {
-  --bg: var(--heritage-bg);
-  --fg: var(--heritage-fg);
-  --border: var(--heritage-border);
-  --link: var(--heritage-link);
-
-  --primary: var(--heritage-primary);
-  --secondary: var(--heritage-secondary);
-  --accent: var(--heritage-accent);
-
-  --success: var(--heritage-success);
-  --warning: var(--heritage-warning);
-  --danger: var(--heritage-danger);
-
-  --muted: var(--heritage-muted);
-
-  /* Mapped typography for this theme */
-  --text-strong: var(--heritage-text-strong);
-  --text-muted: var(--heritage-text-muted);
-  --brand-fg: var(--heritage-brand-fg);
-  --brand-accent: var(--heritage-brand-accent);
-
-  color-scheme: light;
+@keyframes moonRise {
+  0% {
+    transform: rotate(180deg) scale(0) translateY(10px);
+    opacity: 0;
+  }
+  50% {
+    transform: rotate(90deg) scale(1.1) translateY(-5px);
+    opacity: 0.7;
+  }
+  100% {
+    transform: rotate(0deg) scale(1) translateY(0);
+    opacity: 1;
+  }
 }
 
-/* ==============================================
-   Optional: sample component variables mapped from generic tokens
-   (Can be used by existing .button classes without structural changes)
-   ============================================== */
-
-:root, html[data-theme="spice"], html[data-theme="holi"], html[data-theme="heritage"] {
-  --button-bg: var(--primary);
-  --button-fg: #ffffff;
-  --button-border: transparent;
-
-  --button-outline-fg: var(--link);
-  --button-outline-border: var(--link);
-
-  --surface-card: #ffffff;
-  --surface-card-border: var(--border);
+@keyframes sunSet {
+  0% {
+    transform: rotate(0deg) scale(1) translateY(0);
+    opacity: 1;
+  }
+  50% {
+    transform: rotate(-90deg) scale(1.1) translateY(5px);
+    opacity: 0.7;
+  }
+  100% {
+    transform: rotate(-180deg) scale(0) translateY(10px);
+    opacity: 0;
+  }
 }
 
-/* Ensure backgrounds and text apply site-wide where generic tokens are used */
-html[data-theme="spice"] body,
-html[data-theme="holi"] body,
-html[data-theme="heritage"] body {
+@keyframes moonSet {
+  0% {
+    transform: rotate(0deg) scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: rotate(90deg) scale(1.1);
+    opacity: 0.7;
+  }
+  100% {
+    transform: rotate(180deg) scale(0);
+    opacity: 0;
+  }
+}
+
+/* Micro-interaction animations */
+@keyframes buttonPress {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(0.95); }
+}
+
+@keyframes ripple {
+  0% {
+    transform: scale(0);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(4);
+    opacity: 0;
+  }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Loading animations */
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes shimmer {
+  0% { background-position: -1000px 0; }
+  100% { background-position: 1000px 0; }
+}
+
+/* ===========================
+   Reduced Motion Support
+   =========================== */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  
+  /* Preserve essential animations with reduced intensity */
+  .theme-toggle {
+    transition: opacity 150ms ease-in-out;
+  }
+  
+  /* Simplify loading indicators */
+  .spinner {
+    animation: none;
+    border-color: currentColor transparent currentColor transparent;
+  }
+}
+
+/* ===========================
+   Typography Application
+   =========================== */
+body {
+  font-family: var(--font-body, var(--font-sans, system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial, sans-serif));
+  font-size: var(--text-base);
+  line-height: var(--leading-normal);
+  letter-spacing: var(--tracking-normal);
+  color: var(--color-text-primary, var(--fg));
+  background-color: var(--color-background, var(--bg));
+}
+
+/* Headings keep existing site choices if defined elsewhere */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading, inherit);
+  font-weight: var(--font-bold);
+  line-height: var(--leading-tight);
+  letter-spacing: var(--tracking-tight);
+  color: var(--color-text-primary, inherit);
+}
+
+h1 { font-size: var(--text-3xl); }
+h2 { font-size: var(--text-2xl); }
+h3 { font-size: var(--text-xl); }
+h4 { font-size: var(--text-lg); }
+h5 { font-size: var(--text-md); }
+h6 { font-size: var(--text-base); }
+
+.display {
+  font-family: var(--font-display, inherit);
+  font-size: var(--text-4xl);
+  font-weight: var(--font-bold);
+  line-height: var(--leading-tight);
+  letter-spacing: var(--tracking-tighter);
+}
+
+/* ===========================
+   Focus States
+   =========================== */
+:focus-visible {
+  outline: var(--focus-ring-width, 3px) solid var(--focus-ring-color, var(--focus, #0057ff));
+  outline-offset: var(--focus-ring-offset, 3px);
+  border-radius: var(--radius-base, 6px);
+}
+
+/* ===========================
+   Utility Classes
+   =========================== */
+.text-primary { color: var(--color-text-primary); }
+.text-secondary { color: var(--color-text-secondary); }
+.text-muted { color: var(--color-text-muted); }
+.text-inverse { color: var(--color-text-inverse); }
+
+.bg-background { background-color: var(--color-background); }
+.bg-surface { background-color: var(--color-surface); }
+.bg-primary { background-color: var(--color-primary); }
+.bg-secondary { background-color: var(--color-secondary); }
+.bg-accent { background-color: var(--color-accent); }
+
+.border-default { border-color: var(--color-border); }
+.border-hover { border-color: var(--color-border-hover); }
+
+.shadow-sm { box-shadow: var(--shadow-sm); }
+.shadow-base { box-shadow: var(--shadow-base); }
+.shadow-md { box-shadow: var(--shadow-md); }
+.shadow-lg { box-shadow: var(--shadow-lg); }
+.shadow-xl { box-shadow: var(--shadow-xl); }
+.shadow-2xl { box-shadow: var(--shadow-2xl); }
+.shadow-inner { box-shadow: var(--shadow-inner); }
+
+/* ===========================
+   Back-compat for existing theme tokens
+   =========================== */
+html[data-theme="saffronSunrise"] body,
+html[data-theme="indigoMidnight"] body {
   background: var(--bg);
   color: var(--fg);
 }
-
-/* Accessibility helpers: focus visibility remains driven by --focus already defined. */

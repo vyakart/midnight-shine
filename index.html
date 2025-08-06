@@ -8,14 +8,20 @@
   <meta name="robots" content="index, follow">
   <meta name="color-scheme" content="light dark">
   <script>
-    // Pre-paint theme setter to avoid flash; minimal and sync with main.js
+    // Pre-paint theme setter to avoid FOUC: set html[data-theme] before first paint
     (function () {
       try {
         var d = document.documentElement;
-        var stored = localStorage.getItem('theme');
-        var mql = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)');
-        var dark = stored ? stored === 'dark' : (mql ? mql.matches : false);
-        if (dark) d.classList.add('dark'); else d.classList.remove('dark');
+        var key = 'theme-preference';
+        var stored = null;
+        try { stored = localStorage.getItem(key); } catch (_) {}
+        if (stored !== 'saffronSunrise' && stored !== 'indigoMidnight') {
+          // Fall back to system preference
+          var mql = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)');
+          stored = (mql && mql.matches) ? 'indigoMidnight' : 'saffronSunrise';
+        }
+        d.setAttribute('data-theme', stored);
+        d.classList.remove('dark'); // remove legacy class if present
       } catch (_) {}
     })();
   </script>
