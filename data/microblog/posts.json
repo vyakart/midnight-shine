@@ -1,0 +1,99 @@
+{
+  "metadata": {
+    "total": 6,
+    "lastUpdated": "2025-08-07T12:00:00Z"
+  },
+  "posts": [
+    {
+      "id": "2025-08-07-001",
+      "timestamp": "2025-08-07T10:30:00Z",
+      "type": "text",
+      "content": {
+        "text": "Reduce to essentials. Today I removed two animations and everything felt faster.",
+        "html": "<p>Reduce to essentials. Today I removed two animations and everything felt faster.</p>"
+      },
+      "media": {},
+      "metadata": {
+        "tags": ["design", "performance", "practice"],
+        "readingTime": "1 min"
+      }
+    },
+    {
+      "id": "2025-08-06-001",
+      "timestamp": "2025-08-06T19:10:00Z",
+      "type": "link",
+      "content": {
+        "text": "On designing with constraints.",
+        "html": "<p>On designing with constraints.</p>"
+      },
+      "media": {},
+      "metadata": {
+        "tags": ["design", "reading"],
+        "url": "https://alistapart.com/article/learning-from-lego/",
+        "title": "Learning from LEGO"
+      }
+    },
+    {
+      "id": "2025-08-05-001",
+      "timestamp": "2025-08-05T06:42:00Z",
+      "type": "image",
+      "content": {
+        "text": "Morning sky over Pune. 50mm, f/4, 1/500s."
+      },
+      "media": {
+        "images": [
+          {
+            "url": "/assets/posters/astro.png",
+            "alt": "Morning sky over the city with soft gradients",
+            "caption": "Astro practice: noticing gradients."
+          }
+        ]
+      },
+      "metadata": {
+        "tags": ["photography", "astro", "morning"]
+      }
+    },
+    {
+      "id": "2025-08-04-001",
+      "timestamp": "2025-08-04T21:20:00Z",
+      "type": "code",
+      "content": {
+        "text": "function clamp(v, min, max){ return Math.min(max, Math.max(min, v)); }"
+      },
+      "media": {},
+      "metadata": {
+        "tags": ["code", "javascript", "snippets"]
+      }
+    },
+    {
+      "id": "2025-08-03-001",
+      "timestamp": "2025-08-03T14:05:00Z",
+      "type": "quote",
+      "content": {
+        "text": "Simplicity is about subtracting the obvious and adding the meaningful.",
+        "html": "<p>“Simplicity is about subtracting the obvious and adding the meaningful.”</p>"
+      },
+      "media": {},
+      "metadata": {
+        "tags": ["quotes", "simplicity"]
+      }
+    },
+    {
+      "id": "2025-08-02-001",
+      "timestamp": "2025-08-02T08:00:00Z",
+      "type": "video",
+      "content": {
+        "text": "Flow drill from this morning's BJJ session."
+      },
+      "media": {
+        "video": {
+          "url": "/assets/movies/bjj.mp4",
+          "poster": "/assets/posters/bjj.png"
+        }
+      },
+      "metadata": {
+        "tags": ["bjj", "movement", "training"]
+      }
+    }
+  ]
+}
