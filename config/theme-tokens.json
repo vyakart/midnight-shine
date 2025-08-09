@@ -27,6 +27,25 @@
         "heading": "'Merriweather', serif",
         "body": "'Recursive', sans-serif",
         "mono": "'Recursive Mono Casual', monospace"
+      },
+      "icons": {
+        "sprite": "/assets/icons/compiled/spiceOxide.svg",
+        "names": [
+          "menu",
+          "external-link",
+          "chevron-right",
+          "chevron-left",
+          "arrow-up-right",
+          "mail",
+          "play",
+          "pause",
+          "document",
+          "list",
+          "theme",
+          "search",
+          "user",
+          "calendar"
+        ]
       }
     },
     "indigoMidnight": {
@@ -56,6 +75,178 @@
         "heading": "'Recursive', sans-serif",
         "body": "'Recursive', sans-serif",
         "mono": "'Recursive Mono Casual', monospace"
+      },
+      "icons": {
+        "sprite": "/assets/icons/compiled/templeHeritage.svg",
+        "names": [
+          "menu",
+          "external-link",
+          "chevron-right",
+          "chevron-left",
+          "arrow-up-right",
+          "mail",
+          "play",
+          "pause",
+          "document",
+          "list",
+          "theme",
+          "search",
+          "user",
+          "calendar"
+        ]
+      }
+    },
+    "spiceOxide": {
+      "scheme": "light",
+      "colors": {
+        "background": "#FFF4EC",
+        "surface": "#FFFFFF",
+        "primary": "#C75000",
+        "secondary": "#7A2E0E",
+        "accent": "#D83A56",
+        "accentSoft": "#F4C95D",
+        "textPrimary": "#2D1B12",
+        "textSecondary": "#5A3A2C",
+        "textMuted": "#8B6F60",
+        "textInverse": "#FFFFFF",
+        "success": "#16A34A",
+        "warning": "#D97706",
+        "error": "#DC2626",
+        "info": "#2563EB",
+        "border": "#EBD5C7",
+        "borderHover": "#DBBFA8",
+        "shadowRGB": "139, 69, 19",
+        "overlayRGB": "255, 245, 236"
+      },
+      "fonts": {
+        "display": "'Fraunces', serif",
+        "heading": "'Hind', 'Noto Sans Devanagari', sans-serif",
+        "body": "'Recursive', sans-serif",
+        "mono": "'Recursive Mono Casual', monospace"
+      },
+      "icons": {
+        "core": "tabler",
+        "accent": "lucide",
+        "alt": "carbon",
+        "brands": "simple-icons",
+        "sprite": "/assets/icons/compiled/spiceOxide.svg",
+        "names": [
+          "menu",
+          "external-link",
+          "chevron-right",
+          "chevron-left",
+          "arrow-up-right",
+          "mail",
+          "play",
+          "pause",
+          "document",
+          "list",
+          "theme",
+          "search",
+          "user",
+          "calendar"
+        ]
+      }
+    },
+    "templeHeritage": {
+      "scheme": "dark",
+      "colors": {
+        "background": "#0E1225",
+        "surface": "#171B2E",
+        "primary": "#E2B714",
+        "secondary": "#7E5CF7",
+        "accent": "#F25F5C",
+        "accentSoft": "#7AD1D6",
+        "textPrimary": "#EAEAF2",
+        "textSecondary": "#C7C7D3",
+        "textMuted": "#9A9AB1",
+        "textInverse": "#0E1225",
+        "success": "#22C55E",
+        "warning": "#F59E0B",
+        "error": "#EF4444",
+        "info": "#60A5FA",
+        "border": "#2A3050",
+        "borderHover": "#3A4168",
+        "shadowRGB": "0, 0, 0",
+        "overlayRGB": "14, 18, 37"
+      },
+      "fonts": {
+        "display": "'Merriweather', serif",
+        "heading": "'Recursive', sans-serif",
+        "body": "'Recursive', sans-serif",
+        "mono": "'Recursive Mono Casual', monospace"
+      },
+      "icons": {
+        "core": "phosphor",
+        "accent": "iconoir",
+        "sprite": "/assets/icons/compiled/templeHeritage.svg",
+        "names": [
+          "menu",
+          "external-link",
+          "chevron-right",
+          "chevron-left",
+          "arrow-up-right",
+          "mail",
+          "play",
+          "pause",
+          "document",
+          "list",
+          "theme",
+          "search",
+          "user",
+          "calendar"
+        ]
+      }
+    },
+    "rajasthanHoli": {
+      "scheme": "light",
+      "colors": {
+        "background": "#FFFBF5",
+        "surface": "#FFFFFF",
+        "primary": "#E35D00",
+        "secondary": "#007F7F",
+        "accent": "#C81E6E",
+        "accentSoft": "#FFB703",
+        "textPrimary": "#2B2B30",
+        "textSecondary": "#4D4D57",
+        "textMuted": "#777789",
+        "textInverse": "#FFFFFF",
+        "success": "#16A34A",
+        "warning": "#D97706",
+        "error": "#DC2626",
+        "info": "#2563EB",
+        "border": "#EDE3CD",
+        "borderHover": "#E0D3B8",
+        "shadowRGB": "139, 69, 19",
+        "overlayRGB": "255, 251, 245"
+      },
+      "fonts": {
+        "display": "'Hind', 'Noto Sans Devanagari', sans-serif",
+        "heading": "'Fraunces', serif",
+        "body": "'Hind', 'Noto Sans Devanagari', sans-serif",
+        "mono": "'Recursive Mono Casual', monospace"
+      },
+      "icons": {
+        "core": "heroicons",
+        "accent": "solar",
+        "alt": "material-symbols",
+        "sprite": "/assets/icons/compiled/rajasthanHoli.svg",
+        "names": [
+          "menu",
+          "external-link",
+          "chevron-right",
+          "chevron-left",
+          "arrow-up-right",
+          "mail",
+          "play",
+          "pause",
+          "document",
+          "list",
+          "theme",
+          "search",
+          "user",
+          "calendar"
+        ]
       }
     }
   }

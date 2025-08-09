@@ -267,7 +267,10 @@
    Generic UI Token Mappings
    =========================== */
 :root[data-theme="saffronSunrise"],
-:root[data-theme="indigoMidnight"] {
+:root[data-theme="indigoMidnight"],
+:root[data-theme="spiceOxide"],
+:root[data-theme="templeHeritage"],
+:root[data-theme="rajasthanHoli"] {
   /* Map to generic tokens for backward compatibility */
   --bg: var(--color-background);
   --fg: var(--color-text-primary);

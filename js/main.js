@@ -9,199 +9,162 @@
   var yearEl = document.getElementById('year');
   if (yearEl) yearEl.textContent = new Date().getFullYear();
 
-  // Theme init (new): two named themes via html[data-theme] with persistence + cross-tab sync.
+  // Theme init via ThemeProvider: render toggle, load tokens/sprites, and react to theme events.
   (function initTheme() {
     'use strict';
     try {
-      var html = document.documentElement;
-      var STORAGE_KEY = 'theme-preference';
-      var THEMES = { saffronSunrise: 1, indigoMidnight: 1 };
+      // Render a single toggle button into the header once ThemeProvider is ready
+      document.addEventListener('theme-ready', function(e) {
+        var themeSwitcher = document.querySelector('.theme-switcher');
+        if (themeSwitcher && window.ThemeProvider) {
+          // Replace any legacy multi-button UI
+          themeSwitcher.innerHTML = '';
 
-      function applyTheme(name) {
-        var finalName = THEMES[name] ? name : 'saffronSunrise';
-        html.setAttribute('data-theme', finalName);
-        html.classList.remove('dark'); // remove legacy class to avoid conflicts
-        try { localStorage.setItem(STORAGE_KEY, finalName); } catch (_) {}
-        document.dispatchEvent(new CustomEvent('theme-changed', { detail: { theme: finalName } }));
-        setToggleA11y(finalName);
-      }
+          // Create new toggle using ThemeProvider
+          var toggleBtn = window.ThemeProvider.createToggleButton({
+            className: 'theme-toggle-btn',
+            showLabel: false,
+            animateIcons: true
+          });
 
-      function currentStored() {
-        try { return localStorage.getItem(STORAGE_KEY); } catch (_) { return null; }
-      }
+          // Custom affordance styling
+          toggleBtn.style.cssText = [
+            'position: relative',
+            'display: inline-flex',
+            'align-items: center',
+            'justify-content: center',
+            'width: 56px',
+            'height: 56px',
+            'padding: 0',
+            'background: transparent',
+            'border: 2px solid var(--color-border)',
+            'border-radius: var(--radius-full)',
+            'cursor: pointer',
+            'transition: all var(--duration-fast) var(--ease-out)'
+          ].join(';') + ';';
 
-      function systemPref() {
-        var mql = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)');
-        return mql && mql.matches ? 'indigoMidnight' : 'saffronSunrise';
-      }
+          toggleBtn.addEventListener('mouseenter', function() {
+            this.style.transform = 'scale(1.05)';
+            this.style.borderColor = 'var(--color-primary)';
+          });
+          toggleBtn.addEventListener('mouseleave', function() {
+            this.style.transform = 'scale(1)';
+            this.style.borderColor = 'var(--color-border)';
+          });
 
-      function setToggleA11y(active) {
-        // Update aria-checked on a single toggle button if we render one
-        var toggle = document.querySelector('.theme-toggle-btn[role="switch"]');
-        if (toggle) toggle.setAttribute('aria-checked', String(active === 'indigoMidnight'));
-      }
-
-      // Initial apply
-      applyTheme(currentStored() || systemPref());
-
-      // Build an accessible toggle in header .theme-switcher
-      var mount = document.querySelector('.theme-switcher');
-      if (mount) {
-        // Clear any legacy icons
-        mount.innerHTML = '';
-
-        var btn = document.createElement('button');
-        btn.type = 'button';
-        btn.className = 'theme-toggle-btn';
-        btn.setAttribute('role', 'switch');
-        btn.setAttribute('aria-label', 'Toggle color theme');
-        btn.style.cssText = 'position:relative;display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;border-radius:9999px;border:1px solid var(--color-border);background:var(--color-surface);color:var(--color-primary);transition:transform 300ms cubic-bezier(0.645,0.045,0.355,1), border-color 300ms, background-color 300ms;';
-        btn.addEventListener('mouseenter', function(){ btn.style.transform = 'scale(1.06)'; });
-        btn.addEventListener('mouseleave', function(){ btn.style.transform = 'scale(1)'; });
-
-        // Icons: sun and moon stacked
-        var sun = document.createElement('span');
-        sun.className = 'theme-icon theme-icon-sun';
-        sun.style.cssText = 'position:absolute;inset:0;display:flex;align-items:center;justify-content:center;animation:none;';
-        sun.innerHTML = '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>';
-
-        var moon = document.createElement('span');
-        moon.className = 'theme-icon theme-icon-moon';
-        moon.style.cssText = 'position:absolute;inset:0;display:flex;align-items:center;justify-content:center;animation:none;';
-        moon.innerHTML = '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>';
-
-        btn.appendChild(sun);
-        btn.appendChild(moon);
-
-        function syncIcons(theme) {
-          if (theme === 'saffronSunrise') {
-            sun.style.opacity = '1';
-            sun.style.transform = 'rotate(0deg) scale(1)';
-            moon.style.opacity = '0';
-            moon.style.transform = 'rotate(180deg) scale(0)';
-          } else {
-            sun.style.opacity = '0';
-            sun.style.transform = 'rotate(-180deg) scale(0)';
-            moon.style.opacity = '1';
-            moon.style.transform = 'rotate(0deg) scale(1)';
-          }
+          themeSwitcher.appendChild(toggleBtn);
         }
-        syncIcons(html.getAttribute('data-theme'));
 
-        btn.addEventListener('click', function() {
-          var current = html.getAttribute('data-theme');
-          var next = current === 'saffronSunrise' ? 'indigoMidnight' : 'saffronSunrise';
-          // icon micro-animations (names defined in css/themes.css)
-          if (next === 'indigoMidnight') {
-            sun.style.animation = 'sunSet 300ms var(--ease-in-out) forwards';
-            moon.style.animation = 'moonRise 300ms var(--ease-in-out) forwards';
-          } else {
-            moon.style.animation = 'moonSet 300ms var(--ease-in-out) forwards';
-            sun.style.animation = 'sunRise 300ms var(--ease-in-out) forwards';
-          }
-          // apply theme slightly after animation starts for smoothness
-          setTimeout(function(){ applyTheme(next); }, 120);
-        });
-
-        mount.appendChild(btn);
-        setToggleA11y(html.getAttribute('data-theme'));
-      }
-
-      // Cross‑tab sync
-      window.addEventListener('storage', function(e) {
-        if (e.key === STORAGE_KEY && e.newValue) {
-          if (THEMES[e.newValue]) applyTheme(e.newValue);
-        }
-        // migrate legacy key once
-        if (e.key === 'theme' && e.newValue) {
-          var map = { spice: 'saffronSunrise', holi: 'saffronSunrise', heritage: 'saffronSunrise', dark: 'indigoMidnight' };
-          var migrated = map[e.newValue] || 'saffronSunrise';
-          applyTheme(migrated);
-          try { localStorage.setItem(STORAGE_KEY, migrated); } catch(_) {}
+        // Harmonize header link color with theme
+        var cvLink = document.querySelector('.cv-link-header');
+        if (cvLink) {
+          cvLink.style.color = 'var(--color-text-primary)';
+          cvLink.style.borderColor = 'var(--color-border)';
         }
       });
 
-      // One-time migration of legacy localStorage key
-      (function migrateOnce() {
-        var old = null; try { old = localStorage.getItem('theme'); } catch(_) {}
-        if (old) {
-          var map = { spice: 'saffronSunrise', holi: 'saffronSunrise', heritage: 'saffronSunrise', dark: 'indigoMidnight' };
-          var migrated = map[old] || 'saffronSunrise';
-          try { localStorage.setItem(STORAGE_KEY, migrated); localStorage.removeItem('theme'); } catch(_) {}
-          applyTheme(migrated);
-        }
-      })();
-    
-      // JSON token loader: reflect config/theme-tokens.json into CSS variables at startup
+      // JSON token + icon sprite loader: reflect config/theme-tokens.json into CSS vars and load per-theme icon sprite
       (function loadDesignTokens() {
         try {
           var html = document.documentElement;
-          var active = html.getAttribute('data-theme') || 'saffronSunrise';
           var tokensUrl = '/config/theme-tokens.json';
-    
+
+          // Inject/replace the inline SVG sprite for the active theme (static compiled subset)
+          function ensureIconSprite(url) {
+            if (!url) return;
+            var current = html.getAttribute('data-icon-sprite');
+            if (current === url) return;
+            fetch(url, { cache: 'no-cache' })
+              .then(function (r) { return r.ok ? r.text() : ''; })
+              .then(function (svg) {
+                if (!svg) return;
+                var holder = document.getElementById('icon-sprite');
+                if (!holder) {
+                  holder = document.createElement('div');
+                  holder.id = 'icon-sprite';
+                  holder.setAttribute('aria-hidden', 'true');
+                  holder.style.position = 'absolute';
+                  holder.style.width = '0';
+                  holder.style.height = '0';
+                  holder.style.overflow = 'hidden';
+                  // Insert at top of body so <use> works anywhere
+                  document.body.insertBefore(holder, document.body.firstChild || null);
+                }
+                holder.innerHTML = svg;
+                html.setAttribute('data-icon-sprite', url);
+              })
+              .catch(function () { /* ignore sprite errors */ });
+          }
+
           function applyTokenVars(themeKey, tokens) {
-            if (!tokens || !tokens.themes || !tokens.themes[themeKey]) return;
+            if (!tokens || !tokens.themes || !tokens.themes[themeKey]) return null;
             var t = tokens.themes[themeKey];
             var c = t.colors || {};
             var f = t.fonts || {};
-    
+            var i = t.icons || null;
+
             // Apply core color variables (kept in sync with css/themes.css names)
-            html.style.setProperty('--color-background', c.background || '');
-            html.style.setProperty('--color-surface', c.surface || '');
-            html.style.setProperty('--color-primary', c.primary || '');
-            html.style.setProperty('--color-secondary', c.secondary || '');
-            html.style.setProperty('--color-accent', c.accent || '');
-            html.style.setProperty('--color-accent-soft', c.accentSoft || '');
-    
-            html.style.setProperty('--color-text-primary', c.textPrimary || '');
-            html.style.setProperty('--color-text-secondary', c.textSecondary || '');
-            html.style.setProperty('--color-text-muted', c.textMuted || '');
-            html.style.setProperty('--color-text-inverse', c.textInverse || '');
-    
-            html.style.setProperty('--color-success', c.success || '');
-            html.style.setProperty('--color-warning', c.warning || '');
-            html.style.setProperty('--color-error', c.error || '');
-            html.style.setProperty('--color-info', c.info || '');
-    
-            html.style.setProperty('--color-border', c.border || '');
-            html.style.setProperty('--color-border-hover', c.borderHover || '');
-    
+            if (c.background)    html.style.setProperty('--color-background', c.background);
+            if (c.surface)       html.style.setProperty('--color-surface', c.surface);
+            if (c.primary)       html.style.setProperty('--color-primary', c.primary);
+            if (c.secondary)     html.style.setProperty('--color-secondary', c.secondary);
+            if (c.accent)        html.style.setProperty('--color-accent', c.accent);
+            if (c.accentSoft)    html.style.setProperty('--color-accent-soft', c.accentSoft);
+
+            if (c.textPrimary)   html.style.setProperty('--color-text-primary', c.textPrimary);
+            if (c.textSecondary) html.style.setProperty('--color-text-secondary', c.textSecondary);
+            if (c.textMuted)     html.style.setProperty('--color-text-muted', c.textMuted);
+            if (c.textInverse)   html.style.setProperty('--color-text-inverse', c.textInverse);
+
+            if (c.success)       html.style.setProperty('--color-success', c.success);
+            if (c.warning)       html.style.setProperty('--color-warning', c.warning);
+            if (c.error)         html.style.setProperty('--color-error', c.error);
+            if (c.info)          html.style.setProperty('--color-info', c.info);
+
+            if (c.border)        html.style.setProperty('--color-border', c.border);
+            if (c.borderHover)   html.style.setProperty('--color-border-hover', c.borderHover);
+
             if (c.shadowRGB) {
               html.style.setProperty('--shadow-color', c.shadowRGB);
             }
             if (c.overlayRGB) {
               html.style.setProperty('--overlay-color', c.overlayRGB);
             }
-    
+
             // Typography families
             if (f.display) html.style.setProperty('--font-display', f.display);
             if (f.heading) html.style.setProperty('--font-heading', f.heading);
             if (f.body)    html.style.setProperty('--font-body', f.body);
             if (f.mono)    html.style.setProperty('--font-mono', f.mono);
+
+            return i;
           }
-    
+
           function fetchAndApply(themeKey) {
             fetch(tokensUrl, { cache: 'no-cache' })
               .then(function (r) { return r.ok ? r.json() : null; })
-              .then(function (json) { if (json) applyTokenVars(themeKey, json); })
+              .then(function (json) {
+                if (!json) return;
+                var iconsConf = applyTokenVars(themeKey, json);
+                if (iconsConf && iconsConf.sprite) ensureIconSprite(iconsConf.sprite);
+              })
               .catch(function () { /* silent fail to avoid blocking paint */ });
           }
-    
-          // Initial load
-          fetchAndApply(active);
-    
-          // Re-apply on theme change
+
+          // Initial load using current DOM theme (set pre-paint)
+          var initialTheme = document.documentElement.getAttribute('data-theme') || 'saffronSunrise';
+          fetchAndApply(initialTheme);
+
+          // Re-apply on ThemeProvider changes
           document.addEventListener('theme-changed', function (e) {
-            var to = (e.detail && e.detail.to) || html.getAttribute('data-theme') || 'saffronSunrise';
+            var det = (e && e.detail) || {};
+            var to = det.theme || det.to || document.documentElement.getAttribute('data-theme') || 'saffronSunrise';
             fetchAndApply(to);
           });
         } catch (_) {}
       })();
 
-      // Remove any legacy icon listeners/DOM if still present in markup
-      var legacyIcons = document.querySelectorAll('.theme-icon[data-theme]');
-      legacyIcons.forEach(function(el){ el.replaceWith(document.createComment('legacy theme icon removed')); });
-
+      // Remove legacy single toggle if still present
       var legacyToggle = document.getElementById('theme-toggle');
       if (legacyToggle) legacyToggle.replaceWith(document.createComment('legacy theme toggle removed'));
     } catch (err) {
@@ -488,70 +451,65 @@
     showNext();
     if (!reduceMotion) setInterval(showNext, intervalMs);
   }
-  // Dynamically render available 88x31 badges in footer by listing known filenames and checking existence
-  (function initBadges() {
+  // 88x31 footer badges removed per request
+
+})();
+/* Idempotent header toggle render to ensure replacement even if theme-ready fired before this script bound */
+(function () {
+  'use strict';
+  function renderHeaderThemeToggleNow() {
     try {
-      var footerList = document.querySelector('.site-footer .footer-links');
-      if (!footerList) return;
-
-      // Candidate assets (extendable). We’ll probe existence via HEAD requests.
-      var candidates = [
-        { file: '/assets/88x31/kilo.gif', alt: 'Kilo Code 88x31 badge' },
-        { file: '/assets/88x31/edit.gif', alt: 'Edit 88x31 badge' },
-        { file: '/assets/88x31/citizen.gif', alt: 'Citizen of the Web 88x31 badge' },
-        { file: '/assets/88x31/kilo-anim.mp4', alt: 'Kilo animated 88x31' } // will fallback to link text if mp4
-      ];
-
-      // Helper to check if an asset exists using HEAD (served by the same server)
-      function check(url) {
-        return fetch(url, { method: 'HEAD' }).then(function (res) {
-          return res.ok;
-        }).catch(function () { return false; });
-      }
-
-      // Clear any static badges we may have in markup to avoid duplicates
-      footerList.innerHTML = '';
-
-      // For each candidate, if exists, append appropriate element
-      Promise.all(candidates.map(function (c) { return check(c.file).then(function (ok) { return { ok: ok, meta: c }; }); }))
-        .then(function (results) {
-          results.filter(function (r) { return r.ok; }).forEach(function (r) {
-            var li = document.createElement('li');
-
-            if (r.meta.file.endsWith('.gif') || r.meta.file.endsWith('.png') || r.meta.file.endsWith('.jpg') || r.meta.file.endsWith('.webp')) {
-              var img = document.createElement('img');
-              img.src = r.meta.file;
-              img.width = 88;
-              img.height = 31;
-              img.decoding = 'async';
-              img.loading = 'lazy';
-              img.alt = r.meta.alt;
-              li.appendChild(img);
-            } else if (r.meta.file.endsWith('.mp4')) {
-              // Tiny video badge, muted inline looping; keep accessible name via aria-label
-              var vid = document.createElement('video');
-              vid.src = r.meta.file;
-              vid.width = 88;
-              vid.height = 31;
-              vid.muted = true;
-              vid.loop = true;
-              vid.playsInline = true;
-              vid.autoplay = true;
-              vid.setAttribute('aria-label', r.meta.alt);
-              vid.style.display = 'block';
-              li.appendChild(vid);
-            } else {
-              // Fallback to a link text if unexpected extension
-              var a = document.createElement('a');
-              a.href = r.meta.file;
-              a.textContent = r.meta.alt;
-              li.appendChild(a);
-            }
-
-            footerList.appendChild(li);
-          });
+      var themeSwitcher = document.querySelector('.theme-switcher');
+      if (themeSwitcher && window.ThemeProvider) {
+        // If already rendered, bail
+        if (themeSwitcher.querySelector('.theme-toggle-btn')) return;
+        // Replace any legacy multi-button UI
+        themeSwitcher.innerHTML = '';
+        var toggleBtn = window.ThemeProvider.createToggleButton({
+          className: 'theme-toggle-btn',
+          showLabel: false,
+          animateIcons: true
         });
+        // Custom affordance styling (mirror initTheme block)
+        toggleBtn.style.cssText = [
+          'position: relative',
+          'display: inline-flex',
+          'align-items: center',
+          'justify-content: center',
+          'width: 56px',
+          'height: 56px',
+          'padding: 0',
+          'background: transparent',
+          'border: 2px solid var(--color-border)',
+          'border-radius: var(--radius-full)',
+          'cursor: pointer',
+          'transition: all var(--duration-fast) var(--ease-out)'
+        ].join(';') + ';';
+        toggleBtn.addEventListener('mouseenter', function() {
+          this.style.transform = 'scale(1.05)';
+          this.style.borderColor = 'var(--color-primary)';
+        });
+        toggleBtn.addEventListener('mouseleave', function() {
+          this.style.transform = 'scale(1)';
+          this.style.borderColor = 'var(--color-border)';
+        });
+        themeSwitcher.appendChild(toggleBtn);
+      }
+      var cvLink = document.querySelector('.cv-link-header');
+      if (cvLink) {
+        cvLink.style.color = 'var(--color-text-primary)';
+        cvLink.style.borderColor = 'var(--color-border)';
+      }
     } catch (_) {}
-  })();
-
+  }
+  // Run after DOM ready and also if ThemeProvider was already ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function () {
+      if (window.ThemeProvider) renderHeaderThemeToggleNow();
+    });
+  } else {
+    if (window.ThemeProvider) renderHeaderThemeToggleNow();
+  }
+  // Also respond to future theme-ready events
+  document.addEventListener('theme-ready', renderHeaderThemeToggleNow);
 })();
