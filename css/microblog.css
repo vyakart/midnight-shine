@@ -13,6 +13,10 @@
 /* Hero */
 .microblog-hero .subheadline {
   color: var(--text-muted, var(--color-text-secondary));
+  /* Show full sentence; allow wrapping */
+  white-space: normal;
+  overflow: visible;
+  text-overflow: clip;
 }
 
 /* Type Dock (horizontal) */
@@ -93,18 +97,15 @@
 
 @media (min-width: 768px) {
   .microblog-layout {
-    grid-template-columns: minmax(0, var(--micro-sidebar)) minmax(0, 1fr);
+    /* Collapse the (now empty) sidebar so the grid is centered */
+    grid-template-columns: 1fr;
     align-items: start;
   }
 }
 
+/* Filters are disabled for this layout; hide the column entirely */
 .microblog-filters {
-  position: sticky;
-  top: 72px; /* below sticky header */
-  display: grid;
-  gap: var(--space-6, 1.5rem);
-  align-self: start;
-  background: transparent;
+  display: none !important;
 }
 
 .filter-group {
@@ -225,12 +226,31 @@
 
 /* Feed */
 .microblog-feed-wrapper {
-  max-width: var(--micro-max-width);
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto; /* center the grid within the page container */
 }
 
 .microblog-feed {
   display: grid;
   gap: var(--micro-gap);
+  /* Responsive: 1 / 2 / 3 columns to present as 3x3 on desktop */
+  grid-template-columns: 1fr;
+  justify-content: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  align-items: stretch;
+}
+
+@media (min-width: 640px) {
+  .microblog-feed {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (min-width: 1024px) {
+  .microblog-feed {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
 }
 
 /* Post card */
@@ -311,15 +331,17 @@
 
 .micro-post-tags .tag {
   font-size: var(--text-xs, .75rem);
-  color: var(--color-text-secondary);
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
+  color: var(--chip-fg, var(--color-text-secondary));
+  background: var(--chip-bg, var(--color-surface));
+  border: 1px solid var(--chip-border, var(--color-border));
   padding: .2rem .45rem;
   border-radius: var(--radius-base, .25rem);
   cursor: pointer;
+  transition: background-color var(--duration-fast, 150ms) var(--ease-out, ease), border-color var(--duration-fast, 150ms) var(--ease-out, ease), color var(--duration-fast, 150ms) var(--ease-out, ease);
 }
 .micro-post-tags .tag:hover {
-  border-color: var(--color-primary);
+  border-color: var(--chip-fg, var(--color-primary));
+  background: color-mix(in oklab, var(--chip-bg, transparent) 70%, var(--chip-fg, var(--color-primary)) 30%);
 }
 
 /* Loading sentinel */
@@ -358,4 +380,255 @@
 .toast.show {
   transform: translateX(-50%) translateY(0);
   opacity: 1;
+}
+/* Pantone Card Layout */
+.pantone-card {
+  padding: 0; /* override .micro-post padding */
+  display: flex;
+  flex-direction: column;
+  height: 400px; /* Fixed height for uniform cards */
+  /* Rounded-rectangle look similar to reference */
+  border-radius: var(--pantone-radius, var(--radius-2xl, 1rem));
+  overflow: hidden;
+  box-shadow: var(--card-shadow, var(--shadow-base));
+  animation: pantoneReveal .4s ease-out backwards;
+}
+.pantone-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--card-hover-shadow, var(--shadow-lg));
+}
+
+/* Image block */
+.pantone-card__image {
+  background: var(--card-color, #888);
+  color: var(--card-fg, #111);
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  position: relative;
+}
+.pantone-card__image figure {
+  margin: 0;
+  height: 100%;
+}
+.pantone-card__image img,
+.pantone-card__image video {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  background: var(--card-color, #888);
+}
+
+/* Placeholder image element (legacy) */
+.pantone-placeholder img {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* ShaderGradient-inspired background for imageless posts */
+.shadergradient-bg {
+  width: 100%;
+  height: 100%;
+  border-radius: 0;
+  /* Palette from request */
+  --sg-c1: #ff5005;
+  --sg-c2: #dbba95;
+  --sg-c3: #d0bce1;
+
+  background:
+    radial-gradient(60% 60% at 20% 30%, var(--sg-c1) 0 60%, transparent 70%),
+    radial-gradient(60% 60% at 80% 20%, var(--sg-c2) 0 55%, transparent 75%),
+    radial-gradient(80% 80% at 50% 80%, var(--sg-c3) 0 55%, transparent 75%),
+    linear-gradient(120deg, color-mix(in oklab, var(--sg-c1) 60%, var(--sg-c2) 40%), color-mix(in oklab, var(--sg-c2) 60%, var(--sg-c3) 40%));
+  background-blend-mode: screen, screen, multiply, normal;
+  background-size: 140% 140%, 140% 140%, 160% 160%, 100% 100%;
+  filter: brightness(1.2) saturate(1.05);
+}
+
+/* Gentle motion reminiscent of shadergradient */
+.shadergradient-animate {
+  animation: shaderPan 18s var(--ease-in-out, ease) infinite alternate;
+  will-change: background-position, transform;
+}
+@keyframes shaderPan {
+  0% {
+    background-position: 0% 40%, 100% 0%, 50% 100%, 0% 0%;
+    transform: rotate(0deg) scale(1);
+  }
+  50% {
+    background-position: 50% 60%, 30% 50%, 60% 40%, 100% 100%;
+    transform: rotate(1deg) scale(1.02);
+  }
+  100% {
+    background-position: 100% 20%, 0% 60%, 40% 0%, 0% 0%;
+    transform: rotate(-1deg) scale(1.01);
+  }
+}
+
+/* Respect reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  .shadergradient-animate {
+    animation: none !important;
+    transform: none !important;
+  }
+}
+
+/* Stronger rounded-rectangle feel */
+.pantone-card { border-radius: var(--pantone-radius, 18px); }
+
+/* Label block */
+.pantone-card__label {
+  background: var(--color-surface, #fff);
+  color: var(--color-text-primary);
+  padding: 14px 16px 18px 16px;
+  border-top: 1px solid var(--color-border);
+  display: grid;
+  gap: 6px;
+  flex-shrink: 0;
+  /* Allow content to grow; prevents action buttons being cropped */
+  min-height: 110px;
+  height: auto;
+  overflow: visible;
+}
+.pantone-card__brand {
+  font-size: 10px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--color-text-secondary);
+}
+.pantone-card__code {
+  font-family: var(--font-mono, ui-monospace);
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--card-color, var(--color-primary));
+}
+.pantone-card__title {
+  margin: 0;
+  font: 600 1rem/1.25 var(--font-sans, system-ui);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.pantone-card__meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--text-muted, var(--color-text-secondary));
+  font-size: .82rem;
+}
+
+/* Tags inside label */
+.pantone-card .micro-post-tags {
+  margin-top: 4px;
+}
+/* Action buttons for like/share */
+.pantone-card__actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.pantone-action-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border: 1px solid var(--color-border);
+  border-radius: 50%;
+  background: transparent;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.pantone-action-btn:hover {
+  background: var(--color-surface);
+  color: var(--color-primary);
+  border-color: var(--color-primary);
+  transform: scale(1.1);
+}
+
+.pantone-action-btn:active {
+  transform: scale(0.95);
+}
+
+.pantone-action-btn.liked {
+  color: #ef4444;
+  background: rgba(239, 68, 68, 0.1);
+  border-color: #ef4444;
+}
+
+.pantone-action-btn.liked svg {
+  fill: currentColor;
+}
+
+/* Remove default media margin inside pantone card */
+.pantone-card .micro-post-media {
+  margin: 0;
+}
+
+/* Entry animation */
+@keyframes pantoneReveal {
+  from { opacity: 0; transform: translateY(14px) scale(.98); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+/* Accessibility & Performance overrides */
+.pantone-card { contain: content; }
+
+@media (prefers-reduced-motion: reduce) {
+  .pantone-card { animation: none !important; }
+}
+/* Center feed items within the layout */
+.microblog-layout { justify-items: center; }
+
+/* Ensure label content (title + meta + actions) never crops */
+.pantone-card__label {
+  height: auto;
+  min-height: 128px;
+  overflow: visible;
+  padding-bottom: 18px;
+}
+
+/* Gradient overlay on ALL media (images/videos/placeholders) */
+.pantone-card__image::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: inherit;
+  /* Defaults; per-card values come from JS via CSS vars */
+  --sg-c1: #ff5005;
+  --sg-c2: #dbba95;
+  --sg-c3: #d0bce1;
+  --sg-speed: 18s;
+  --sg-rot: 0deg;
+  --sg-scale: 1;
+  --sg-opacity: 0.6;
+
+  background:
+    radial-gradient(60% 60% at 20% 30%, var(--sg-c1) 0 60%, transparent 70%),
+    radial-gradient(60% 60% at 80% 20%, var(--sg-c2) 0 55%, transparent 75%),
+    radial-gradient(80% 80% at 50% 80%, var(--sg-c3) 0 55%, transparent 75%),
+    linear-gradient(120deg,
+      color-mix(in oklab, var(--sg-c1) 60%, var(--sg-c2) 40%),
+      color-mix(in oklab, var(--sg-c2) 60%, var(--sg-c3) 40%));
+  background-blend-mode: screen, screen, multiply, normal;
+  background-size: 140% 140%, 140% 140%, 160% 160%, 100% 100%;
+  mix-blend-mode: screen;
+  opacity: var(--sg-opacity);
+  transform: rotate(var(--sg-rot)) scale(var(--sg-scale));
+  animation: shaderPan var(--sg-speed) var(--ease-in-out, ease) infinite alternate;
+}
+
+/* Keep animation respectful for motion-sensitive users */
+@media (prefers-reduced-motion: reduce) {
+  .pantone-card__image::after {
+    animation: none !important;
+    transform: none !important;
+  }
 }

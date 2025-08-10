@@ -1,0 +1,30 @@
+{
+  "design": { "code": "17-3938", "name": "Very Peri", "color": "#6667AB" },
+  "art": { "code": "17-1755", "name": "Paradise Pink", "color": "#E8537A" },
+  "photography": { "code": "15-1040", "name": "Iced Coffee", "color": "#B08D74" },
+
+  "code": { "code": "19-4052", "name": "Classic Blue", "color": "#0F4C81" },
+  "javascript": { "code": "13-0932", "name": "Cornsilk", "color": "#E4C16F" },
+  "snippets": { "code": "15-3919", "name": "Serenity", "color": "#91A8D0" },
+  "performance": { "code": "16-1546", "name": "Living Coral", "color": "#FF6F61" },
+
+  "bjj": { "code": "18-3949", "name": "Purple Haze", "color": "#7C4789" },
+  "movement": { "code": "16-4411", "name": "Tourmaline", "color": "#86A8A3" },
+  "training": { "code": "15-4003", "name": "Storm Gray", "color": "#B5BAB6" },
+  "meditation": { "code": "14-4318", "name": "Serenity", "color": "#91A8D0" },
+
+  "reading": { "code": "17-1755", "name": "Paradise Pink", "color": "#E8537A" },
+  "quotes": { "code": "15-2718", "name": "Fuchsia Pink", "color": "#D77FA1" },
+
+  "morning": { "code": "17-1341", "name": "Tawny Orange", "color": "#D68A59" },
+  "astro": { "code": "19-3832", "name": "Galaxy Blue", "color": "#2A4B7C" },
+
+  "simplicity": { "code": "11-4001", "name": "Bright White", "color": "#F4F5F0" },
+  "practice": { "code": "13-0932", "name": "Cornsilk", "color": "#E4D96F" },
+
+  "video": { "code": "18-2133", "name": "Pink Flambé", "color": "#CC5490" },
+  "link": { "code": "14-4318", "name": "Serenity", "color": "#91A8D0" },
+  "image": { "code": "16-1546", "name": "Living Coral", "color": "#FF6F61" },
+  "text": { "code": "17-3938", "name": "Very Peri", "color": "#6667AB" },
+  "thought": { "code": "16-4411", "name": "Tourmaline", "color": "#86A8A3" }
+}
