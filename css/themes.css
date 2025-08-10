@@ -98,52 +98,56 @@
 }
 
 /* ===========================
-   saffronSunrise Theme (Light)
+   Sunset Glow Theme (Light)
    =========================== */
-:root[data-theme="saffronSunrise"] {
+:root[data-theme="sunsetGlow"] {
   /* Core colors */
-  --color-background: #FFF8E7;
+  --color-background: #FFFBF5;
   --color-surface: #FFFFFF;
-  --color-primary: #FF9933;
-  --color-secondary: #096C6C;
-  --color-accent: #9A031E;
-  --color-accent-soft: #D4AF37;
+  --color-primary: #FF6B6B;
+  --color-secondary: #4D96FF;
+  --color-accent: #FFD93D;
+  --color-accent-soft: #FDB99B;
+  
+  /* Gradients */
+  --gradient-primary: linear-gradient(135deg, #FFD93D 0%, #FF6B6B 50%, #C73E1D 100%);
+  --gradient-secondary: linear-gradient(135deg, #6BCB77 0%, #4D96FF 100%);
+  --gradient-accent: radial-gradient(circle at 30% 107%, #FDB99B 0%, #CD84F1 45%, #7367F0 100%);
+  --gradient-overlay: linear-gradient(180deg, rgba(255,217,61,0.1) 0%, rgba(255,107,107,0.05) 100%);
+  --gradient-glass: linear-gradient(135deg, rgba(255,255,255,0.7) 0%, rgba(255,255,255,0.3) 100%);
+  
+  /* Mesh gradient colors */
+  --mesh-color-1: #FFD93D;
+  --mesh-color-2: #FF6B6B;
+  --mesh-color-3: #C73E1D;
+  --mesh-color-4: #FDB99B;
+  --mesh-color-5: #CD84F1;
   
   /* Text colors */
-  --color-text-primary: #3B2E2A;
-  --color-text-secondary: #5C4F4B;
-  --color-text-muted: #7A6D69;
+  --color-text-primary: #2D1B11;
+  --color-text-secondary: #5C4033;
+  --color-text-muted: #8B6F60;
   --color-text-inverse: #FFFFFF;
   
   /* Semantic colors */
-  --color-success: #138000;
-  --color-warning: #B26500;
-  --color-error: #C41E3A;
-  --color-info: #0066CC;
+  --color-success: #6BCB77;
+  --color-warning: #FFD93D;
+  --color-error: #FF6B6B;
+  --color-info: #4D96FF;
   
   /* Borders and surfaces */
-  --color-border: #E8DFC8;
-  --color-border-hover: #D4C9A8;
+  --color-border: #FFE4D6;
+  --color-border-hover: #FFCDB2;
   
   /* Shadows */
-  --shadow-color: 139, 69, 19;
+  --shadow-color: 255, 107, 107;
   --shadow-sm: 0 1px 2px 0 rgba(var(--shadow-color), 0.05);
-  --shadow-base: 0 1px 3px 0 rgba(var(--shadow-color), 0.1), 
+  --shadow-base: 0 1px 3px 0 rgba(var(--shadow-color), 0.1),
                  0 1px 2px 0 rgba(var(--shadow-color), 0.06);
-  --shadow-md: 0 4px 6px -1px rgba(var(--shadow-color), 0.1), 
+  --shadow-md: 0 4px 6px -1px rgba(var(--shadow-color), 0.1),
                0 2px 4px -1px rgba(var(--shadow-color), 0.06);
-  --shadow-lg: 0 10px 15px -3px rgba(var(--shadow-color), 0.1), 
+  --shadow-lg: 0 10px 15px -3px rgba(var(--shadow-color), 0.1),
                0 4px 6px -2px rgba(var(--shadow-color), 0.05);
-  --shadow-xl: 0 20px 25px -5px rgba(var(--shadow-color), 0.1), 
-               0 10px 10px -5px rgba(var(--shadow-color), 0.04);
-  --shadow-2xl: 0 25px 50px -12px rgba(var(--shadow-color), 0.25);
-  --shadow-inner: inset 0 2px 4px 0 rgba(var(--shadow-color), 0.06);
-  
-  /* Overlays */
-  --overlay-color: 255, 248, 231;
-  --overlay-light: rgba(var(--overlay-color), 0.5);
-  --overlay-medium: rgba(var(--overlay-color), 0.75);
-  --overlay-heavy: rgba(var(--overlay-color), 0.95);
   
   /* Typography */
   --font-display: 'Hind', 'Noto Sans Devanagari', sans-serif;
@@ -153,148 +157,314 @@
   
   /* Component tokens */
   --button-primary-bg: var(--color-primary);
-  --button-primary-fg: var(--color-surface);
-  --button-primary-hover: #E67A00;
+  --button-primary-fg: var(--color-text-inverse);
+  --button-primary-hover: #e95757;
   --button-secondary-bg: var(--color-secondary);
-  --button-secondary-fg: var(--color-surface);
-  --button-secondary-hover: #075959;
-  
+  --button-secondary-fg: var(--color-text-inverse);
+  --button-secondary-hover: #397ce0;
+
   --card-bg: var(--color-surface);
   --card-border: var(--color-border);
   --card-shadow: var(--shadow-base);
   --card-hover-shadow: var(--shadow-lg);
-  
+
   --input-bg: var(--color-surface);
   --input-border: var(--color-border);
   --input-focus-border: var(--color-primary);
   --input-placeholder: var(--color-text-muted);
-  
-  --link-color: var(--color-secondary);
-  --link-hover: var(--color-primary);
-  
+
+  --link-color: var(--color-primary);
+  --link-hover: var(--color-secondary);
+
   /* Focus ring */
   --focus-ring-color: var(--color-primary);
   --focus-ring-offset: 2px;
   --focus-ring-width: 3px;
-  
+
   color-scheme: light;
 }
 
 /* ===========================
-   indigoMidnight Theme (Dark)
+   Midnight Aurora Theme (Dark)
    =========================== */
-:root[data-theme="indigoMidnight"] {
+:root[data-theme="midnightAurora"] {
   /* Core colors */
-  --color-background: #0B1D3F;
-  --color-surface: #18264D;
-  --color-primary: #B98A2A;
-  --color-secondary: #149C9C;
-  --color-accent: #9C1149;
-  --color-accent-soft: #DC921A;
+  --color-background: #0A0E27;
+  --color-surface: #151932;
+  --color-primary: #764BA2;
+  --color-secondary: #00D2FF;
+  --color-accent: #F093FB;
+  --color-accent-soft: #FA709A;
+  
+  /* Gradients */
+  --gradient-primary: linear-gradient(135deg, #667EEA 0%, #764BA2 50%, #F093FB 100%);
+  --gradient-secondary: linear-gradient(135deg, #FA709A 0%, #FEE140 100%);
+  --gradient-accent: radial-gradient(circle at 20% 80%, #00D2FF 0%, #3A7BD5 50%, #00265F 100%);
+  --gradient-overlay: linear-gradient(180deg, rgba(118,75,162,0.1) 0%, rgba(0,210,255,0.05) 100%);
+  --gradient-glass: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.02) 100%);
+  
+  /* Mesh gradient colors */
+  --mesh-color-1: #667EEA;
+  --mesh-color-2: #764BA2;
+  --mesh-color-3: #F093FB;
+  --mesh-color-4: #00D2FF;
+  --mesh-color-5: #3A7BD5;
   
   /* Text colors */
-  --color-text-primary: #E6E5EB;
-  --color-text-secondary: #C4C4CF;
-  --color-text-muted: #9A9AA8;
-  --color-text-inverse: #0B1D3F;
+  --color-text-primary: #E8E6F7;
+  --color-text-secondary: #B8B5D6;
+  --color-text-muted: #7874A0;
+  --color-text-inverse: #0A0E27;
   
   /* Semantic colors */
   --color-success: #4ADE80;
-  --color-warning: #FBB040;
-  --color-error: #F87171;
-  --color-info: #60A5FA;
+  --color-warning: #FEE140;
+  --color-error: #FA709A;
+  --color-info: #00D2FF;
   
   /* Borders and surfaces */
-  --color-border: #2F3B5A;
-  --color-border-hover: #3D4A6B;
+  --color-border: #2A2E4A;
+  --color-border-hover: #3A3E5A;
   
   /* Shadows */
   --shadow-color: 0, 0, 0;
   --shadow-sm: 0 1px 2px 0 rgba(var(--shadow-color), 0.2);
-  --shadow-base: 0 1px 3px 0 rgba(var(--shadow-color), 0.3), 
+  --shadow-base: 0 1px 3px 0 rgba(var(--shadow-color), 0.3),
                  0 1px 2px 0 rgba(var(--shadow-color), 0.24);
-  --shadow-md: 0 4px 6px -1px rgba(var(--shadow-color), 0.3), 
+  --shadow-md: 0 4px 6px -1px rgba(var(--shadow-color), 0.3),
                0 2px 4px -1px rgba(var(--shadow-color), 0.24);
-  --shadow-lg: 0 10px 15px -3px rgba(var(--shadow-color), 0.3), 
+  --shadow-lg: 0 10px 15px -3px rgba(var(--shadow-color), 0.3),
                0 4px 6px -2px rgba(var(--shadow-color), 0.2);
-  --shadow-xl: 0 20px 25px -5px rgba(var(--shadow-color), 0.3), 
-               0 10px 10px -5px rgba(var(--shadow-color), 0.16);
-  --shadow-2xl: 0 25px 50px -12px rgba(var(--shadow-color), 0.5);
-  --shadow-inner: inset 0 2px 4px 0 rgba(var(--shadow-color), 0.24);
-  
-  /* Overlays */
-  --overlay-color: 11, 29, 63;
-  --overlay-light: rgba(var(--overlay-color), 0.5);
-  --overlay-medium: rgba(var(--overlay-color), 0.75);
-  --overlay-heavy: rgba(var(--overlay-color), 0.95);
   
   /* Typography */
   --font-display: 'Hind', 'Noto Sans Devanagari', sans-serif;
   --font-heading: 'Recursive', sans-serif;
   --font-body: 'Recursive', sans-serif;
   --font-mono: 'Recursive Mono Casual', monospace;
-  
+
   /* Component tokens */
   --button-primary-bg: var(--color-primary);
   --button-primary-fg: var(--color-text-inverse);
-  --button-primary-hover: #A67A1A;
+  --button-primary-hover: #5f3a85;
   --button-secondary-bg: var(--color-secondary);
   --button-secondary-fg: var(--color-text-inverse);
-  --button-secondary-hover: #0F8A8A;
-  
+  --button-secondary-hover: #0abfe5;
+
   --card-bg: var(--color-surface);
   --card-border: var(--color-border);
   --card-shadow: var(--shadow-base);
   --card-hover-shadow: var(--shadow-lg);
-  
+
   --input-bg: var(--color-surface);
   --input-border: var(--color-border);
   --input-focus-border: var(--color-primary);
   --input-placeholder: var(--color-text-muted);
-  
+
   --link-color: var(--color-secondary);
   --link-hover: var(--color-primary);
-  
+
   /* Focus ring */
   --focus-ring-color: var(--color-primary);
   --focus-ring-offset: 2px;
   --focus-ring-width: 3px;
-  
+
   color-scheme: dark;
+}
+
+/* ===========================
+   Forest Mist Theme (Light)
+   =========================== */
+:root[data-theme="forestMist"] {
+  /* Core colors */
+  --color-background: #F7FFF7;
+  --color-surface: #FFFFFF;
+  --color-primary: #11998E;
+  --color-secondary: #6A82FB;
+  --color-accent: #FC5C7D;
+  --color-accent-soft: #FFE000;
+
+  /* Gradients */
+  --gradient-primary: linear-gradient(135deg, #11998E 0%, #38EF7D 100%);
+  --gradient-secondary: linear-gradient(135deg, #FC5C7D 0%, #6A82FB 100%);
+  --gradient-accent: radial-gradient(circle at 10% 20%, #FFE000 0%, #799F0C 100%);
+  --gradient-overlay: linear-gradient(180deg, rgba(17,153,142,0.08) 0%, rgba(56,239,125,0.04) 100%);
+  --gradient-glass: linear-gradient(135deg, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0.4) 100%);
+
+  /* Mesh colors */
+  --mesh-color-1: #11998E;
+  --mesh-color-2: #38EF7D;
+  --mesh-color-3: #FC5C7D;
+  --mesh-color-4: #6A82FB;
+  --mesh-color-5: #FFE000;
+
+  /* Text colors */
+  --color-text-primary: #1A2F1A;
+  --color-text-secondary: #3D5A3D;
+  --color-text-muted: #668866;
+  --color-text-inverse: #FFFFFF;
+
+  /* Semantic */
+  --color-success: #38EF7D;
+  --color-warning: #FFE000;
+  --color-error: #FC5C7D;
+  --color-info: #6A82FB;
+
+  /* Borders */
+  --color-border: #D4E8D4;
+  --color-border-hover: #B8D4B8;
+
+  /* Shadows */
+  --shadow-color: 17, 153, 142;
+
+  /* Typography */
+  --font-display: 'Fraunces', serif;
+  --font-heading: 'Hind', 'Noto Sans Devanagari', sans-serif;
+  --font-body: 'Recursive', sans-serif;
+  --font-mono: 'Recursive Mono Casual', monospace;
+
+  color-scheme: light;
+}
+
+/* ===========================
+   Cosmic Dust Theme (Dark)
+   =========================== */
+:root[data-theme="cosmicDust"] {
+  /* Core colors */
+  --color-background: #0C0C1E;
+  --color-surface: #1A1A2E;
+  --color-primary: #7E57C2;
+  --color-secondary: #F953C6;
+  --color-accent: #FFB75E;
+  --color-accent-soft: #ED8F03;
+
+  /* Gradients */
+  --gradient-primary: linear-gradient(135deg, #1E3C72 0%, #2A5298 50%, #7E57C2 100%);
+  --gradient-secondary: linear-gradient(135deg, #F953C6 0%, #B91D73 100%);
+  --gradient-accent: radial-gradient(circle at 50% 50%, #FFB75E 0%, #ED8F03 50%, #8D4E85 100%);
+  --gradient-overlay: linear-gradient(180deg, rgba(126,87,194,0.1) 0%, rgba(249,83,198,0.05) 100%);
+  --gradient-glass: linear-gradient(135deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.01) 100%);
+
+  /* Mesh colors */
+  --mesh-color-1: #1E3C72;
+  --mesh-color-2: #7E57C2;
+  --mesh-color-3: #F953C6;
+  --mesh-color-4: #FFB75E;
+  --mesh-color-5: #8D4E85;
+
+  /* Text colors */
+  --color-text-primary: #EAEAF5;
+  --color-text-secondary: #C5C5E2;
+  --color-text-muted: #8585B3;
+  --color-text-inverse: #0C0C1E;
+
+  /* Semantic */
+  --color-success: #4ADE80;
+  --color-warning: #FFB75E;
+  --color-error: #F953C6;
+  --color-info: #7E57C2;
+
+  /* Borders */
+  --color-border: #2A2A3E;
+  --color-border-hover: #3A3A4E;
+
+  /* Shadows */
+  --shadow-color: 0, 0, 0;
+
+  /* Typography */
+  --font-display: 'Merriweather', serif;
+  --font-heading: 'Recursive', sans-serif;
+  --font-body: 'Recursive', sans-serif;
+  --font-mono: 'Recursive Mono Casual', monospace;
+
+  color-scheme: dark;
+}
+
+/* ===========================
+   Ocean Breeze Theme (Light)
+   =========================== */
+:root[data-theme="oceanBreeze"] {
+  /* Core colors */
+  --color-background: #F0F9FF;
+  --color-surface: #FFFFFF;
+  --color-primary: #045DE9;
+  --color-secondary: #09C6F9;
+  --color-accent: #FFA8A8;
+  --color-accent-soft: #FCFF00;
+
+  /* Gradients */
+  --gradient-primary: linear-gradient(135deg, #2E3192 0%, #1BFFFF 100%);
+  --gradient-secondary: linear-gradient(135deg, #FFA8A8 0%, #FCFF00 100%);
+  --gradient-accent: radial-gradient(circle at 70% 70%, #09C6F9 0%, #045DE9 100%);
+  --gradient-overlay: linear-gradient(180deg, rgba(4,93,233,0.08) 0%, rgba(9,198,249,0.04) 100%);
+  --gradient-glass: linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.5) 100%);
+
+  /* Mesh colors */
+  --mesh-color-1: #2E3192;
+  --mesh-color-2: #1BFFFF;
+  --mesh-color-3: #FFA8A8;
+  --mesh-color-4: #09C6F9;
+  --mesh-color-5: #045DE9;
+
+  /* Text colors */
+  --color-text-primary: #0C2340;
+  --color-text-secondary: #2C4E70;
+  --color-text-muted: #5C7A99;
+  --color-text-inverse: #FFFFFF;
+
+  /* Semantic */
+  --color-success: #1BFFFF;
+  --color-warning: #FCFF00;
+  --color-error: #FFA8A8;
+  --color-info: #09C6F9;
+
+  /* Borders */
+  --color-border: #D0E7F9;
+  --color-border-hover: #B0D7F0;
+
+  /* Shadows */
+  --shadow-color: 4, 93, 233;
+
+  /* Typography */
+  --font-display: 'Hind', 'Noto Sans Devanagari', sans-serif;
+  --font-heading: 'Fraunces', serif;
+  --font-body: 'Hind', 'Noto Sans Devanagari', sans-serif;
+  --font-mono: 'Recursive Mono Casual', monospace;
+
+  color-scheme: light;
 }
 
 /* ===========================
    Generic UI Token Mappings
    =========================== */
-:root[data-theme="saffronSunrise"],
-:root[data-theme="indigoMidnight"],
-:root[data-theme="spiceOxide"],
-:root[data-theme="templeHeritage"],
-:root[data-theme="rajasthanHoli"] {
+:root[data-theme="sunsetGlow"],
+:root[data-theme="midnightAurora"],
+:root[data-theme="forestMist"],
+:root[data-theme="cosmicDust"],
+:root[data-theme="oceanBreeze"] {
   /* Map to generic tokens for backward compatibility */
   --bg: var(--color-background);
   --fg: var(--color-text-primary);
   --border: var(--color-border);
   --link: var(--link-color);
-  
+
   --primary: var(--color-primary);
   --secondary: var(--color-secondary);
   --accent: var(--color-accent);
-  
+
   --success: var(--color-success);
   --warning: var(--color-warning);
   --danger: var(--color-error);
-  
+
   --muted: var(--color-text-muted);
-  
+
   --text-strong: var(--color-text-primary);
   --text-muted: var(--color-text-muted);
   --brand-fg: var(--color-text-primary);
   --brand-accent: var(--color-primary);
-  
+
   --focus: var(--focus-ring-color);
   --transition-fast: var(--duration-fast);
-  
+
   --surface-card: var(--card-bg);
   --surface-card-border: var(--card-border);
 }
@@ -520,8 +690,107 @@ h6 { font-size: var(--text-base); }
 /* ===========================
    Back-compat for existing theme tokens
    =========================== */
-html[data-theme="saffronSunrise"] body,
-html[data-theme="indigoMidnight"] body {
+html[data-theme="sunsetGlow"] body,
+html[data-theme="midnightAurora"] body,
+html[data-theme="forestMist"] body,
+html[data-theme="cosmicDust"] body,
+html[data-theme="oceanBreeze"] body {
   background: var(--bg);
   color: var(--fg);
+}
+/* ========== Gradient Utilities ========== */
+/* Background gradients bound to theme variables */
+.gradient-primary {
+  background: var(--color-primary);
+  background: var(--gradient-primary);
+  background-size: 200% 200%;
+}
+.gradient-secondary {
+  background: var(--color-secondary);
+  background: var(--gradient-secondary);
+  background-size: 200% 200%;
+}
+.gradient-accent {
+  background: var(--color-accent);
+  background: var(--gradient-accent);
+  background-size: 200% 200%;
+}
+
+/* Animated pan for gradients */
+.gradient-animate {
+  animation: gradientShift 15s var(--ease-in-out, ease) infinite;
+  will-change: background-position;
+}
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Subtle overlay gradient for cards/sections */
+.gradient-overlay {
+  position: relative;
+  overflow: hidden;
+}
+.gradient-overlay::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--gradient-overlay);
+  pointer-events: none;
+  z-index: 1;
+  contain: paint;
+  backface-visibility: hidden;
+}
+
+/* Animate overlay gradients when requested */
+.gradient-overlay.gradient-animate::before {
+  animation: gradientShift 15s var(--ease-in-out, ease) infinite;
+  will-change: background-position;
+}
+
+/* Mesh gradient that uses per-theme mesh colors */
+.gradient-mesh {
+  /* Fallback color for older browsers while gradients resolve */
+  background-color: var(--color-background);
+  background:
+    radial-gradient(at 40% 20%, var(--mesh-color-1, #ffffff) 0px, transparent 50%),
+    radial-gradient(at 80% 0%, var(--mesh-color-2, #ffffff) 0px, transparent 50%),
+    radial-gradient(at 10% 50%, var(--mesh-color-3, #ffffff) 0px, transparent 50%),
+    radial-gradient(at 80% 50%, var(--mesh-color-4, #ffffff) 0px, transparent 50%),
+    radial-gradient(at 50% 100%, var(--mesh-color-5, #ffffff) 0px, transparent 50%);
+}
+
+/* Glass morphism surface */
+.glass {
+  background: var(--gradient-glass);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255,255,255,0.15);
+}
+
+/* Gradient text utility */
+.text-gradient {
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+/* Gradient button utility */
+.button.gradient {
+  background: var(--gradient-primary);
+  background-size: 200% auto;
+  color: var(--color-text-inverse, #fff);
+  transition: background-position var(--duration-fast, 150ms) var(--ease-out, ease);
+}
+.button.gradient:hover {
+  background-position: right center;
+}
+
+/* Reduced-motion respect */
+@media (prefers-reduced-motion: reduce) {
+  .gradient-animate { animation: none; }
+  .button.gradient { transition: none; }
 }

@@ -341,7 +341,7 @@ p {
 .theme-switcher-group .theme-btn:hover {
   background: rgba(0,0,0,.04);
 }
-:root[data-theme="indigoMidnight"] .theme-switcher-group .theme-btn:hover {
+:root[data-theme="midnightAurora"] .theme-switcher-group .theme-btn:hover {
   background: rgba(255,255,255,.06);
 }
 .theme-switcher-group .theme-btn:focus-visible {

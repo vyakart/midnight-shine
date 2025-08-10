@@ -1683,3 +1683,80 @@ This implementation plan provides a complete, production-ready theme system with
 - Clear migration path
 
 The system is modular, maintainable, and extensible for future enhancements.
+## Gradient Integration v1 — Execution Notes
+
+- Scope finalized for v1: two canonical themes only — `saffronSunrise` and `indigoMidnight`.
+- Added gradient tokens to config for both themes: primary, secondary, accent, overlay, glass, mesh-color1..5 in [config/theme-tokens.json](config/theme-tokens.json).
+- Mapped gradient variables under each theme in [css/themes.css](css/themes.css) with fallbacks and performance hints.
+- Utilities implemented: `.gradient-primary`, `.gradient-secondary`, `.gradient-accent`, `.gradient-overlay`, `.gradient-animate`, `.gradient-mesh`, `.glass`, `.text-gradient`, `.button.gradient` in [css/themes.css](css/themes.css:548).
+- Applied utilities to pages:
+  - Mesh background layer inserted after `<body>` in [index.html](index.html) and [microblog.html](microblog.html).
+  - Animated overlay on hero in [index.html](index.html).
+  - Section overlays on About/Values/Practice in [index.html](index.html).
+  - Glass header + animated hero overlay + gradient action in [microblog.html](microblog.html).
+- Performance: `will-change` on animated gradients; `contain: paint` and `backface-visibility: hidden` for overlay pseudo-element layers in [css/themes.css](css/themes.css).
+- Fallbacks: solid color fallbacks precede gradient backgrounds; `.gradient-mesh` includes `background-color` fallback in [css/themes.css](css/themes.css).
+- Migration: legacy theme keys mapped to new `theme-preference` pre-paint in [index.html](index.html) and [microblog.html](microblog.html).
+- ThemeProvider compatibility: meta theme-color and switching flow retained via [ThemeProvider.applyTheme()](js/theme-provider.js:113).
+## Token & Plan Audit — v1 Gradient Integration
+
+This section reconciles planned specs with implemented assets for the two canonical themes (saffronSunrise, indigoMidnight).
+
+1) Sources compared
+- Plan: [implementation-plan.md](implementation-plan.md)
+- Gradient spec: [theme-gradient-design.md](theme-gradient-design.md)
+- Extended multi-theme spec: [theme-implementation.md](theme-implementation.md)
+- Implementation: [config/theme-tokens.json](config/theme-tokens.json:1), [css/themes.css](css/themes.css:100), [js/theme-provider.js](js/theme-provider.js:11)
+
+2) Naming and scope
+- Decision: v1 limits scope to two canonical themes:
+  - saffronSunrise (light) — implemented
+  - indigoMidnight (dark) — implemented
+- Defers 5-theme expansion (sunsetGlow, midnightAurora, forestMist, cosmicDust, oceanBreeze) to v2.
+
+3) Tokens implemented vs planned
+- Implemented base colors match v1 palette decisions (warm cream vs deep licorice backgrounds).
+- New gradient tokens (added to config + mapped to CSS vars):
+  - gradients.primary, gradients.secondary, gradients.accent
+  - gradients.overlay, gradients.glass
+  - gradients.mesh.color1..color5
+  - See: [config/theme-tokens.json](config/theme-tokens.json:1) and [css/themes.css](css/themes.css:100)
+- CSS theme blocks expose theme-scoped vars:
+  - --gradient-primary/secondary/accent/overlay/glass
+  - --mesh-color-1..5
+  - See: [css/themes.css](css/themes.css:100)
+- Utilities bound to these tokens:
+  - .gradient-primary/.gradient-secondary/.gradient-accent (with solid-color fallback first)
+  - .gradient-overlay (pseudo-element layer with contain: paint)
+  - .gradient-animate (will-change: background-position)
+  - .gradient-mesh (with background-color fallback)
+  - .glass (backdrop-filter + -webkit-backdrop-filter)
+  - .text-gradient, .button.gradient
+  - See: [css/themes.css](css/themes.css:548)
+
+4) Behavioral alignment
+- Pre-paint theme mapping from legacy keys to new storage key:
+  - Implemented in [index.html](index.html:10) and [microblog.html](microblog.html:11)
+- ThemeProvider integration:
+  - Meta theme-color updated in [ThemeProvider.applyTheme()](js/theme-provider.js:113)
+  - Toggle UI created via [ThemeProvider.createToggleButton()](js/theme-provider.js:301)
+
+5) Accessibility & motion
+- Focus visibility preserved via :focus-visible and tokens (already present).
+- Reduced motion support for gradient animations:
+  - .gradient-animate disabled under prefers-reduced-motion
+  - See: [css/themes.css](css/themes.css:632)
+
+6) Page usage (v1)
+- Global background mesh: fixed layer after &lt;body&gt;
+- Section overlays (About / Values / Practice): .gradient-overlay
+- Hero overlay animation: .gradient-overlay.gradient-animate
+- Microblog: glass header, animated hero overlay, gradient button
+  - See: [index.html](index.html:88), [microblog.html](microblog.html:63)
+
+7) Divergences from earlier multi-theme draft
+- Earlier multi-theme names (sunsetGlow, midnightAurora, etc.) retained only in documentation for v2; not shipped in v1.
+- All gradient utilities and tokens are present, but only two themes export them.
+
+Conclusion
+- v1 gradients are fully wired for saffronSunrise and indigoMidnight with utilities, fallbacks, motion preferences, and ThemeProvider alignment. The v2 expansion can plug into the same token/utility surface without architectural changes.

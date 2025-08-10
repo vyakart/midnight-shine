@@ -7,6 +7,7 @@
   <meta name="description" content="Brazilian Jiu-Jitsu, astrophotography, mathematics, physics, effective altruism, phenomenology, meditation, and design—woven into a single practice.">
   <meta name="robots" content="index, follow">
   <meta name="color-scheme" content="light dark">
+  <meta name="theme-color" content="#FFFBF5">
   <script>
     // Pre-paint theme setter to avoid FOUC: enforce new themes with legacy mapping
     (function () {
@@ -16,21 +17,23 @@
         var stored = null;
         try { stored = localStorage.getItem(key); } catch (_) {}
 
-        // New canonical themes
-        var NEW = { saffronSunrise: 1, indigoMidnight: 1 };
+        // New canonical themes (v2)
+        var NEW = { sunsetGlow: 1, midnightAurora: 1, forestMist: 1, cosmicDust: 1, oceanBreeze: 1 };
 
         // Legacy → New theme mapping
         var LEGACY_MAP = {
           // very old keys
-          spice: 'saffronSunrise',
-          holi: 'saffronSunrise',
-          heritage: 'saffronSunrise',
-          dark: 'indigoMidnight',
-          light: 'saffronSunrise',
+          spice: 'sunsetGlow',
+          holi: 'sunsetGlow',
+          heritage: 'midnightAurora',
+          dark: 'midnightAurora',
+          light: 'sunsetGlow',
           // recent legacy keys
-          spiceOxide: 'saffronSunrise',
-          rajasthanHoli: 'saffronSunrise',
-          templeHeritage: 'indigoMidnight'
+          saffronSunrise: 'sunsetGlow',
+          indigoMidnight: 'midnightAurora',
+          spiceOxide: 'sunsetGlow',
+          rajasthanHoli: 'sunsetGlow',
+          templeHeritage: 'midnightAurora'
         };
 
         if (!NEW[stored]) {
@@ -44,9 +47,9 @@
             stored = LEGACY_MAP[stored];
             try { localStorage.setItem(key, stored); } catch(_) {}
           } else {
-            // Fallback to system preference between the two new themes
+            // Fallback to system preference
             var mql = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)');
-            stored = (mql && mql.matches) ? 'indigoMidnight' : 'saffronSunrise';
+            stored = (mql && mql.matches) ? 'midnightAurora' : 'sunsetGlow';
           }
         }
 
@@ -85,8 +88,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@600;700&display=swap" rel="stylesheet">
 </head>
 <body>
+<!-- Fixed gradient mesh background layer -->
+<div class="gradient-mesh" aria-hidden="true" style="position: fixed; inset: 0; z-index: 0; opacity: 0.08; pointer-events: none;"></div>
   <a class="skip-link" href="#main">Skip to content</a>
-  <header class="site-header">
+  <header class="site-header glass">
     <div class="container header-inner">
       <div class="brand">
         <a href="/" class="brand-link" aria-label="Go to home">
@@ -101,21 +106,7 @@
           <!-- Theme switcher (left within actions) -->
           <div class="theme-switcher" aria-label="Theme switcher">
             <div role="group" aria-label="Select color theme" class="theme-switcher-group" style="display:flex;gap:14px;align-items:center;">
-              <button type="button" class="theme-icon theme-btn" data-theme="spice" aria-label="Use Spice theme" title="Spice">
-                <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                  <use href="#theme"></use>
-                </svg>
-              </button>
-              <button type="button" class="theme-icon theme-btn" data-theme="holi" aria-label="Use Holi theme" title="Holi">
-                <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                  <use href="#theme"></use>
-                </svg>
-              </button>
-              <button type="button" class="theme-icon theme-btn" data-theme="heritage" aria-label="Use Heritage theme" title="Heritage">
-                <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                  <use href="#theme"></use>
-                </svg>
-              </button>
+              <!-- ThemeProvider will render a toggle button here -->
             </div>
           </div>
           <!-- Streams icon/link -->
@@ -151,7 +142,7 @@
   <main id="main" class="site-main">
     <section class="section hero" aria-labelledby="hero-title">
       <h2 id="hero-title" class="visually-hidden">Hero</h2>
-      <div class="hero-media">
+      <div class="hero-media gradient-overlay gradient-animate">
         <video
           id="hero-video"
           class="hero-video"
@@ -172,7 +163,7 @@
       </div>
     </section>
 
-    <section class="section about" id="about" aria-labelledby="about-title">
+    <section class="section about gradient-overlay" id="about" aria-labelledby="about-title">
       <div class="container narrow">
         <h2 id="about-title">About</h2>
         <p>I build a life of inquiry across body, mind, and world. On the mat, under a sky full of signal, at the whiteboard, and in the studio, I iterate. My work blends rigor and intuition: test, observe, refine. Minimal surfaces, bold edges, clear structure—then a single detail that turns the image.</p>
@@ -216,7 +207,7 @@
     </section>
 
     <!-- Values section inserted before Practice -->
-    <section class="section values" id="values" aria-labelledby="values-title">
+    <section class="section values gradient-overlay" id="values" aria-labelledby="values-title">
       <div class="container narrow">
         <h2 id="values-title">Values</h2>
 
@@ -242,7 +233,7 @@
       </div>
     </section>
 
-    <section class="section practice" id="practice" aria-labelledby="practice-title">
+    <section class="section practice gradient-overlay" id="practice" aria-labelledby="practice-title">
       <div class="container narrow">
         <h2 id="practice-title">Practice</h2>
         <ul class="principles">

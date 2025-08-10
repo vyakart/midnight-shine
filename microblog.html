@@ -7,6 +7,7 @@
   <meta name="description" content="Short-form thoughts, links, images, quotes, and code snippets. A quiet microblog stream.">
   <meta name="robots" content="index, follow">
   <meta name="color-scheme" content="light dark">
+  <meta name="theme-color" content="#FFFBF5">
   <link rel="icon" href="/assets/icons/favicon.png" type="image/png">
   <script>
     // Pre-paint theme setter to avoid FOUC: enforce new themes with legacy mapping
@@ -17,19 +18,23 @@
         var stored = null;
         try { stored = localStorage.getItem(key); } catch (_) {}
 
-        // Canonical themes
-        var NEW = { saffronSunrise: 1, indigoMidnight: 1 };
+        // Canonical themes (v2)
+        var NEW = { sunsetGlow: 1, midnightAurora: 1, forestMist: 1, cosmicDust: 1, oceanBreeze: 1 };
 
         // Legacy → New theme mapping
         var LEGACY_MAP = {
-          spice: 'saffronSunrise',
-          holi: 'saffronSunrise',
-          heritage: 'saffronSunrise',
-          dark: 'indigoMidnight',
-          light: 'saffronSunrise',
-          spiceOxide: 'saffronSunrise',
-          rajasthanHoli: 'saffronSunrise',
-          templeHeritage: 'indigoMidnight'
+          // very old keys
+          spice: 'sunsetGlow',
+          holi: 'sunsetGlow',
+          heritage: 'midnightAurora',
+          dark: 'midnightAurora',
+          light: 'sunsetGlow',
+          // recent legacy keys
+          saffronSunrise: 'sunsetGlow',
+          indigoMidnight: 'midnightAurora',
+          spiceOxide: 'sunsetGlow',
+          rajasthanHoli: 'sunsetGlow',
+          templeHeritage: 'midnightAurora'
         };
 
         if (!NEW[stored]) {
@@ -43,7 +48,7 @@
             try { localStorage.setItem(key, stored); } catch(_) {}
           } else {
             var mql = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)');
-            stored = (mql && mql.matches) ? 'indigoMidnight' : 'saffronSunrise';
+            stored = (mql && mql.matches) ? 'midnightAurora' : 'sunsetGlow';
           }
         }
 
@@ -61,9 +66,11 @@
   <link rel="stylesheet" href="./css/microblog.css">
 </head>
 <body>
+<!-- Fixed gradient mesh background layer -->
+  <div class="gradient-mesh" aria-hidden="true" style="position: fixed; inset: 0; z-index: -1; opacity: 0.06;"></div>
   <a class="skip-link" href="#main">Skip to content</a>
 
-  <header class="site-header">
+  <header class="site-header glass">
     <div class="container header-inner">
       <div class="brand">
         <a href="/" class="brand-link" aria-label="Go to home">
@@ -78,18 +85,7 @@
         <div class="site-actions" style="display:flex;align-items:center;gap:18px;">
           <div class="theme-switcher" aria-label="Theme switcher">
             <div role="group" aria-label="Select color theme" class="theme-switcher-group" style="display:flex;gap:14px;align-items:center;">
-              <button type="button" class="theme-icon theme-btn" data-theme="spice" aria-label="Use Spice theme" title="Spice">
-                <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="#theme"></use></svg>
-                <span class="theme-tooltip">Spice</span>
-              </button>
-              <button type="button" class="theme-icon theme-btn" data-theme="holi" aria-label="Use Holi theme" title="Holi">
-                <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="#theme"></use></svg>
-                <span class="theme-tooltip">Holi</span>
-              </button>
-              <button type="button" class="theme-icon theme-btn" data-theme="heritage" aria-label="Use Heritage theme" title="Heritage">
-                <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="#theme"></use></svg>
-                <span class="theme-tooltip">Heritage</span>
-              </button>
+              <!-- ThemeProvider will render a toggle button here -->
             </div>
           </div>
           <!-- Streams icon/link -->
@@ -142,7 +138,7 @@
       </div>
     </nav>
 
-    <section class="microblog-hero section" aria-labelledby="microblog-hero-title">
+    <section class="microblog-hero section gradient-overlay gradient-animate" aria-labelledby="microblog-hero-title">
       <div class="container narrow">
         <h2 id="microblog-hero-title">Stream</h2>
         <p class="subheadline">A quiet microblog: fragments, links, notes, and experiments. Chronological. Minimal ceremony.</p>
@@ -183,7 +179,7 @@
 
                 <footer class="micro-post-footer">
                   <div class="micro-post-tags"></div>
-                  <button class="micro-post-share button outline" aria-label="Share post">Share</button>
+                  <button class="micro-post-share button gradient" aria-label="Share post">Share</button>
                 </footer>
               </article>
             </template>

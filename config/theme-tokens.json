@@ -1,26 +1,41 @@
 {
   "themes": {
-    "saffronSunrise": {
+    "sunsetGlow": {
       "scheme": "light",
+      "name": "Sunset Glow",
       "colors": {
-        "background": "#FFF8E7",
+        "background": "#FFFBF5",
         "surface": "#FFFFFF",
-        "primary": "#FF9933",
-        "secondary": "#096C6C",
-        "accent": "#9A031E",
-        "accentSoft": "#D4AF37",
-        "textPrimary": "#3B2E2A",
-        "textSecondary": "#5C4F4B",
-        "textMuted": "#7A6D69",
+        "primary": "#FF6B6B",
+        "secondary": "#4D96FF",
+        "accent": "#FFD93D",
+        "accentSoft": "#FDB99B",
+        "textPrimary": "#2D1B11",
+        "textSecondary": "#5C4033",
+        "textMuted": "#8B6F60",
         "textInverse": "#FFFFFF",
-        "success": "#138000",
-        "warning": "#B26500",
-        "error": "#C41E3A",
-        "info": "#0066CC",
-        "border": "#E8DFC8",
-        "borderHover": "#D4C9A8",
-        "shadowRGB": "139, 69, 19",
-        "overlayRGB": "255, 248, 231"
+        "success": "#6BCB77",
+        "warning": "#FFD93D",
+        "error": "#FF6B6B",
+        "info": "#4D96FF",
+        "border": "#FFE4D6",
+        "borderHover": "#FFCDB2",
+        "shadowRGB": "255, 107, 107",
+        "overlayRGB": "255, 251, 245"
+      },
+      "gradients": {
+        "primary": "linear-gradient(135deg, #FFD93D 0%, #FF6B6B 50%, #C73E1D 100%)",
+        "secondary": "linear-gradient(135deg, #6BCB77 0%, #4D96FF 100%)",
+        "accent": "radial-gradient(circle at 30% 107%, #FDB99B 0%, #CD84F1 45%, #7367F0 100%)",
+        "overlay": "linear-gradient(180deg, rgba(255,217,61,0.1) 0%, rgba(255,107,107,0.05) 100%)",
+        "glass": "linear-gradient(135deg, rgba(255,255,255,0.7) 0%, rgba(255,255,255,0.3) 100%)",
+        "mesh": {
+          "color1": "#FFD93D",
+          "color2": "#FF6B6B",
+          "color3": "#C73E1D",
+          "color4": "#FDB99B",
+          "color5": "#CD84F1"
+        }
       },
       "fonts": {
         "display": "'Hind', 'Noto Sans Devanagari', sans-serif",
@@ -29,46 +44,46 @@
         "mono": "'Recursive Mono Casual', monospace"
       },
       "icons": {
-        "sprite": "/assets/icons/compiled/spiceOxide.svg",
-        "names": [
-          "menu",
-          "external-link",
-          "chevron-right",
-          "chevron-left",
-          "arrow-up-right",
-          "mail",
-          "play",
-          "pause",
-          "document",
-          "list",
-          "theme",
-          "search",
-          "user",
-          "calendar"
-        ]
+        "sprite": "/assets/icons/compiled/sunsetGlow.svg",
+        "names": ["menu", "external-link", "chevron-right", "chevron-left", "arrow-up-right", "mail", "play", "pause", "document", "list", "theme", "search", "user", "calendar"]
       }
     },
-    "indigoMidnight": {
+    "midnightAurora": {
       "scheme": "dark",
+      "name": "Midnight Aurora",
       "colors": {
-        "background": "#0B1D3F",
-        "surface": "#18264D",
-        "primary": "#B98A2A",
-        "secondary": "#149C9C",
-        "accent": "#9C1149",
-        "accentSoft": "#DC921A",
-        "textPrimary": "#E6E5EB",
-        "textSecondary": "#C4C4CF",
-        "textMuted": "#9A9AA8",
-        "textInverse": "#0B1D3F",
+        "background": "#0A0E27",
+        "surface": "#151932",
+        "primary": "#764BA2",
+        "secondary": "#00D2FF",
+        "accent": "#F093FB",
+        "accentSoft": "#FA709A",
+        "textPrimary": "#E8E6F7",
+        "textSecondary": "#B8B5D6",
+        "textMuted": "#7874A0",
+        "textInverse": "#0A0E27",
         "success": "#4ADE80",
-        "warning": "#FBB040",
-        "error": "#F87171",
-        "info": "#60A5FA",
-        "border": "#2F3B5A",
-        "borderHover": "#3D4A6B",
+        "warning": "#FEE140",
+        "error": "#FA709A",
+        "info": "#00D2FF",
+        "border": "#2A2E4A",
+        "borderHover": "#3A3E5A",
         "shadowRGB": "0, 0, 0",
-        "overlayRGB": "11, 29, 63"
+        "overlayRGB": "10, 14, 39"
+      },
+      "gradients": {
+        "primary": "linear-gradient(135deg, #667EEA 0%, #764BA2 50%, #F093FB 100%)",
+        "secondary": "linear-gradient(135deg, #FA709A 0%, #FEE140 100%)",
+        "accent": "radial-gradient(circle at 20% 80%, #00D2FF 0%, #3A7BD5 50%, #00265F 100%)",
+        "overlay": "linear-gradient(180deg, rgba(118,75,162,0.1) 0%, rgba(0,210,255,0.05) 100%)",
+        "glass": "linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.02) 100%)",
+        "mesh": {
+          "color1": "#667EEA",
+          "color2": "#764BA2",
+          "color3": "#F093FB",
+          "color4": "#00D2FF",
+          "color5": "#3A7BD5"
+        }
       },
       "fonts": {
         "display": "'Hind', 'Noto Sans Devanagari', sans-serif",
@@ -77,46 +92,46 @@
         "mono": "'Recursive Mono Casual', monospace"
       },
       "icons": {
-        "sprite": "/assets/icons/compiled/templeHeritage.svg",
-        "names": [
-          "menu",
-          "external-link",
-          "chevron-right",
-          "chevron-left",
-          "arrow-up-right",
-          "mail",
-          "play",
-          "pause",
-          "document",
-          "list",
-          "theme",
-          "search",
-          "user",
-          "calendar"
-        ]
+        "sprite": "/assets/icons/compiled/midnightAurora.svg",
+        "names": ["menu", "external-link", "chevron-right", "chevron-left", "arrow-up-right", "mail", "play", "pause", "document", "list", "theme", "search", "user", "calendar"]
       }
     },
-    "spiceOxide": {
+    "forestMist": {
       "scheme": "light",
+      "name": "Forest Mist",
       "colors": {
-        "background": "#FFF4EC",
+        "background": "#F7FFF7",
         "surface": "#FFFFFF",
-        "primary": "#C75000",
-        "secondary": "#7A2E0E",
-        "accent": "#D83A56",
-        "accentSoft": "#F4C95D",
-        "textPrimary": "#2D1B12",
-        "textSecondary": "#5A3A2C",
-        "textMuted": "#8B6F60",
+        "primary": "#11998E",
+        "secondary": "#6A82FB",
+        "accent": "#FC5C7D",
+        "accentSoft": "#FFE000",
+        "textPrimary": "#1A2F1A",
+        "textSecondary": "#3D5A3D",
+        "textMuted": "#668866",
         "textInverse": "#FFFFFF",
-        "success": "#16A34A",
-        "warning": "#D97706",
-        "error": "#DC2626",
-        "info": "#2563EB",
-        "border": "#EBD5C7",
-        "borderHover": "#DBBFA8",
-        "shadowRGB": "139, 69, 19",
-        "overlayRGB": "255, 245, 236"
+        "success": "#38EF7D",
+        "warning": "#FFE000",
+        "error": "#FC5C7D",
+        "info": "#6A82FB",
+        "border": "#D4E8D4",
+        "borderHover": "#B8D4B8",
+        "shadowRGB": "17, 153, 142",
+        "overlayRGB": "247, 255, 247"
+      },
+      "gradients": {
+        "primary": "linear-gradient(135deg, #11998E 0%, #38EF7D 100%)",
+        "secondary": "linear-gradient(135deg, #FC5C7D 0%, #6A82FB 100%)",
+        "accent": "radial-gradient(circle at 10% 20%, #FFE000 0%, #799F0C 100%)",
+        "overlay": "linear-gradient(180deg, rgba(17,153,142,0.08) 0%, rgba(56,239,125,0.04) 100%)",
+        "glass": "linear-gradient(135deg, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0.4) 100%)",
+        "mesh": {
+          "color1": "#11998E",
+          "color2": "#38EF7D",
+          "color3": "#FC5C7D",
+          "color4": "#6A82FB",
+          "color5": "#FFE000"
+        }
       },
       "fonts": {
         "display": "'Fraunces', serif",
@@ -125,50 +140,46 @@
         "mono": "'Recursive Mono Casual', monospace"
       },
       "icons": {
-        "core": "tabler",
-        "accent": "lucide",
-        "alt": "carbon",
-        "brands": "simple-icons",
-        "sprite": "/assets/icons/compiled/spiceOxide.svg",
-        "names": [
-          "menu",
-          "external-link",
-          "chevron-right",
-          "chevron-left",
-          "arrow-up-right",
-          "mail",
-          "play",
-          "pause",
-          "document",
-          "list",
-          "theme",
-          "search",
-          "user",
-          "calendar"
-        ]
+        "sprite": "/assets/icons/compiled/forestMist.svg",
+        "names": ["menu", "external-link", "chevron-right", "chevron-left", "arrow-up-right", "mail", "play", "pause", "document", "list", "theme", "search", "user", "calendar"]
       }
     },
-    "templeHeritage": {
+    "cosmicDust": {
       "scheme": "dark",
+      "name": "Cosmic Dust",
       "colors": {
-        "background": "#0E1225",
-        "surface": "#171B2E",
-        "primary": "#E2B714",
-        "secondary": "#7E5CF7",
-        "accent": "#F25F5C",
-        "accentSoft": "#7AD1D6",
-        "textPrimary": "#EAEAF2",
-        "textSecondary": "#C7C7D3",
-        "textMuted": "#9A9AB1",
-        "textInverse": "#0E1225",
-        "success": "#22C55E",
-        "warning": "#F59E0B",
-        "error": "#EF4444",
-        "info": "#60A5FA",
-        "border": "#2A3050",
-        "borderHover": "#3A4168",
+        "background": "#0C0C1E",
+        "surface": "#1A1A2E",
+        "primary": "#7E57C2",
+        "secondary": "#F953C6",
+        "accent": "#FFB75E",
+        "accentSoft": "#ED8F03",
+        "textPrimary": "#EAEAF5",
+        "textSecondary": "#C5C5E2",
+        "textMuted": "#8585B3",
+        "textInverse": "#0C0C1E",
+        "success": "#4ADE80",
+        "warning": "#FFB75E",
+        "error": "#F953C6",
+        "info": "#7E57C2",
+        "border": "#2A2A3E",
+        "borderHover": "#3A3A4E",
         "shadowRGB": "0, 0, 0",
-        "overlayRGB": "14, 18, 37"
+        "overlayRGB": "12, 12, 30"
+      },
+      "gradients": {
+        "primary": "linear-gradient(135deg, #1E3C72 0%, #2A5298 50%, #7E57C2 100%)",
+        "secondary": "linear-gradient(135deg, #F953C6 0%, #B91D73 100%)",
+        "accent": "radial-gradient(circle at 50% 50%, #FFB75E 0%, #ED8F03 50%, #8D4E85 100%)",
+        "overlay": "linear-gradient(180deg, rgba(126,87,194,0.1) 0%, rgba(249,83,198,0.05) 100%)",
+        "glass": "linear-gradient(135deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.01) 100%)",
+        "mesh": {
+          "color1": "#1E3C72",
+          "color2": "#7E57C2",
+          "color3": "#F953C6",
+          "color4": "#FFB75E",
+          "color5": "#8D4E85"
+        }
       },
       "fonts": {
         "display": "'Merriweather', serif",
@@ -177,48 +188,46 @@
         "mono": "'Recursive Mono Casual', monospace"
       },
       "icons": {
-        "core": "phosphor",
-        "accent": "iconoir",
-        "sprite": "/assets/icons/compiled/templeHeritage.svg",
-        "names": [
-          "menu",
-          "external-link",
-          "chevron-right",
-          "chevron-left",
-          "arrow-up-right",
-          "mail",
-          "play",
-          "pause",
-          "document",
-          "list",
-          "theme",
-          "search",
-          "user",
-          "calendar"
-        ]
+        "sprite": "/assets/icons/compiled/cosmicDust.svg",
+        "names": ["menu", "external-link", "chevron-right", "chevron-left", "arrow-up-right", "mail", "play", "pause", "document", "list", "theme", "search", "user", "calendar"]
       }
     },
-    "rajasthanHoli": {
+    "oceanBreeze": {
       "scheme": "light",
+      "name": "Ocean Breeze",
       "colors": {
-        "background": "#FFFBF5",
+        "background": "#F0F9FF",
         "surface": "#FFFFFF",
-        "primary": "#E35D00",
-        "secondary": "#007F7F",
-        "accent": "#C81E6E",
-        "accentSoft": "#FFB703",
-        "textPrimary": "#2B2B30",
-        "textSecondary": "#4D4D57",
-        "textMuted": "#777789",
+        "primary": "#045DE9",
+        "secondary": "#09C6F9",
+        "accent": "#FFA8A8",
+        "accentSoft": "#FCFF00",
+        "textPrimary": "#0C2340",
+        "textSecondary": "#2C4E70",
+        "textMuted": "#5C7A99",
         "textInverse": "#FFFFFF",
-        "success": "#16A34A",
-        "warning": "#D97706",
-        "error": "#DC2626",
-        "info": "#2563EB",
-        "border": "#EDE3CD",
-        "borderHover": "#E0D3B8",
-        "shadowRGB": "139, 69, 19",
-        "overlayRGB": "255, 251, 245"
+        "success": "#1BFFFF",
+        "warning": "#FCFF00",
+        "error": "#FFA8A8",
+        "info": "#09C6F9",
+        "border": "#D0E7F9",
+        "borderHover": "#B0D7F0",
+        "shadowRGB": "4, 93, 233",
+        "overlayRGB": "240, 249, 255"
+      },
+      "gradients": {
+        "primary": "linear-gradient(135deg, #2E3192 0%, #1BFFFF 100%)",
+        "secondary": "linear-gradient(135deg, #FFA8A8 0%, #FCFF00 100%)",
+        "accent": "radial-gradient(circle at 70% 70%, #09C6F9 0%, #045DE9 100%)",
+        "overlay": "linear-gradient(180deg, rgba(4,93,233,0.08) 0%, rgba(9,198,249,0.04) 100%)",
+        "glass": "linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.5) 100%)",
+        "mesh": {
+          "color1": "#2E3192",
+          "color2": "#1BFFFF",
+          "color3": "#FFA8A8",
+          "color4": "#09C6F9",
+          "color5": "#045DE9"
+        }
       },
       "fonts": {
         "display": "'Hind', 'Noto Sans Devanagari', sans-serif",
@@ -227,26 +236,8 @@
         "mono": "'Recursive Mono Casual', monospace"
       },
       "icons": {
-        "core": "heroicons",
-        "accent": "solar",
-        "alt": "material-symbols",
-        "sprite": "/assets/icons/compiled/rajasthanHoli.svg",
-        "names": [
-          "menu",
-          "external-link",
-          "chevron-right",
-          "chevron-left",
-          "arrow-up-right",
-          "mail",
-          "play",
-          "pause",
-          "document",
-          "list",
-          "theme",
-          "search",
-          "user",
-          "calendar"
-        ]
+        "sprite": "/assets/icons/compiled/oceanBreeze.svg",
+        "names": ["menu", "external-link", "chevron-right", "chevron-left", "arrow-up-right", "mail", "play", "pause", "document", "list", "theme", "search", "user", "calendar"]
       }
     }
   }

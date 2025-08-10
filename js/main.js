@@ -27,29 +27,27 @@
             animateIcons: true
           });
 
-          // Custom affordance styling
+          // Square toggle; inner swatch from ThemeProvider reflects theme colors
           toggleBtn.style.cssText = [
             'position: relative',
             'display: inline-flex',
             'align-items: center',
             'justify-content: center',
-            'width: 56px',
-            'height: 56px',
+            'width: 40px',
+            'height: 40px',
             'padding: 0',
             'background: transparent',
-            'border: 2px solid var(--color-border)',
-            'border-radius: var(--radius-full)',
+            'border: none',
+            'border-radius: var(--radius-md)',
             'cursor: pointer',
-            'transition: all var(--duration-fast) var(--ease-out)'
+            'transition: transform var(--duration-fast,150ms) var(--ease-out, ease)'
           ].join(';') + ';';
 
           toggleBtn.addEventListener('mouseenter', function() {
-            this.style.transform = 'scale(1.05)';
-            this.style.borderColor = 'var(--color-primary)';
+            this.style.transform = 'scale(1.02)';
           });
           toggleBtn.addEventListener('mouseleave', function() {
             this.style.transform = 'scale(1)';
-            this.style.borderColor = 'var(--color-border)';
           });
 
           themeSwitcher.appendChild(toggleBtn);
@@ -152,13 +150,13 @@
           }
 
           // Initial load using current DOM theme (set pre-paint)
-          var initialTheme = document.documentElement.getAttribute('data-theme') || 'saffronSunrise';
+          var initialTheme = document.documentElement.getAttribute('data-theme') || 'sunsetGlow';
           fetchAndApply(initialTheme);
 
           // Re-apply on ThemeProvider changes
           document.addEventListener('theme-changed', function (e) {
             var det = (e && e.detail) || {};
-            var to = det.theme || det.to || document.documentElement.getAttribute('data-theme') || 'saffronSunrise';
+            var to = det.theme || det.to || document.documentElement.getAttribute('data-theme') || 'sunsetGlow';
             fetchAndApply(to);
           });
         } catch (_) {}
@@ -470,28 +468,26 @@
           showLabel: false,
           animateIcons: true
         });
-        // Custom affordance styling (mirror initTheme block)
+        // Square toggle; inner swatch from ThemeProvider reflects theme colors
         toggleBtn.style.cssText = [
           'position: relative',
           'display: inline-flex',
           'align-items: center',
           'justify-content: center',
-          'width: 56px',
-          'height: 56px',
+          'width: 40px',
+          'height: 40px',
           'padding: 0',
           'background: transparent',
-          'border: 2px solid var(--color-border)',
-          'border-radius: var(--radius-full)',
+          'border: none',
+          'border-radius: var(--radius-md)',
           'cursor: pointer',
-          'transition: all var(--duration-fast) var(--ease-out)'
+          'transition: transform var(--duration-fast,150ms) var(--ease-out, ease)'
         ].join(';') + ';';
         toggleBtn.addEventListener('mouseenter', function() {
-          this.style.transform = 'scale(1.05)';
-          this.style.borderColor = 'var(--color-primary)';
+          this.style.transform = 'scale(1.02)';
         });
         toggleBtn.addEventListener('mouseleave', function() {
           this.style.transform = 'scale(1)';
-          this.style.borderColor = 'var(--color-border)';
         });
         themeSwitcher.appendChild(toggleBtn);
       }

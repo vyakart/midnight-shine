@@ -9,19 +9,34 @@
 
   // Theme configuration
   const THEMES = {
-    saffronSunrise: {
-      name: 'Saffron Sunrise',
+    sunsetGlow: {
+      name: 'Sunset Glow',
       icon: 'sun',
       scheme: 'light'
     },
-    indigoMidnight: {
-      name: 'Indigo Midnight',
+    midnightAurora: {
+      name: 'Midnight Aurora',
       icon: 'moon',
       scheme: 'dark'
+    },
+    forestMist: {
+      name: 'Forest Mist',
+      icon: 'leaf',
+      scheme: 'light'
+    },
+    cosmicDust: {
+      name: 'Cosmic Dust',
+      icon: 'star',
+      scheme: 'dark'
+    },
+    oceanBreeze: {
+      name: 'Ocean Breeze',
+      icon: 'wave',
+      scheme: 'light'
     }
   };
 
-  const DEFAULT_THEME = 'saffronSunrise';
+  const DEFAULT_THEME = 'sunsetGlow';
   const STORAGE_KEY = 'theme-preference';
   const THEME_ATTRIBUTE = 'data-theme';
 
@@ -68,7 +83,7 @@
         const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
         mediaQuery.addEventListener('change', (e) => {
           if (!this.getStoredTheme()) {
-            this.setTheme(e.matches ? 'indigoMidnight' : 'saffronSunrise');
+            this.setTheme(e.matches ? 'midnightAurora' : 'sunsetGlow');
           }
         });
       }
@@ -104,7 +119,7 @@
       if (!window.matchMedia) return null;
       
       const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-      return isDark ? 'indigoMidnight' : 'saffronSunrise';
+      return isDark ? 'midnightAurora' : 'sunsetGlow';
     }
 
     /**
@@ -123,8 +138,11 @@
       const metaThemeColor = document.querySelector('meta[name="theme-color"]');
       if (metaThemeColor) {
         const colors = {
-          saffronSunrise: '#FFF8E7',
-          indigoMidnight: '#0B1D3F'
+          sunsetGlow: '#FFFBF5',
+          midnightAurora: '#0A0E27',
+          forestMist: '#F7FFF7',
+          cosmicDust: '#0C0C1E',
+          oceanBreeze: '#F0F9FF'
         };
         metaThemeColor.content = colors[theme];
       }
@@ -191,23 +209,21 @@
      */
     async animateThemeChange(fromTheme, toTheme) {
       return new Promise((resolve) => {
-        // Get toggle button if exists
         const toggleBtn = document.querySelector('.theme-toggle-btn');
-        
-        if (toggleBtn) {
-          const fromIcon = toggleBtn.querySelector('.theme-icon-' + THEMES[fromTheme].icon);
-          const toIcon = toggleBtn.querySelector('.theme-icon-' + THEMES[toTheme].icon);
-          
-          if (fromIcon && toIcon) {
-            // Animate icons
-            fromIcon.style.animation = `${THEMES[fromTheme].icon}Set 300ms ease-in-out forwards`;
-            toIcon.style.animation = `${THEMES[toTheme].icon}Rise 300ms ease-in-out forwards`;
-          }
+        const swatch = toggleBtn ? toggleBtn.querySelector('.color-swatch') : null;
+
+        if (swatch) {
+          swatch.style.transition = 'transform 150ms var(--ease-out, ease)';
+          swatch.style.transform = 'scale(0.85)';
         }
-        
-        // Apply theme after a brief delay for smooth transition
+
         setTimeout(() => {
           this.applyTheme(toTheme);
+          if (swatch) {
+            requestAnimationFrame(() => {
+              swatch.style.transform = 'scale(1)';
+            });
+          }
           resolve();
         }, 150);
       });
@@ -301,82 +317,68 @@
     createToggleButton(options = {}) {
       const {
         className = 'theme-toggle-btn',
-        showLabel = false,
-        animateIcons = true
+        showLabel = false
       } = options;
-      
+
       const button = document.createElement('button');
       button.className = className;
       button.setAttribute('type', 'button');
       button.setAttribute('role', 'switch');
       button.setAttribute('aria-label', 'Toggle theme');
-      button.setAttribute('aria-checked', this.currentTheme === 'indigoMidnight');
-      
-      // Create sun icon
-      const sunIcon = document.createElement('span');
-      sunIcon.className = 'theme-icon theme-icon-sun';
-      sunIcon.innerHTML = `
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="12" cy="12" r="5"></circle>
-          <line x1="12" y1="1" x2="12" y2="3"></line>
-          <line x1="12" y1="21" x2="12" y2="23"></line>
-          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
-          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
-          <line x1="1" y1="12" x2="3" y2="12"></line>
-          <line x1="21" y1="12" x2="23" y2="12"></line>
-          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
-          <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
-        </svg>
-      `;
-      
-      // Create moon icon
-      const moonIcon = document.createElement('span');
-      moonIcon.className = 'theme-icon theme-icon-moon';
-      moonIcon.innerHTML = `
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-        </svg>
-      `;
-      
-      // Set initial visibility
-      if (this.currentTheme === 'saffronSunrise') {
-        sunIcon.style.opacity = '1';
-        sunIcon.style.transform = 'rotate(0deg) scale(1)';
-        moonIcon.style.opacity = '0';
-        moonIcon.style.transform = 'rotate(180deg) scale(0)';
-      } else {
-        sunIcon.style.opacity = '0';
-        sunIcon.style.transform = 'rotate(-180deg) scale(0)';
-        moonIcon.style.opacity = '1';
-        moonIcon.style.transform = 'rotate(0deg) scale(1)';
-      }
-      
-      button.appendChild(sunIcon);
-      button.appendChild(moonIcon);
-      
-      // Add label if requested
+      button.setAttribute('aria-checked', (THEMES[this.currentTheme]?.scheme === 'dark'));
+
+      // Color box (outer) + inner swatch that reflects current theme
+      const box = document.createElement('span');
+      box.className = 'color-box';
+      box.style.cssText = [
+        'display:inline-flex',
+        'align-items:center',
+        'justify-content:center',
+        'width:28px',
+        'height:28px',
+        'border-radius: var(--radius-md, 6px)',
+        'border: 2px solid var(--color-border)',
+        'background: var(--color-surface)',
+        'box-shadow: var(--shadow-sm, 0 1px 2px rgba(0,0,0,.06))'
+      ].join(';') + ';';
+
+      const swatch = document.createElement('span');
+      swatch.className = 'color-swatch';
+      swatch.style.cssText = [
+        'display:block',
+        'width:18px',
+        'height:18px',
+        'border-radius: var(--radius-sm, 4px)',
+        'background: var(--gradient-primary, var(--color-primary))',
+        'transition: transform 150ms var(--ease-out, ease), background 150ms var(--ease-out, ease)'
+      ].join(';') + ';';
+
+      box.appendChild(swatch);
+      button.appendChild(box);
+
       if (showLabel) {
         const label = document.createElement('span');
         label.className = 'theme-toggle-label';
+        label.style.marginLeft = '8px';
         label.textContent = THEMES[this.currentTheme].name;
         button.appendChild(label);
-        
-        // Update label on theme change
+
         this.subscribe((theme) => {
           label.textContent = THEMES[theme].name;
         });
       }
-      
-      // Add click handler
+
+      // Click toggles to next theme (cycles across all registered themes)
       button.addEventListener('click', () => {
         this.toggleTheme();
       });
-      
-      // Update aria-checked on theme change
+
+      // Update aria-checked (true when current scheme is dark)
       this.subscribe((theme) => {
-        button.setAttribute('aria-checked', theme === 'indigoMidnight');
+        const isDark = !!(THEMES[theme] && THEMES[theme].scheme === 'dark');
+        button.setAttribute('aria-checked', String(isDark));
       });
-      
+
       return button;
     }
   }
