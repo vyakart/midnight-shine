@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Streams — Flowing Thoughts in Motion</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Streams: flowing thoughts in motion with an animated grid of posts.">
+  <meta name="robots" content="index, follow">
+  <meta name="color-scheme" content="light dark">
+  <meta name="theme-color" content="#FFFBF5">
+  <link rel="icon" href="/assets/icons/favicon.png" type="image/png">
+
+  <script>
+    // Pre-paint theme setter to avoid FOUC: enforce new themes with legacy mapping
+    (function () {
+      try {
+        var d = document.documentElement;
+        var key = 'theme-preference';
+        var stored = null;
+        try { stored = localStorage.getItem(key); } catch (_) {}
+
+        // New canonical themes (v2)
+        var NEW = { sunsetGlow: 1, midnightAurora: 1, forestMist: 1, cosmicDust: 1, oceanBreeze: 1 };
+
+        // Legacy → New theme mapping
+        var LEGACY_MAP = {
+          spice: 'sunsetGlow',
+          holi: 'sunsetGlow',
+          heritage: 'midnightAurora',
+          dark: 'midnightAurora',
+          light: 'sunsetGlow',
+          saffronSunrise: 'sunsetGlow',
+          indigoMidnight: 'midnightAurora',
+          spiceOxide: 'sunsetGlow',
+          rajasthanHoli: 'sunsetGlow',
+          templeHeritage: 'midnightAurora'
+        };
+
+        if (!NEW[stored]) {
+          var legacy = null; try { legacy = localStorage.getItem('theme'); } catch(_) {}
+          if (legacy && LEGACY_MAP[legacy]) {
+            stored = LEGACY_MAP[legacy];
+            try { localStorage.setItem(key, stored); localStorage.removeItem('theme'); } catch(_) {}
+          } else if (LEGACY_MAP[stored]) {
+            stored = LEGACY_MAP[stored];
+            try { localStorage.setItem(key, stored); } catch(_) {}
+          } else {
+            var mql = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)');
+            stored = (mql && mql.matches) ? 'midnightAurora' : 'sunsetGlow';
+          }
+        }
+
+        d.setAttribute('data-theme', stored);
+        d.classList.remove('dark'); // remove legacy class if present
+      } catch (_) {}
+    })();
+  </script>
+
+  <!-- Base styles for consistent header/footer + page styles -->
+  <link rel="stylesheet" href="/css/styles.css">
+  <link rel="stylesheet" href="/css/themes.css">
+  <link rel="stylesheet" href="/css/utilities.css">
+  <link rel="stylesheet" href="/css/microblog.css">
+</head>
+<body>
+  <!-- Fixed gradient mesh background layer (match main site) -->
+  <div class="gradient-mesh" aria-hidden="true" style="position: fixed; inset: 0; z-index: 0; opacity: 0.08; pointer-events: none;"></div>
+
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <!-- Header (mirrors main site header with ThemeProvider target area) -->
+  <header class="site-header glass">
+    <div class="container header-inner">
+      <div class="brand">
+        <a href="/" class="brand-link" aria-label="Go to home">
+          <img class="brand-logo" src="/assets/icons/favicon.png" alt="Nishit logo" width="28" height="28" decoding="async">
+          <h1 class="brand-title">
+            <span class="brand-fixed">Nishit</span>
+          </h1>
+        </a>
+      </div>
+      <nav class="site-nav" aria-label="Site navigation">
+        <div class="site-actions" style="display:flex;align-items:center;gap:18px;">
+          <!-- Theme switcher (left within actions) -->
+          <div class="theme-switcher" aria-label="Theme switcher">
+            <div role="group" aria-label="Select color theme" class="theme-switcher-group" style="display:flex;gap:14px;align-items:center;">
+              <!-- ThemeProvider will render a toggle button here -->
+            </div>
+          </div>
+          <!-- Streams icon/link (current page) -->
+          <a href="/pages/microblog.html"
+             class="cv-link-header"
+             aria-label="Open Streams (microblog)"
+             title="Streams">
+            <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+              <use href="#pencil"></use>
+            </svg>
+          </a>
+          <!-- CV link -->
+          <a href="/assets/Nishit_cv.pdf"
+             class="cv-link-header"
+             target="_blank"
+             rel="noopener noreferrer"
+             aria-label="Open CV PDF in a new tab"
+             title="CV (PDF)">
+            <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+              <path fill="currentColor" d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zM13 9V3.5L18.5 9H13z"/>
+            </svg>
+          </a>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main" class="site-main streams-page">
+    <!-- Page heading to reflect new name -->
+    <section class="section" aria-labelledby="streams-title">
+      <div class="container narrow">
+        <h2 id="streams-title">Streams</h2>
+        <p class="subheadline">A quiet nook: fragments, links, notes, and experiments. <span class="nowrap">Chronological. Minimal ceremony.</span></p>
+        <p class="subheadline" style="margin-top:0.25rem;">
+          Inspired by <a href="https://joodaloop.com/" target="_blank" rel="noopener noreferrer">Judah’s</a> idea of
+          <a href="https://streams.place/" target="_blank" rel="noopener noreferrer">µblogging</a>.
+        </p>
+      </div>
+    </section>
+
+    <!-- Streams grid -->
+    <section class="section">
+      <div class="container">
+        <h3 class="values-heading" id="values">Values</h3>
+        <!-- 3x3 Grid Layout -->
+        <div id="microblog-grid" class="microblog-grid" aria-live="polite">
+          <!-- Cards generated by JavaScript -->
+        </div>
+
+        <!-- Load More Button -->
+        <div class="load-more-section">
+          <button class="load-more-btn" type="button" aria-label="Load more posts">
+            <span class="btn-content">
+              <span>Load More Posts</span>
+              <svg class="btn-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+              </svg>
+            </span>
+          </button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer (match main site) -->
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <p>Contact: <a href="mailto:imayreply@vyakart.com" aria-label="Email: imayreply@vyakart.com">imayreply@vyakart.com</a></p>
+    </div>
+  </footer>
+
+  <!-- Scripts: ThemeProvider first, then main, then page JS -->
+  <script src="/js/theme-provider.js" defer></script>
+  <script src="/js/main.js" defer></script>
+  <script src="/js/microblog-data.js" defer></script>
+  <script src="/js/microblog.js" defer></script>
+</body>
+</html>
