@@ -378,81 +378,7 @@ p {
   opacity: 1;
 }
 
-/* Theme toggle control */
-.theme-toggle {
-  --track: #e6eef8;
-  --tick: #86b9ff;
-  --thumbBg: #b3f4da;
-  --thumbFg: #0b3d2e;
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  justify-content: flex-start;
-  width: 140px;
-  height: 40px;
-  padding: 0;
-  background: transparent;
-  border: 2px solid transparent; /* ensure visible focus ring offset */
-  border-radius: 10px;
-  cursor: pointer;
-}
-.theme-toggle:focus-visible {
-  outline: 3px solid var(--focus);
-  outline-offset: 3px;
-}
-.theme-toggle .toggle-track {
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 50%;
-  height: 2px;
-  transform: translateY(-50%);
-  background: var(--track);
-  border-radius: 2px;
-}
-.theme-toggle .tick-marks {
-  position: absolute;
-  inset: 0;
-  background:
-    repeating-linear-gradient(
-      to right,
-      transparent 0 10px,
-      var(--tick) 10px 12px
-    );
-  opacity: 0.55;
-}
-.theme-toggle .toggle-thumb {
-  position: relative;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background: var(--thumbBg);
-  box-shadow:
-    0 8px 16px rgba(0,0,0,0.18),
-    0 0 0 1px rgba(0,0,0,0.05) inset;
-  transform: translateX(0);
-  transition: transform var(--transition-fast) ease;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-}
-.theme-toggle .icon {
-  width: 18px;
-  height: 18px;
-  display: inline-block;
-  background: radial-gradient(circle at 60% 40%, var(--thumbFg) 55%, transparent 56%) /* moon cutout */
-              , radial-gradient(circle at 50% 50%, var(--thumbFg) 0 0); /* ensures visible icon base */
-  -webkit-mask:
-    radial-gradient(circle at 50% 50%, #000 49%, transparent 50%);
-  mask:
-    radial-gradient(circle at 50% 50%, #000 49%, transparent 50%);
-  border-radius: 50%;
-}
 
-/* Dark mode thumb position */
-html.dark .theme-toggle .toggle-thumb {
-  transform: translateX(calc(140px - 40px));
-}
 /* Dark theme colors handled above; keep body fallback */
 html.dark body {
   background: var(--bg);
@@ -464,12 +390,6 @@ html.dark .site-header {
 }
 html.dark .brand-fixed { color: var(--fg); }
 html.dark .brand-rotate-item { color: #7ce7c4; }
-html.dark .theme-toggle {
-  --track: #1f4a43;
-  --tick: #7ce7c4;
-  --thumbBg: #a9f5d8;
-  --thumbFg: #0b3d2e;
-}
 
 /* Buttons */
 .button {
