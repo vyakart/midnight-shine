@@ -1015,3 +1015,440 @@ html:not(.dark) .carousel-cap-sub { color: #4a4a4a; }
   clip: rect(1px, 1px, 1px, 1px);
   white-space: nowrap;
 }
+/* Tabs for Projects section */
+.tabs {
+  display: inline-flex;
+  gap: 10px;
+  align-items: center;
+  margin: 10px 0 14px;
+  border-bottom: 1px solid var(--color-border, var(--border, #e5e7eb));
+}
+
+.tab {
+  appearance: none;
+  border: none;
+  background: transparent;
+  color: var(--color-text-secondary, var(--fg));
+  font: 600 0.95rem/1 var(--font-sans, system-ui);
+  padding: 10px 12px;
+  border-radius: 8px 8px 0 0;
+  cursor: pointer;
+  position: relative;
+}
+
+.tab[aria-selected="true"] {
+  color: var(--link, #0057ff);
+  background: color-mix(in srgb, var(--color-surface, #fff) 82%, transparent);
+}
+
+.tab[aria-selected="true"]::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: -1px;
+  height: 2px;
+  background: var(--link, #0057ff);
+}
+
+/* Panel spacing */
+.tabpanel {
+  padding-top: 6px;
+}
+/* Projects Lightbox (accessible modal) */
+html[data-projects-modal="open"] {
+  overflow: hidden;
+}
+
+.lightbox-backdrop {
+  position: fixed;
+  inset: 0;
+  display: none;
+  place-items: center;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 9999;
+}
+
+.lightbox-backdrop.open {
+  display: grid;
+}
+
+.lightbox-content {
+  position: relative;
+  width: min(960px, 96vw);
+  max-height: 86vh;
+  background: var(--color-surface, #fff);
+  color: var(--color-text-primary, #111);
+  border: 1px solid var(--color-border, #e5e7eb);
+  border-radius: 12px;
+  box-shadow: var(--shadow-lg, 0 10px 15px rgba(0,0,0,0.2));
+  padding: 12px 12px 28px;
+}
+
+.lightbox-slide {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: clamp(200px, 70vh, 72vh);
+  overflow: hidden;
+  background: #000;
+  border-radius: 10px;
+}
+
+.lightbox-slide img,
+.lightbox-slide video {
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  display: block;
+  object-fit: contain;
+  background: #000;
+  border-radius: 8px;
+}
+
+.lightbox-close {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 38px;
+  height: 38px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--color-border, #e5e7eb);
+  border-radius: 8px;
+  background: var(--color-surface, #fff);
+  color: var(--color-text-primary, #111);
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.lightbox-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 42px;
+  height: 42px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--color-border, #e5e7eb);
+  border-radius: 9999px;
+  background: var(--color-surface, #fff);
+  color: var(--color-text-primary, #111);
+  font-size: 22px;
+  cursor: pointer;
+}
+
+.lightbox-nav.prev { left: 10px; }
+.lightbox-nav.next { right: 10px; }
+
+.lightbox-counter {
+  position: absolute;
+  bottom: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 4px 8px;
+  font: 600 12px/1 var(--font-sans, system-ui);
+  color: var(--color-text-inverse, #fff);
+  background: rgba(0,0,0,0.45);
+  border-radius: 6px;
+}
+
+/* Respect focus visibility */
+.lightbox-close:focus-visible,
+.lightbox-nav:focus-visible {
+  outline: 3px solid var(--focus, #0057ff);
+  outline-offset: 3px;
+  border-radius: 8px;
+}
+/* Timeline styles */
+.timeline .tabs { margin-bottom: 10px; }
+
+/* Scrollable viewport; show horizontal scrolling for overflow */
+.tl-viewport {
+  position: relative;
+  overflow-x: auto;
+  overflow-y: visible;
+  padding: 4px 0 2px;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+}
+
+/* Horizontal lane with a central axis line */
+.tl-row {
+  position: relative;
+  display: inline-flex;
+  align-items: flex-start;
+  gap: 28px;
+  padding: 44px 8px 12px; /* top space for axis + dots */
+  min-height: 160px;
+}
+
+.tl-row::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 34px; /* axis y-position */
+  height: 2px;
+  background: var(--color-border, #e5e7eb);
+  opacity: 0.8;
+}
+
+/* Node: marker + label + floating card */
+.tl-node {
+  position: relative;
+  display: grid;
+  grid-template-rows: 36px auto;
+  justify-items: center;
+  align-items: start;
+  width: clamp(160px, 22vw, 220px);
+  outline: none;
+}
+
+/* Marker (dot) on the axis */
+.tl-dot {
+  position: absolute;
+  top: 25px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 18px;
+  height: 18px;
+  border-radius: 9999px;
+  border: 2px solid var(--color-border, #e5e7eb);
+  background: var(--color-surface, #fff);
+  box-shadow: var(--shadow-sm, 0 1px 2px rgba(0,0,0,.06));
+  cursor: pointer;
+}
+
+.tl-dot:hover {
+  border-color: var(--link, #0057ff);
+}
+.tl-dot[aria-expanded="true"] {
+  background: var(--link, #0057ff);
+  border-color: var(--link, #0057ff);
+}
+
+/* Under-axis label */
+.tl-label {
+  margin-top: 40px; /* space below axis */
+  text-align: center;
+  max-width: 90%;
+}
+.tl-title {
+  font: 700 0.98rem/1.25 var(--font-sans, system-ui);
+  color: var(--color-text-primary, var(--fg));
+}
+.tl-year {
+  margin-top: 2px;
+  font: 600 0.82rem/1 var(--font-sans, system-ui);
+  color: var(--color-text-muted, #666);
+}
+
+/* Floating card above axis */
+.tl-card {
+  position: absolute;
+  left: 50%;
+  top: 20px;
+  transform: translate(-50%, -100%); /* above axis */
+  width: min(340px, 82vw);
+  background: var(--surface-card, #fff);
+  color: var(--text-strong, var(--fg, #0e0e0e));
+  border: 1px solid var(--surface-card-border, var(--border, #e5e7eb));
+  border-radius: 12px;
+  padding: 12px 14px;
+  box-shadow: var(--shadow-lg, 0 10px 15px rgba(0,0,0,0.1));
+  z-index: 2;
+}
+.tl-card p {
+  margin: 0;
+  font: 400 0.95rem/1.45 var(--font-sans, system-ui);
+}
+
+/* Focus visibility */
+.tl-node:focus-visible .tl-dot,
+.tl-dot:focus-visible {
+  outline: 3px solid var(--focus, #0057ff);
+  outline-offset: 3px;
+  border-radius: 9999px;
+}
+
+/* Mobile tweaks */
+@media (max-width: 520px) {
+  .tl-row { gap: 20px; }
+  .tl-node { width: clamp(140px, 64vw, 220px); }
+  .tl-card { width: min(300px, 92vw); }
+}
+/* Projects – Ruler-style Infinite Carousel */
+.ruler-carousel {
+  margin-top: 28px;
+  display: grid;
+  gap: 16px; /* extra vertical spacing between top ruler, viewport, bottom ruler */
+}
+/* Add breathing room between Projects heading and the ruler */
+.projects h2 {
+  margin-bottom: 18px;
+}
+
+.ruler-lines {
+  position: relative;
+  width: 100%;
+  height: 32px;
+}
+.ruler-lines .tick {
+  position: absolute;
+  left: 0;
+  transform: translateX(-50%);
+  width: 2px;
+  height: 12px; /* minor default */
+  background: var(--color-border, #cfd7ff);
+  pointer-events: none;
+  opacity: 0.9;
+}
+.ruler-lines.top .tick { top: 0; }
+.ruler-lines.bottom .tick { bottom: 0; }
+.ruler-lines .tick.minor {
+  height: 12px;
+  opacity: 0.7;
+}
+.ruler-lines .tick.major {
+  height: 16px;
+  background: var(--link, #0057ff);
+  opacity: 0.95;
+}
+.ruler-lines .tick.center {
+  height: 28px;
+  background: var(--link, #0057ff);
+  width: 2.5px;
+}
+html.dark .ruler-lines .tick {
+  background: var(--color-border, #2a2a2a);
+}
+html.dark .ruler-lines .tick.major,
+html.dark .ruler-lines .tick.center {
+  background: #ffffff;
+}
+
+.ruler-viewport {
+  position: relative;
+  width: 100%;
+  height: clamp(140px, 22vw, 200px);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+}
+
+.ruler-track {
+  display: inline-flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: 160px; /* increased to keep more space between active and neighbors */
+  will-change: transform;
+  transform: translate3d(0,0,0);
+  transition: transform 420ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.ruler-track.no-transition {
+  transition: none !important;
+}
+
+.rc-item {
+  appearance: none;
+  border: none;
+  background: transparent;
+  color: var(--color-text-muted, #666);
+  font: 800 clamp(1.6rem, 4vw, 3rem)/1 var(--font-sans);
+  white-space: nowrap;
+  cursor: pointer;
+  width: clamp(300px, 44vw, 520px); /* widened to prevent crowding with neighbors */
+  text-align: center;
+  transform: scale(0.78);
+  opacity: 0.42;
+  transition: transform 260ms ease, opacity 260ms ease, color 260ms ease;
+  outline: none;
+}
+.rc-item:hover {
+  color: var(--color-text-primary, var(--fg));
+  opacity: 0.6;
+}
+.rc-item:focus-visible {
+  outline: 3px solid var(--focus, #ff7a00);
+  outline-offset: 3px;
+  border-radius: 8px;
+}
+
+/* Two-line variant for specific long titles (e.g., "Mario in the StacyVerse") */
+.rc-item--twoLine {
+  white-space: normal;        /* allow wrap */
+  line-height: 1.15;
+}
+.rc-item--twoLine .rc-line1,
+.rc-item--twoLine .rc-line2 {
+  display: block;
+}
+.rc-item--twoLine .rc-line1 {
+  margin-bottom: 4px;
+}
+.rc-item.active {
+  color: var(--link, #0057ff);
+  transform: scale(1);
+  opacity: 1;
+}
+
+.ruler-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 10px;
+}
+.ruler-controls .ruler-prev,
+.ruler-controls .ruler-next {
+  width: 40px;
+  height: 40px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--color-border, #e5e7eb);
+  border-radius: 8px;
+  background: var(--color-surface, #fff);
+  color: var(--color-text-primary, #111);
+  cursor: pointer;
+}
+html.dark .ruler-controls .ruler-prev,
+html.dark .ruler-controls .ruler-next {
+  background: var(--bg, #000);
+  color: var(--fg, #fff);
+  border-color: var(--border, #2a2a2a);
+}
+.ruler-controls .ruler-prev:hover,
+.ruler-controls .ruler-next:hover {
+  background: rgba(0,0,0,0.04);
+}
+html.dark .ruler-controls .ruler-prev:hover,
+html.dark .ruler-controls .ruler-next:hover {
+  background: rgba(255,255,255,0.06);
+}
+.ruler-controls .ruler-prev:focus-visible,
+.ruler-controls .ruler-next:focus-visible {
+  outline: 3px solid var(--focus, #ff7a00);
+  outline-offset: 3px;
+}
+.ruler-counter {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  font: 600 0.95rem/1 var(--font-sans);
+  color: var(--color-text-secondary, #555);
+}
+
+@media (max-width: 640px) {
+  .ruler-track { gap: 80px; }
+  .rc-item { font-weight: 800; }
+}
+/* Targeted spacing tweak for long title "Mario in the StacyVerse" */
+.rc-item[data-title*="stacyverse" i] {
+  letter-spacing: -0.02em;
+  font-kerning: normal;
+}

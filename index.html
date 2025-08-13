@@ -205,6 +205,37 @@
         </section>
       </div>
     </section>
+<!-- Projects: Ruler-style infinite carousel -->
+    <section class="section projects" id="projects" aria-labelledby="projects-title">
+      <div class="container">
+        <h2 id="projects-title">Projects</h2>
+
+        <div id="projects-carousel" class="ruler-carousel" role="region" aria-label="Projects carousel">
+          <!-- Top ruler line -->
+          <div class="ruler-lines top" aria-hidden="true"></div>
+
+          <!-- Viewport and track -->
+          <div class="ruler-viewport" tabindex="0">
+            <div class="ruler-track" role="list"></div>
+          </div>
+
+          <!-- Bottom ruler line -->
+          <div class="ruler-lines bottom" aria-hidden="true"></div>
+        </div>
+
+        <!-- Controls -->
+        <div class="ruler-controls" aria-label="Carousel controls">
+          <button class="ruler-prev" type="button" aria-label="Previous project" title="Previous">◀</button>
+          <div class="ruler-counter" aria-live="polite" aria-atomic="true">
+            <span class="ruler-current">1</span>
+            <span class="sep">/</span>
+            <span class="ruler-total">0</span>
+          </div>
+          <button class="ruler-next" type="button" aria-label="Next project" title="Next">▶</button>
+        </div>
+      </div>
+    </section>
+
 
 
 
@@ -220,6 +251,7 @@
 
   <!-- Defer scripts: ThemeProvider first, then main -->
   <script src="./js/theme-provider.js" defer></script>
+  <script src="./js/projects-carousel.js" defer></script>
   <script src="./js/main.js" defer></script>
   <script src="./js/terminal.js" defer></script>
 </body>
