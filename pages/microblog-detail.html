@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Post — Streams</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Post detail">
+  <meta name="robots" content="index, follow">
+  <meta name="color-scheme" content="light dark">
+  <meta name="theme-color" content="#FFFBF5">
+  <link rel="icon" href="/assets/icons/favicon.png" type="image/png">
+
+  <script>
+    (function () {
+      try {
+        var d = document.documentElement;
+        var key = 'theme-preference';
+        var stored = null;
+        try { stored = localStorage.getItem(key); } catch (_) {}
+        var NEW = { sunsetGlow: 1, midnightAurora: 1, forestMist: 1, cosmicDust: 1, oceanBreeze: 1 };
+        var LEGACY_MAP = {
+          spice: 'sunsetGlow',
+          holi: 'sunsetGlow',
+          heritage: 'midnightAurora',
+          dark: 'midnightAurora',
+          light: 'sunsetGlow',
+          saffronSunrise: 'sunsetGlow',
+          indigoMidnight: 'midnightAurora',
+          spiceOxide: 'sunsetGlow',
+          rajasthanHoli: 'sunsetGlow',
+          templeHeritage: 'midnightAurora'
+        };
+        if (!NEW[stored]) {
+          var legacy = null; try { legacy = localStorage.getItem('theme'); } catch(_) {}
+          if (legacy && LEGACY_MAP[legacy]) {
+            stored = LEGACY_MAP[legacy];
+            try { localStorage.setItem(key, stored); localStorage.removeItem('theme'); } catch(_) {}
+          } else if (LEGACY_MAP[stored]) {
+            stored = LEGACY_MAP[stored];
+            try { localStorage.setItem(key, stored); } catch(_) {}
+          } else {
+            var mql = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)');
+            stored = (mql && mql.matches) ? 'midnightAurora' : 'sunsetGlow';
+          }
+        }
+        d.setAttribute('data-theme', stored);
+        d.classList.remove('dark');
+      } catch (_) {}
+    })();
+  </script>
+
+  <link rel="stylesheet" href="/css/styles.css">
+  <link rel="stylesheet" href="/css/themes.css">
+  <link rel="stylesheet" href="/css/utilities.css">
+  <link rel="stylesheet" href="/css/microblog.css">
+</head>
+<body class="detail-page">
+  <div class="gradient-mesh" aria-hidden="true" style="position: fixed; inset: 0; z-index: 0; opacity: 0.08; pointer-events: none;"></div>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="site-header glass">
+    <div class="container header-inner">
+      <div class="brand">
+        <a href="/" class="brand-link" aria-label="Go to home">
+          <img class="brand-logo" src="/assets/icons/favicon.png" alt="Nishit logo" width="28" height="28" decoding="async">
+          <h1 class="brand-title">
+            <span class="brand-fixed">Nishit</span>
+          </h1>
+        </a>
+      </div>
+      <nav class="site-nav" aria-label="Site navigation">
+        <div class="site-actions" style="display:flex;align-items:center;gap:18px;">
+          <div class="theme-switcher" aria-label="Theme switcher">
+            <div role="group" aria-label="Select color theme" class="theme-switcher-group" style="display:flex;gap:14px;align-items:center;">
+            </div>
+          </div>
+          <a href="/pages/microblog.html"
+             class="cv-link-header"
+             aria-label="Open Streams (microblog)"
+             title="Streams">
+            <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+              <use href="#pencil"></use>
+            </svg>
+          </a>
+          <a href="/assets/Nishit_cv.pdf"
+             class="cv-link-header"
+             target="_blank"
+             rel="noopener noreferrer"
+             aria-label="Open CV PDF in a new tab"
+             title="CV (PDF)">
+            <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+              <path fill="currentColor" d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zM13 9V3.5L18.5 9H13z"/>
+            </svg>
+          </a>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main" class="site-main">
+    <section class="section detail-hero-section" aria-labelledby="detail-title">
+      <div id="detail-hero" class="detail-hero" role="img" aria-label=""></div>
+    </section>
+
+    <section class="section" aria-labelledby="detail-title">
+      <div class="container narrow detail-container">
+        <a class="back-home-btn" href="/pages/microblog.html" aria-label="Back to Streams">
+          <svg class="back-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M15 6l-6 6 6 6"/></svg>
+          <span class="back-home-text">Back to Streams</span>
+        </a>
+
+        <h1 id="detail-title" class="detail-title"></h1>
+        <div class="detail-meta">
+          <span class="detail-author"></span>
+          <span class="detail-dot" aria-hidden="true">·</span>
+          <time class="detail-time" datetime=""></time>
+        </div>
+
+        <article class="detail-body" id="detail-body"></article>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <p>Contact: <a href="mailto:imayreply@vyakart.com" aria-label="Email: imayreply@vyakart.com">imayreply@vyakart.com</a></p>
+    </div>
+  </footer>
+
+  <script src="/js/theme-provider.js" defer></script>
+  <script src="/js/main.js" defer></script>
+  <script src="/js/microblog-data.js" defer></script>
+  <script src="/js/microblog-detail.js" defer></script>
+</body>
+</html>
