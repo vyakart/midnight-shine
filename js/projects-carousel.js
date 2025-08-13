@@ -1,27 +1,27 @@
 /**
  * projects-carousel.js
  * Ruler-style infinite carousel for Projects (vanilla JS).
- * Data source: /data/timeline.json → projects[].title
  *
- * Public API:
- *   - JavaScript.initRulerCarousel(options)
- *     options: {
- *       container: HTMLElement (required),
- *       titles: string[] (required),
- *       initialIndex?: number (0-based index within original set),
- *       totalLines?: number (default 101) // ticks across the ruler width
- *     }
+ * Enhanced to support category tabs inside the Projects section:
+ * - Work, Projects, Talks & shows, Side quests, Volunteering
+ * Data source: /data/timeline.json → arrays by key.
+ *
+ * Public API (returned from initRulerCarousel):
+ *   - updateTitles(newTitles: string[]): void
  */
 (function () {
   'use strict';
 
   var DATA_URL = '/data/timeline.json';
 
-  // Expose public init
+  // Keep per-container API/state if needed later
+  var CONTAINER_STATE = new WeakMap();
+
+  // Expose public init for external usage if ever needed
   window.JavaScript = window.JavaScript || {};
   window.JavaScript.initRulerCarousel = initRulerCarousel;
 
-  // Auto-bootstrap when on homepage section exists
+  // Auto-bootstrap when on homepage Projects section exists
   function bootstrap() {
     var container = document.getElementById('projects-carousel');
     if (!container) return;
@@ -29,30 +29,135 @@
     fetch(DATA_URL, { cache: 'no-cache' })
       .then(function (r) { return r.ok ? r.json() : Promise.reject(new Error('HTTP ' + r.status)); })
       .then(function (json) {
-        var titles = [];
-        if (json && Array.isArray(json.projects)) {
-          // Keep newest-first similar to timeline.js (sort desc by 'sort' or year)
-          var arr = json.projects.slice();
+        // Helper to extract titles from a category in timeline.json
+        function getTitlesFrom(json, category) {
+          var map = {
+            work: 'work',
+            projects: 'projects',
+            talks: 'talks',
+            side: 'sideQuests',
+            sideQuests: 'sideQuests',
+            volunteering: 'volunteering'
+          };
+          var key = map[category] || category;
+          var arr = (json && Array.isArray(json[key])) ? json[key].slice() : [];
+          // Sort newest first by 'sort' desc (fallback year)
           arr.sort(function (a, b) {
             var sa = Number(a.sort || parseInt(String(a.year || 0), 10) || 0);
             var sb = Number(b.sort || parseInt(String(b.year || 0), 10) || 0);
             return sb - sa;
           });
-          titles = arr.map(function (p) { return String(p.title || '').trim(); }).filter(Boolean);
+          return arr.map(function (p) { return String(p.title || '').trim(); }).filter(Boolean);
         }
-        if (!titles.length) {
-          titles = ['Projects'];
-        }
-        initRulerCarousel({
+
+        // Default category
+        var currentCategory = 'projects';
+        var titles = getTitlesFrom(json, currentCategory);
+        if (!titles.length) titles = ['Projects'];
+
+        // Initialize the ruler carousel
+        var api = initRulerCarousel({
           container: container,
           titles: titles,
-          initialIndex: Math.min(1, titles.length - 1), // center 2nd if exists
+          initialIndex: Math.min(1, titles.length - 1),
           totalLines: 101
         });
+
+        // Wire category tabs within Projects section, if present
+        wireCategoryTabs(json, api);
+
+        function wireCategoryTabs(json, api) {
+          var section = document.getElementById('projects');
+          if (!section) return;
+
+          var tabsRoot = section.querySelector('.tabs');
+          var tabWork = section.querySelector('#projtab-work');
+          var tabProj = section.querySelector('#projtab-projects');
+          var tabTalks = section.querySelector('#projtab-talks');
+          var tabSide = section.querySelector('#projtab-side');
+          var tabVol = section.querySelector('#projtab-vol');
+
+          var tabs = [tabWork, tabProj, tabTalks, tabSide, tabVol].filter(Boolean);
+          if (!tabs.length) return;
+
+          // Helper: hard re-init the carousel to guarantee visual update
+          function hardReinit(newTitles) {
+            try {
+              // Remove viewport and ruler lines so init can rebuild cleanly
+              var vp = container.querySelector('.ruler-viewport');
+              var t = container.querySelector('.ruler-lines.top');
+              var b = container.querySelector('.ruler-lines.bottom');
+              if (vp) vp.parentElement.removeChild(vp);
+              if (t) t.parentElement.removeChild(t);
+              if (b) b.parentElement.removeChild(b);
+            } catch (_) {}
+            return initRulerCarousel({
+              container: container,
+              titles: newTitles,
+              initialIndex: Math.min(1, newTitles.length - 1),
+              totalLines: 101
+            });
+          }
+
+          // Initial selection: Projects
+          setActive(tabProj);
+
+          tabs.forEach(function (btn) {
+            btn.addEventListener('click', function () {
+              setActive(btn);
+            });
+          });
+
+          // Keyboard navigation for tabs
+          if (tabsRoot) {
+            tabsRoot.addEventListener('keydown', function (e) {
+              var idx = tabs.indexOf(document.activeElement);
+              if (e.key === 'ArrowRight') {
+                e.preventDefault();
+                var next = tabs[(idx + 1 + tabs.length) % tabs.length];
+                next.click(); next.focus();
+              } else if (e.key === 'ArrowLeft') {
+                e.preventDefault();
+                var prev = tabs[(idx - 1 + tabs.length) % tabs.length];
+                prev.click(); prev.focus();
+              } else if (e.key === 'Home') {
+                e.preventDefault();
+                tabs[0].click(); tabs[0].focus();
+              } else if (e.key === 'End') {
+                e.preventDefault();
+                var last = tabs[tabs.length - 1];
+                last.click(); last.focus();
+              }
+            });
+          }
+
+          function setActive(btn) {
+            tabs.forEach(function (t) {
+              var isActive = (t === btn);
+              t.setAttribute('aria-selected', String(isActive));
+              t.tabIndex = isActive ? 0 : -1;
+            });
+
+            // Determine category by id
+            var id = btn.id || '';
+            var cat = 'projects';
+            if (id.indexOf('projtab-work') >= 0) cat = 'work';
+            else if (id.indexOf('projtab-projects') >= 0) cat = 'projects';
+            else if (id.indexOf('projtab-talks') >= 0) cat = 'talks';
+            else if (id.indexOf('projtab-side') >= 0) cat = 'sideQuests';
+            else if (id.indexOf('projtab-vol') >= 0) cat = 'volunteering';
+
+            var newTitles = getTitlesFrom(json, cat);
+            if (!newTitles.length) newTitles = ['No items'];
+
+            // Prefer hard re-init to eliminate any stale state
+            api = hardReinit(newTitles);
+          }
+        }
       })
       .catch(function (err) {
         console.warn('Projects carousel: failed to load timeline.json:', err);
-        // Fallback minimal mount with placeholder
+        // Minimal fallback with placeholder
         initRulerCarousel({
           container: container,
           titles: ['Projects'],
@@ -70,12 +175,13 @@
 
   /**
    * Initialize the ruler carousel in a container.
+   * Returns an API with updateTitles(newTitles: string[]).
    */
   function initRulerCarousel(options) {
     var container = options.container;
     var titles = Array.isArray(options.titles) ? options.titles.slice() : [];
     var itemsPerSet = titles.length;
-    if (!container || !itemsPerSet) return;
+    if (!container || !itemsPerSet) return { updateTitles: function(){} };
 
     var initialWithinSet = clampInt(options.initialIndex || 0, 0, Math.max(0, itemsPerSet - 1));
     var totalLines = clampInt(options.totalLines || 101, 21, 501); // sane defaults
@@ -94,7 +200,7 @@
     var currentEl = controls ? controls.querySelector('.ruler-current') : null;
     var totalEl = controls ? controls.querySelector('.ruler-total') : null;
 
-    // Ensure base structure exists
+    // Ensure base structure exists (and correct DOM order: top lines, viewport, bottom lines)
     if (!viewport) {
       viewport = document.createElement('div');
       viewport.className = 'ruler-viewport';
@@ -108,9 +214,24 @@
       viewport.appendChild(track);
     }
 
+    // Ensure ruler lines exist
+    if (!topLines)  topLines = createLines(container, 'top');
+    if (!bottomLines) bottomLines = createLines(container, 'bottom');
+
+    // Reorder: top before viewport, bottom after viewport
+    try {
+      if (topLines.nextSibling !== viewport) {
+        container.insertBefore(topLines, viewport);
+      }
+      if (bottomLines.previousSibling !== viewport) {
+        // insert after viewport
+        container.insertBefore(bottomLines, viewport.nextSibling);
+      }
+    } catch (_) {}
+
     // Render ruler ticks (top and bottom)
-    renderRulerLines(topLines || createLines(container, 'top'), totalLines);
-    renderRulerLines(bottomLines || createLines(container, 'bottom'), totalLines);
+    renderRulerLines(topLines, totalLines);
+    renderRulerLines(bottomLines, totalLines);
 
     // Triplicate items for seamless infinite loop
     var infiniteItems = createInfiniteItems(titles);
@@ -127,33 +248,37 @@
 
     // Initialize counter
     if (totalEl) totalEl.textContent = String(itemsPerSet);
-
-    // Apply initial layout
-    measure();
-    applyActiveStyles();
-    applyTransform(true); // no transition on first paint
-    updateCounter();
+ 
+    // Apply initial layout (after layout settles)
+    layoutAndCenter(true); // no transition on first paint
 
     // Wire item clicks
-    itemButtons.forEach(function (btn, idx) {
-      btn.addEventListener('click', function () {
+    wireButtons();
+
+    // Controls (avoid stacking duplicate listeners by removing previous via clone or flag)
+    // To keep it simple and idempotent, remove previous listeners by cloning nodes
+    function replaceWithClone(btn, handler) {
+      if (!btn) return null;
+      var clone = btn.cloneNode(true);
+      btn.parentNode.replaceChild(clone, btn);
+      clone.addEventListener('click', handler);
+      return clone;
+    }
+    prevBtn = replaceWithClone(prevBtn, function () { go(-1); });
+    nextBtn = replaceWithClone(nextBtn, function () { go(+1); });
+
+    // Keyboard on viewport (bind once)
+    if (viewport && !viewport.__keydownBound) {
+      viewport.addEventListener('keydown', function (e) {
         if (isJumping) return;
-        handleItemClick(idx);
+        if (e.key === 'ArrowLeft') { e.preventDefault(); go(-1); }
+        else if (e.key === 'ArrowRight') { e.preventDefault(); go(+1); }
+        else if (e.key === 'Home') { e.preventDefault(); setToOriginal(0); }
+        else if (e.key === 'End') { e.preventDefault(); setToOriginal(itemsPerSet - 1); }
       });
-    });
-
-    // Controls
-    if (prevBtn) prevBtn.addEventListener('click', function () { go(-1); });
-    if (nextBtn) nextBtn.addEventListener('click', function () { go(+1); });
-
-    // Keyboard on viewport
-    viewport.addEventListener('keydown', function (e) {
-      if (isJumping) return;
-      if (e.key === 'ArrowLeft') { e.preventDefault(); go(-1); }
-      else if (e.key === 'ArrowRight') { e.preventDefault(); go(+1); }
-      else if (e.key === 'Home') { e.preventDefault(); setToOriginal(0); }
-      else if (e.key === 'End') { e.preventDefault(); setToOriginal(itemsPerSet - 1); }
-    });
+      // mark as bound
+      try { viewport.__keydownBound = true; } catch(_) {}
+    }
 
     // Resize
     window.addEventListener('resize', throttle(function () {
@@ -163,9 +288,16 @@
       if (stepWidth !== prevStep) applyTransform(true);
     }, 80));
 
-    // Visibility pause of transitions not required; only transform animates
-
     // Helpers
+
+    function wireButtons() {
+      itemButtons.forEach(function (btn, idx) {
+        btn.addEventListener('click', function () {
+          if (isJumping) return;
+          handleItemClick(idx);
+        });
+      });
+    }
 
     function handleItemClick(newIndex) {
       // Map arbitrary index to closest instance of its original item
@@ -236,6 +368,7 @@
       if (!currentEl) return;
       var currentPage = mod(activeIndex, itemsPerSet) + 1;
       currentEl.textContent = String(currentPage);
+      if (totalEl) totalEl.textContent = String(itemsPerSet);
     }
 
     function measure() {
@@ -243,23 +376,40 @@
       var sample = itemButtons[0];
       if (!sample) return;
       var csTrack = getComputedStyle(track);
-      var csSample = getComputedStyle(sample);
 
       itemWidth = sample.offsetWidth;
-      // Prefer gap property; fallback to margin-right
+      // Prefer gap property; fallback to computed offset
       gap = parseFloat(csTrack.columnGap || csTrack.gap || '0');
       if (!gap && itemButtons.length > 1) {
         var s1 = itemButtons[0];
         var s2 = itemButtons[1];
         gap = Math.max(0, s2.offsetLeft - s1.offsetLeft - itemWidth);
       }
-      // If font scales changed, ensure minimums
       if (!isFinite(itemWidth) || itemWidth <= 0) itemWidth = 300;
       if (!isFinite(gap) || gap < 0) gap = 80;
 
       stepWidth = itemWidth + gap;
     }
-
+ 
+    // Layout then center the active item. Retries if width not ready.
+    function layoutAndCenter(noTransition) {
+      function doLayout() {
+        measure();
+        if (!isFinite(itemWidth) || itemWidth <= 0) {
+          setTimeout(doLayout, 50);
+          return;
+        }
+        applyActiveStyles();
+        applyTransform(!!noTransition);
+        updateCounter();
+      }
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', function(){ requestAnimationFrame(doLayout); }, { once: true });
+      } else {
+        requestAnimationFrame(doLayout);
+      }
+    }
+ 
     function applyTransform(noTransition) {
       var centerOffset = viewport.clientWidth / 2 - itemWidth / 2;
       var x = centerOffset - activeIndex * stepWidth;
@@ -278,24 +428,33 @@
     function buildItems(target, data) {
       target.innerHTML = '';
       var btns = [];
-      data.forEach(function (item, idx) {
+      data.forEach(function (item) {
         var btn = document.createElement('button');
         btn.type = 'button';
         btn.className = 'rc-item';
         btn.setAttribute('role', 'listitem');
         btn.setAttribute('data-original-index', String(item.originalIndex));
-        // Expose original title for targeted styling if needed
-        var title = String(item.title || '');
-        btn.setAttribute('data-title', title);
-
-        // Special formatting for "Mario in the StacyVerse" → two lines without "the"
-        if (/^mario\s+in\s+the\s+stacyverse$/i.test(title)) {
+        // Expose original title for targeted styling; support "/nextline" to split into two lines
+        var rawTitle = String(item.title || '');
+        var parts = rawTitle.split(/\s*\/\s*nextline\s*/i);
+        var normTitle = rawTitle.replace(/\s*\/\s*nextline\s*/ig, ' ').trim();
+        btn.setAttribute('data-title', normTitle);
+ 
+        if (parts.length === 2 && parts[0] && parts[1]) {
+          btn.classList.add('rc-item--twoLine');
+          // Build spans safely with textContent
+          var l1 = document.createElement('span'); l1.className = 'rc-line1'; l1.textContent = parts[0];
+          var l2 = document.createElement('span'); l2.className = 'rc-line2'; l2.textContent = parts[1];
+          btn.innerHTML = '';
+          btn.appendChild(l1); btn.appendChild(l2);
+          btn.style.fontKerning = 'normal';
+        } else if (/^mario\s+in\s+the\s+stacyverse$/i.test(normTitle)) {
+          // Special formatting for "Mario in the StacyVerse" → two lines without "the"
           btn.classList.add('rc-item--twoLine');
           btn.innerHTML = '<span class="rc-line1">Mario in</span><span class="rc-line2">Stacyverse</span>';
-          // Ensure kerning for cleaner look
           btn.style.fontKerning = 'normal';
         } else {
-          btn.textContent = title;
+          btn.textContent = rawTitle;
         }
 
         target.appendChild(btn);
@@ -349,6 +508,30 @@
         linesEl.appendChild(tick);
       }
     }
+
+    // API: update titles dynamically (used by category tabs)
+    function updateTitles(newTitles) {
+      titles = Array.isArray(newTitles) ? newTitles.slice() : [];
+      itemsPerSet = Math.max(1, titles.length);
+
+      // Rebuild items
+      infiniteItems = createInfiniteItems(titles);
+      itemButtons = buildItems(track, infiniteItems);
+
+      // Reset state
+      activeIndex = itemsPerSet + Math.min(1, itemsPerSet - 1);
+      if (totalEl) totalEl.textContent = String(itemsPerSet);
+
+      // Rewire button clicks
+      wireButtons();
+
+      // Re-measure and center
+      layoutAndCenter(true);
+    }
+
+    var api = { updateTitles: updateTitles };
+    CONTAINER_STATE.set(container, api);
+    return api;
   }
 
   // Utilities
