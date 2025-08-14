@@ -12,7 +12,7 @@
 (function () {
   'use strict';
 
-  var DATA_URL = '/data/timeline.json';
+  var DATA_URL = './data/timeline.json';
 
   // Keep per-container API/state if needed later
   var CONTAINER_STATE = new WeakMap();
@@ -157,13 +157,140 @@
       })
       .catch(function (err) {
         console.warn('Projects carousel: failed to load timeline.json:', err);
-        // Minimal fallback with placeholder
-        initRulerCarousel({
+
+        // Offline/no-server fallback: use built-in titles per category
+        var fallbackData = {
+          work: [
+            { title: 'Voicedeck' },
+            { title: 'EAGxIndia ’24' },
+            { title: 'Impact Academy' },
+            { title: 'Kaya Guides' },
+            { title: 'Superkit' },
+            { title: 'StackOS' },
+            { title: 'CFAL' },
+            { title: 'IISc (Aerospace)' },
+            { title: 'Orxa Energies' }
+          ],
+          projects: [
+            { title: '0xNARC' },
+            { title: 'Mario in the StacyVerse' },
+            { title: '65° Delta Wing' },
+            { title: 'E‑bike' }
+          ],
+          talks: [
+            { title: 'Decloud 101 Kochi' },
+            { title: 'Expo Circuit' },
+            { title: 'Blockchain Roadshow' }
+          ],
+          sideQuests: [
+            { title: 'Midjourney Magazine' },
+            { title: 'Blue belt BJJ' },
+            { title: 'Photography' },
+            { title: 'Amateur Astronomy' },
+            { title: 'Newsletter dabbling' }
+          ],
+          volunteering: [
+            { title: 'EA Bangalore' },
+            { title: 'Centre for Effective Altruism (Jaipur)' },
+            { title: 'EA Architects & Planners' },
+            { title: 'Institute of Jiujitsu' },
+            { title: 'CFAL Observatory' }
+          ]
+        };
+
+        function titlesOf(cat) { return (fallbackData[cat] || []).map(function (o) { return o.title; }); }
+
+        var fbTitles = titlesOf('projects');
+        if (!fbTitles.length) fbTitles = ['Projects'];
+
+        // Initialize with fallback Projects titles
+        var api = initRulerCarousel({
           container: container,
-          titles: ['Projects'],
-          initialIndex: 0,
-          totalLines: 61
+          titles: fbTitles,
+          initialIndex: Math.min(1, fbTitles.length - 1),
+          totalLines: 101
         });
+
+        // Wire tabs using fallback data
+        (function wireCategoryTabsFallback(fb, apiRef) {
+          var section = document.getElementById('projects');
+          if (!section) return;
+
+          var tabsRoot = section.querySelector('.tabs');
+          var tabWork = section.querySelector('#projtab-work');
+          var tabProj = section.querySelector('#projtab-projects');
+          var tabTalks = section.querySelector('#projtab-talks');
+          var tabSide = section.querySelector('#projtab-side');
+          var tabVol = section.querySelector('#projtab-vol');
+
+          var tabs = [tabWork, tabProj, tabTalks, tabSide, tabVol].filter(Boolean);
+          if (!tabs.length) return;
+
+          function setActive(btn) {
+            tabs.forEach(function (t) {
+              var isActive = (t === btn);
+              t.setAttribute('aria-selected', String(isActive));
+              t.tabIndex = isActive ? 0 : -1;
+            });
+
+            var id = btn.id || '';
+            var cat = 'projects';
+            if (id.indexOf('projtab-work') >= 0) cat = 'work';
+            else if (id.indexOf('projtab-projects') >= 0) cat = 'projects';
+            else if (id.indexOf('projtab-talks') >= 0) cat = 'talks';
+            else if (id.indexOf('projtab-side') >= 0) cat = 'sideQuests';
+            else if (id.indexOf('projtab-vol') >= 0) cat = 'volunteering';
+
+            var newTitles = titlesOf(cat);
+            if (!newTitles.length) newTitles = ['No items'];
+
+            // Hard re-init with new titles
+            try {
+              var vp = container.querySelector('.ruler-viewport');
+              var t = container.querySelector('.ruler-lines.top');
+              var b = container.querySelector('.ruler-lines.bottom');
+              if (vp) vp.parentElement.removeChild(vp);
+              if (t) t.parentElement.removeChild(t);
+              if (b) b.parentElement.removeChild(b);
+            } catch (_) {}
+
+            apiRef = initRulerCarousel({
+              container: container,
+              titles: newTitles,
+              initialIndex: Math.min(1, newTitles.length - 1),
+              totalLines: 101
+            });
+          }
+
+          // Initial selection: Projects
+          if (tabProj) setActive(tabProj);
+
+          tabs.forEach(function (btn) {
+            btn.addEventListener('click', function () { setActive(btn); });
+          });
+
+          if (tabsRoot) {
+            tabsRoot.addEventListener('keydown', function (e) {
+              var idx = tabs.indexOf(document.activeElement);
+              if (e.key === 'ArrowRight') {
+                e.preventDefault();
+                var next = tabs[(idx + 1 + tabs.length) % tabs.length];
+                next.click(); next.focus();
+              } else if (e.key === 'ArrowLeft') {
+                e.preventDefault();
+                var prev = tabs[(idx - 1 + tabs.length) % tabs.length];
+                prev.click(); prev.focus();
+              } else if (e.key === 'Home') {
+                e.preventDefault();
+                tabs[0].click(); tabs[0].focus();
+              } else if (e.key === 'End') {
+                e.preventDefault();
+                var last = tabs[tabs.length - 1];
+                last.click(); last.focus();
+              }
+            });
+          }
+        })(fallbackData, api);
       });
   }
 
@@ -236,6 +363,8 @@
     // Triplicate items for seamless infinite loop
     var infiniteItems = createInfiniteItems(titles);
     var itemButtons = buildItems(track, infiniteItems);
+    // Ensure preview engine wires to freshly built items even if it loaded after us
+    try { if (window.PreviewCard && typeof window.PreviewCard.scan === 'function') window.PreviewCard.scan(track); } catch (_) {}
 
     // State
     var activeIndex = itemsPerSet + initialWithinSet; // start from middle copy
@@ -457,6 +586,9 @@
           btn.textContent = rawTitle;
         }
 
+        // Auto-attach hover preview for Questlog titles
+        try { attachPreviewForTitle(btn, normTitle); } catch (_) {}
+
         target.appendChild(btn);
         btns.push(btn);
       });
@@ -517,6 +649,8 @@
       // Rebuild items
       infiniteItems = createInfiniteItems(titles);
       itemButtons = buildItems(track, infiniteItems);
+      // Re-scan after rebuild so hover previews remain active across category switches
+      try { if (window.PreviewCard && typeof window.PreviewCard.scan === 'function') window.PreviewCard.scan(track); } catch (_) {}
 
       // Reset state
       activeIndex = itemsPerSet + Math.min(1, itemsPerSet - 1);
@@ -556,6 +690,196 @@
         fn.apply(this, arguments);
       }
     };
+  }
+
+  // -----------------------
+  // Preview mapping for Questlog titles → text + assets
+  // -----------------------
+
+  function canonicalizeTitle(s) {
+    if (!s) return '';
+    // Lowercase, strip diacritics, collapse non-alphanumerics to spaces
+    try { s = s.normalize('NFKD'); } catch (_) {}
+    s = String(s).toLowerCase()
+      .replace(/[\u2018\u2019\u201A\u201B\u2032]/g, "'")   // various single quotes → '
+      .replace(/[\u201C\u201D\u201E\u2033]/g, '"')       // double quotes
+      .replace(/[\u2013\u2014\u2212]/g, '-')             // dashes → hyphen
+      .replace(/\s*\/\s*nextline\s*/g, ' ')              // collapse explicit nextline markers
+      .replace(/[^a-z0-9]+/g, ' ')                       // non-alphanumerics → space
+      .trim()
+      .replace(/\s+/g, ' ');
+    return s;
+  }
+
+  // Data pulled from your brief. Pictures sourced from /assets/projects when available.
+  var PV_MAP = (function () {
+    var A = './assets/projects/';
+    // Helper to prefix
+    function P() {
+      var arr = [];
+      for (var i = 0; i < arguments.length; i++) arr.push(A + arguments[i]);
+      return arr;
+    }
+
+    var map = {
+      // Work
+      'voicedeck': {
+        text: "evaluator, aka “does this actually matter?” helped measure journalism impact with llms, picked artwork via diffusion models, and co-authored the paper the team shipped. receipts > vibes.",
+        srcs: P('Evaluator-at-VoiceDeck.jpg')
+      },
+      'eagxindia 24': {
+        text: "production lead for ~300 people at conrad. ran the run-sheet, safety plan, risk trees, av, vendors, vegan menu, and design direction. made chaos look like choreography."
+      },
+      'impact academy': {
+        text: "ops for a 3-day summit: inventory, travel, dietary flows, and on-ground wrangling. also shot the story so the week lived beyond the week."
+      },
+      'kaya guides': {
+        text: "pilot lead, one intense month. built the ops spine, tracked data, researched digital health, and prettied a fundraising deck that didn’t lie."
+      },
+      'superkit': {
+        text: "consultant. wrote bd playbooks and case-study kits (istanbul tulip fest, hornbill, token2049). the job: turn “we should” into “here’s how”."
+      },
+      'stackos': {
+        text: "dev-rel doing five jobs: docs for v2, community + ambassador program, event ops at token2049 + web3 conclave, and enough graphics/motion to break figma auto-save. also judged ethindia."
+      },
+      'centre for advanced learning': {
+        text: "teaching assistant for physics + maths (11th/12th). nights at the observatory cataloguing galaxies to stay honest about scale.",
+        srcs: P(
+          'Observatory-Volunteer-at-Centre-for-Advanced-Learning-1.jpg',
+          'Observatory-Volunteer-at-Centre-for-Advanced-Learning-2.jpg'
+        )
+      },
+      'cfal': {
+        text: "teaching assistant for physics + maths (11th/12th). nights at the observatory cataloguing galaxies to stay honest about scale.",
+        srcs: P(
+          'Observatory-Volunteer-at-Centre-for-Advanced-Learning-1.jpg',
+          'Observatory-Volunteer-at-Centre-for-Advanced-Learning-2.jpg'
+        )
+      },
+      'iisc aerospace': {
+        text: "research assistant in biomechanics (aero). modeled how bodies move in simulated space conditions with md adams, mocap, lifemod. learned that “almost right” is still wrong."
+      },
+      'orxa energies': {
+        text: "mech systems intern. fea on a reverse trike: braking, load transfer, steering effort, the whole force buffet.",
+        srcs: P(
+          'Mechanical-Systems-Intern-at-Orxa-Energies-PvtLtd-1.jpg',
+          'Mechanical-Systems-Intern-at-Orxa-Energies-PvtLtd-2.jpg'
+        )
+      },
+
+      // Projects
+      '0xnarc': {
+        text: "hackathon judge that reads messy repos with gpt, scores them, and mints soulbound “you did the thing” receipts. fewer arguments, faster results.",
+        srcs: P('OxNARC.png')
+      },
+      'mario in the stacyverse': {
+        text: "a trippy fan level on a low-bandwidth multiplayer engine. i did the look, the cuts, the background score; mario took a pill and reality blinked.",
+        srcs: P('Mario-in-the-StacyVerse-at-Self.mp4') // video supported by preview engine
+      },
+      '65 delta wing': {
+        text: "added a tiny step on the upper surface; simulations smiled: ~6% lift bump. vortices, befriended.",
+        srcs: P('Numerical-Analysis-of-a-65-Delta-Wing-1.png', 'Numerical-Analysis-of-a-65-Delta-Wing-2.png')
+      },
+      'e bike': {
+        text: "8 friends, one dirt track. i owned “make it lighter but don’t snap it” (fea), then helped people actually want to ride it.",
+        srcs: P('E-bike-1.jpg', 'E-bike-2.jpg', 'E-bike-3.jpg', 'E-bike-4.jpg')
+      },
+
+      // Talks & shows
+      'decloud 101 kochi': {
+        text: "why decentralized cloud beats the usual suspects, without sounding like a brochure."
+      },
+      'decloud 101': {
+        text: "why decentralized cloud beats the usual suspects, without sounding like a brochure."
+      },
+      'expo circuit': {
+        text: "eth india (ktpo), web3 conclave (hyderabad), web3 conf (goa), token2049 (singapore). set up booths, tuned decks, and herded humans with a smile."
+      },
+      'blockchain roadshow': {
+        text: "ran talks and micro-events across tier-1 and tier-2 cities."
+      },
+
+      // Easter Eggs (side quests)
+      'midjourney magazine': {
+        text: "landed in midjourney magazine, issue 24. nice."
+      },
+      'blue belt bjj': {
+        text: "under coach rohit vasudevan. learned the ancient art of losing slowly and breathing on bottom. progress!"
+      },
+      'photography': {
+        text: "three days, one retreat, story-first set the team could actually use for impact academy and india network for impact.\nFTCIndia: one power packed day filled with discussions about blockchain, impact and many other utilities happening at a sanctuary right in the heart of the city."
+      },
+      'amateur astronomy': {
+        text: "shot planets, comets, nebulae, galaxies; remembered we are very, very small."
+      },
+      'newsletter dabbling': {
+        text: "wrote gameswala, resourcewala, and cryptodoodhshots for doodhwala—kept it useful, not noisy."
+      },
+      'doodhwala': {
+        text: "wrote gameswala, resourcewala, and cryptodoodhshots for doodhwala—kept it useful, not noisy."
+      },
+
+      // Volunteering
+      'ea bangalore': {
+        text: "community builder. keep the lights on: meetups, talks, ops, and the “is this useful?” filter."
+      },
+      'centre for effective altruism jaipur': {
+        text: "full-time volunteer for a week: ops, logistics, speaker liaison, attendee care. quiet glue work."
+      },
+      'eagxindia jaipur': {
+        text: "full-time volunteer for a week: ops, logistics, speaker liaison, attendee care. quiet glue work."
+      },
+      'ea architects planners': {
+        text: "coordinated speakers and schedules so panels didn’t collide."
+      },
+      'institute of jiujitsu': {
+        text: "ongoing help with ops/programming; occasionally tape wrists and egos."
+      },
+      'cfal observatory': {
+        text: "cataloguing deep-sky objects with a tiny crew and colder fingers.",
+        srcs: P(
+          'Observatory-Volunteer-at-Centre-for-Advanced-Learning-3.jpg',
+          'Observatory-Volunteer-at-Centre-for-Advanced-Learning-4.jpg'
+        )
+      }
+    };
+
+    return map;
+  })();
+
+  function attachPreviewForTitle(el, normTitle) {
+    if (!el || !normTitle) return;
+    var key = canonicalizeTitle(normTitle);
+
+    // Some titles include location or year variants; try relaxed fallbacks
+    var candidateKeys = [key];
+    // Drop trailing years like " 24" or "( 24 )"
+    var k2 = key.replace(/\s*\(?\d{2,4}\)?$/, '').trim();
+    if (k2 && k2 !== key) candidateKeys.push(k2);
+    // Remove words like "kochi", "blr" to match base talk
+    var k3 = key.replace(/\b(kochi|blr|bangalore|jaipur)\b/g, '').replace(/\s+/g, ' ').trim();
+    if (k3 && candidateKeys.indexOf(k3) === -1) candidateKeys.push(k3);
+
+    var meta = null;
+    for (var i = 0; i < candidateKeys.length; i++) {
+      meta = PV_MAP[candidateKeys[i]];
+      if (meta) break;
+    }
+    if (!meta) return;
+
+    // Apply data- attributes for preview-card.js to pick up
+    if (meta.text) el.setAttribute('data-preview-text', meta.text);
+    if (Array.isArray(meta.srcs) && meta.srcs.length) {
+      el.setAttribute('data-preview-srcs', meta.srcs.join(','));
+    }
+    // Also add a marker so the preview engine scan always includes this element
+    el.setAttribute('data-preview', '1');
+    el.setAttribute('data-preview-placement', 'top');
+    el.setAttribute('data-preview-width', '380');
+
+    // Lightweight debug marker to verify mapping in dev tools
+    try { el.setAttribute('title', 'Preview attached'); } catch (_) {}
+    try { console.debug('[PV] attached', { key: key, candidateKeys: candidateKeys, text: !!meta.text, srcs: (meta.srcs||[]).length }); } catch(_) {}
   }
 
 })();
