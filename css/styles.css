@@ -120,6 +120,24 @@ p {
   padding: 0; /* video hero will control spacing */
 }
 
+/* About section: left-align heading and content */
+.section.about .container {
+  text-align: left;
+}
+
+/* Align About content with Interests and span full container width */
+.section.about h2 {
+  margin-left: 0;
+  text-align: left;
+}
+.section.about p {
+  max-width: none;
+  width: 100%;
+  margin-left: 0;
+  padding-left: 0;
+  text-align: left;
+}
+
 /* Bento grid for Practice */
 .bento {
   display: grid;
