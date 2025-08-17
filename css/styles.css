@@ -825,6 +825,58 @@ html.dark .button.outline {
   }
 }
 
+/* Footer social flip links (per-letter hover animation) */
+.flip-link {
+  position: relative;
+  display: inline-block;
+  overflow: hidden; /* hide sliding letters */
+  font-weight: 700;
+  line-height: 1;
+}
+
+.flip-link .flip-vis {
+  position: relative;
+  display: inline-block;
+  height: 1em;     /* reserve one line of text height */
+  line-height: 1;
+}
+
+.flip-link .flip-row {
+  position: static;
+  display: inline-flex;
+  white-space: nowrap; /* do not wrap letters */
+}
+
+/* Back row overlays the front row */
+.flip-link .flip-row.back {
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+.flip-link .flip-row span {
+  display: inline-block;
+  transform: translateY(0);
+  transition: transform 300ms ease-in-out;
+  will-change: transform;
+}
+
+/* Back row starts below; slides up on hover/focus */
+.flip-link .flip-row.back span {
+  transform: translateY(110%);
+}
+
+/* Animate per-letter flip on hover/focus-visible */
+.flip-link:hover .flip-row.front span,
+.flip-link:focus-visible .flip-row.front span {
+  transform: translateY(-110%);
+}
+.flip-link:hover .flip-row.back span,
+.flip-link:focus-visible .flip-row.back span {
+  transform: translateY(0);
+}
+
+/* Respect focus visibility from global styles; keep outline on link element */
 /* Skip link */
 .skip-link {
   position: absolute;
@@ -1469,4 +1521,32 @@ html.dark .ruler-controls .ruler-next:hover {
 .rc-item[data-title*="stacyverse" i] {
   letter-spacing: -0.02em;
   font-kerning: normal;
+}
+/* Footer social: stack vertically on right, GitHub above Twitter; use bold uppercase sans with reduced size */
+.footer-social .footer-links {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+}
+
+.footer-social .flip-link {
+  font-family: var(--font-brand, "Recursive Mono Semicasual"), var(--font-sans, "Recursive Sans Linear"), system-ui, -apple-system, "Segoe UI", Roboto, Inter, Arial, sans-serif;
+  font-weight: 900;            /* heavy like the example */
+  text-transform: uppercase;
+  font-size: clamp(1rem, 2.2vw, 1.4rem); /* reduced from the example */
+  line-height: 0.82;
+  letter-spacing: 0.02em;
+  color: var(--color-primary, var(--link)); /* theme-aware color */
+}
+
+.footer-social .flip-vis {
+  height: 0.82em;              /* match the tighter line height */
+}
+
+/* Optional: center on narrow screens if footer stacks */
+@media (max-width: 640px) {
+  .footer-social .footer-links {
+    align-items: center;
+  }
 }

@@ -12,6 +12,7 @@
   // Theme init via ThemeProvider: render toggle, load tokens/sprites, and react to theme events.
   (function initTheme() {
     'use strict';
+  try { document.documentElement.classList.add('js'); } catch(_) {}
     try {
       // Render a single toggle button into the header once ThemeProvider is ready
       document.addEventListener('theme-ready', function(e) {
@@ -508,4 +509,65 @@
   }
   // Also respond to future theme-ready events
   document.addEventListener('theme-ready', renderHeaderThemeToggleNow);
+})();
+// Flip-link per-letter hover animation (no React)
+(function () {
+  'use strict';
+  function setupFlipLinks() {
+    try {
+      var links = document.querySelectorAll('.flip-link');
+      links.forEach(function (link) {
+        var text = link.getAttribute('data-text') || (link.textContent || '').trim();
+        if (!text) return;
+
+        // Ensure visual container
+        var vis = link.querySelector('.flip-vis');
+        if (!vis) {
+          vis = document.createElement('span');
+          vis.className = 'flip-vis';
+          vis.setAttribute('aria-hidden', 'true');
+          link.insertBefore(vis, link.firstChild || null);
+        }
+
+        // Build rows
+        vis.innerHTML = '';
+        var front = document.createElement('span');
+        front.className = 'flip-row front';
+        var back = document.createElement('span');
+        back.className = 'flip-row back';
+
+        // Use Array.from to better handle surrogate pairs
+        var letters = Array.from(text);
+        letters.forEach(function (ch, i) {
+          var s1 = document.createElement('span');
+          s1.textContent = ch;
+          s1.style.transitionDelay = (i * 25) + 'ms';
+
+          var s2 = document.createElement('span');
+          s2.textContent = ch;
+          s2.style.transitionDelay = (i * 25) + 'ms';
+
+          front.appendChild(s1);
+          back.appendChild(s2);
+        });
+
+        vis.appendChild(front);
+        vis.appendChild(back);
+
+        // Ensure accessible label
+        if (!link.querySelector('.visually-hidden')) {
+          var sr = document.createElement('span');
+          sr.className = 'visually-hidden';
+          sr.textContent = text;
+          link.appendChild(sr);
+        }
+      });
+    } catch (_) {}
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', setupFlipLinks, { once: true });
+  } else {
+    setupFlipLinks();
+  }
 })();
