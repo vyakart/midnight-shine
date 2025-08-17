@@ -850,7 +850,8 @@ html.dark .button.outline {
 /* Back row overlays the front row */
 .flip-link .flip-row.back {
   position: absolute;
-  left: 0;
+  right: 0;
+  left: auto;
   top: 0;
 }
 
@@ -1532,16 +1533,24 @@ html.dark .ruler-controls .ruler-next:hover {
 
 .footer-social .flip-link {
   font-family: var(--font-brand, "Recursive Mono Semicasual"), var(--font-sans, "Recursive Sans Linear"), system-ui, -apple-system, "Segoe UI", Roboto, Inter, Arial, sans-serif;
-  font-weight: 900;            /* heavy like the example */
+  font-weight: 900;
   text-transform: uppercase;
-  font-size: clamp(1rem, 2.2vw, 1.4rem); /* reduced from the example */
+  font-size: clamp(1rem, 2.2vw, 1.4rem);
   line-height: 0.82;
   letter-spacing: 0.02em;
-  color: var(--color-primary, var(--link)); /* theme-aware color */
+  color: var(--color-primary, var(--link));
+  /* ensure right-edge alignment for all flip links */
+  display: inline-grid;
+  justify-items: end;
+  text-align: right;
 }
 
 .footer-social .flip-vis {
-  height: 0.82em;              /* match the tighter line height */
+  position: relative;
+  display: block;
+  width: max-content;   /* shrink-to-fit content */
+  margin-left: auto;    /* right-align the block inside footer */
+  height: 0.82em;
 }
 
 /* Optional: center on narrow screens if footer stacks */
