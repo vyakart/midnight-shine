@@ -850,8 +850,8 @@ html.dark .button.outline {
 /* Back row overlays the front row */
 .flip-link .flip-row.back {
   position: absolute;
-  right: 0;
-  left: auto;
+  left: 0;
+  right: auto;
   top: 0;
 }
 
@@ -1527,7 +1527,7 @@ html.dark .ruler-controls .ruler-next:hover {
 .footer-social .footer-links {
   display: flex;
   flex-direction: column;
-  align-items: flex-end;
+  align-items: flex-start; /* left-align each stacked item */
   gap: 6px;
 }
 
@@ -1536,28 +1536,30 @@ html.dark .ruler-controls .ruler-next:hover {
   font-weight: 900;
   text-transform: uppercase;
   font-size: clamp(1rem, 2.2vw, 1.4rem);
-  line-height: 0.82;
+  line-height: 1;               /* prevent glyph clipping (I, E, R) */
   letter-spacing: 0.02em;
   color: var(--color-primary, var(--link));
-  /* ensure right-edge alignment for all flip links */
-  display: inline-grid;
-  justify-items: end;
-  text-align: right;
+  display: inline-block;        /* left-aligned within the list */
+  text-align: left;
+  overflow: hidden;             /* keep flip animation clipped cleanly */
 }
 
 .footer-social .flip-vis {
   position: relative;
   display: block;
   width: max-content;   /* shrink-to-fit content */
-  margin-left: auto;    /* right-align the block inside footer */
-  height: 0.82em;
+  margin-left: 0;       /* left-align within the right-pinned block */
+  height: 1em;          /* match line-height to avoid cropping (I, E, R) */
 }
 
 /* Optional: center on narrow screens if footer stacks */
 @media (max-width: 640px) {
   .footer-social .footer-links {
-    align-items: center;
-  }
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; /* left-align each stacked item */
+  gap: 6px;
+}
 }
 /* Footer alignment: keep social block pinned to the right when it's the only child */
 .footer-inner .footer-social {
