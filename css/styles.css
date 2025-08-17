@@ -1550,3 +1550,13 @@ html.dark .ruler-controls .ruler-next:hover {
     align-items: center;
   }
 }
+/* Footer alignment: keep social block pinned to the right when it's the only child */
+.footer-inner .footer-social {
+  margin-left: auto;
+}
+
+@media (max-width: 640px) {
+  .footer-inner .footer-social {
+    margin-left: 0; /* center on stacked mobile layout */
+  }
+}
