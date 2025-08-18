@@ -23,16 +23,19 @@
 
 .pv-card {
   position: absolute;
-  max-width: min(92vw, 480px);
-  min-width: 220px;
+  max-width: min(92vw, 680px); /* larger card so caption fits comfortably */
+  min-width: 260px;
+  max-height: min(90vh, 720px); /* taller to keep more text visible without scrolling */
+  overflow: auto; /* allow long text to scroll instead of overflowing viewport */
+  overscroll-behavior: contain; /* prevent background scroll chaining */
   background: var(--color-surface, #fff);
   color: var(--color-text-primary, #111);
   border: 1px solid var(--color-border, #e5e7eb);
-  border-radius: 10px;
+  border-radius: 12px;
   box-shadow:
-    0 10px 30px rgba(var(--shadow-color, 0,0,0), 0.18),
-    0 1px 3px rgba(var(--shadow-color, 0,0,0), 0.10);
-  padding: 8px;
+    0 14px 36px rgba(var(--shadow-color, 0,0,0), 0.20),
+    0 2px 6px rgba(var(--shadow-color, 0,0,0), 0.10);
+  padding: 10px;
   transform-origin: var(--pv-origin, 50% 100%);
   transition: transform 150ms ease, opacity 150ms ease;
   opacity: 0;
@@ -91,6 +94,18 @@
 
 /* Single item */
 .pv-single .pv-item {
+/* Edge-to-edge media like the example card: image flush with card edges */
+.pv-single .pv-media {
+  margin: -8px -8px 8px; /* cancel card padding on top/left/right; keep space below */
+  border-radius: 10px 10px 0 0; /* round only the top corners to match the card */
+}
+
+/* Adjust for compact padding on very small screens */
+@media (max-width: 420px) {
+  .pv-single .pv-media {
+    margin: -6px -6px 8px;
+  }
+}
   display: grid;
   gap: 6px;
 }
@@ -181,8 +196,8 @@
 .pv-media {
   position: relative;
   width: 100%;
-  background: #000;
-  border-radius: 6px;
+  background: var(--color-surface, #fff); /* blend with card like the example */
+  border-radius: 12px; /* sync with card corners */
   overflow: hidden;
 }
 
@@ -191,14 +206,16 @@
   display: block;
   width: 100%;
   height: auto;
-  object-fit: cover;
-  background: #000;
+  max-height: 170px; /* reduced image height to leave more room for caption text */
+  object-fit: contain; /* avoid cropping; scale down inside the frame */
+  background: var(--color-surface, #fff);
 }
 
 /* Caption */
 .pv-caption {
-  font: 600 12px/1.35 var(--font-sans, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif);
+  font: 400 16px/1.55 var(--font-sans, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif);
   color: var(--color-text-primary, #111);
+  margin-top: 8px; /* spacing from media */
 }
 
 /* Text-only */
@@ -217,6 +234,12 @@
   outline: 3px solid var(--focus, #ff7a00);
   outline-offset: 2px;
   border-radius: 6px;
+}
+
+/* Bold the first word style like the example via strong/b tags */
+.pv-caption strong,
+.pv-caption b {
+  font-weight: 700;
 }
 
 /* Compact on very small screens */

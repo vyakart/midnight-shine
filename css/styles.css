@@ -1571,3 +1571,37 @@ html.dark .ruler-controls .ruler-next:hover {
     margin-left: 0; /* center on stacked mobile layout */
   }
 }
+/* Preview-term trigger underline with theme color */
+.preview-term,
+[data-preview],
+[data-preview-srcs],
+[data-preview-text] {
+  color: inherit;
+  text-decoration-line: underline;
+  text-decoration-color: var(--link, #0057ff); /* follows active theme */
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+  cursor: pointer;
+  border-radius: 3px; /* for focus ring rounding */
+}
+
+.preview-term:hover,
+.preview-term:focus,
+[data-preview]:hover,
+[data-preview]:focus,
+[data-preview-srcs]:hover,
+[data-preview-srcs]:focus,
+[data-preview-text]:hover,
+[data-preview-text]:focus {
+  text-decoration-thickness: 3px; /* subtle emphasis on intent */
+}
+
+/* Respect global focus-visible ring; ensure underline remains visible */
+.preview-term:focus-visible,
+[data-preview]:focus-visible,
+[data-preview-srcs]:focus-visible,
+[data-preview-text]:focus-visible {
+  outline: 3px solid var(--focus, #ff7a00);
+  outline-offset: 3px;
+  text-decoration-color: var(--link, #0057ff);
+}

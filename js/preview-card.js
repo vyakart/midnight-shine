@@ -456,7 +456,8 @@
     if (item.caption) {
       var cap = document.createElement('div');
       cap.className = 'pv-caption';
-      cap.textContent = item.caption;
+      // Allow limited inline formatting in captions (e.g., <strong>, <em>, line breaks)
+      cap.innerHTML = sanitizeCaption(item.caption);
       root.appendChild(cap);
     }
 
@@ -647,5 +648,44 @@
     ].join(',');
     return root.querySelector(selectors);
   }
+
+// Minimal HTML sanitizer for captions: allow only strong/b/em/i/br and strip all attributes.
+// This keeps author-controlled markup while preventing unexpected HTML.
+function sanitizeCaption(html) {
+  try {
+    var allowed = { STRONG:1, B:1, EM:1, I:1, BR:1 };
+    var container = document.createElement('div');
+    container.innerHTML = String(html || '');
+
+    (function walk(node) {
+      var child = node.firstChild;
+      while (child) {
+        var next = child.nextSibling;
+        if (child.nodeType === 1) { // Element
+          if (!allowed[child.nodeName]) {
+            // Replace disallowed element with its text
+            var text = document.createTextNode(child.textContent || '');
+            node.replaceChild(text, child);
+          } else {
+            // Strip all attributes on allowed tags
+            var atts = child.attributes;
+            for (var i = atts.length - 1; i >= 0; i--) {
+              child.removeAttribute(atts[i].name);
+            }
+            walk(child);
+          }
+        } else if (child.nodeType === 8) {
+          // Remove comments
+          node.removeChild(child);
+        }
+        child = next;
+      }
+    })(container);
+
+    return container.innerHTML;
+  } catch (_) {
+    return String(html || '');
+  }
+}
 
 })();
