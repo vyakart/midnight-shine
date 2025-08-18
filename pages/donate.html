@@ -1,0 +1,324 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Dāna — Donate</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Dāna — fuel for connection. Support the library, fieldwork, and community spaces.">
+  <meta name="robots" content="index, follow">
+  <meta name="color-scheme" content="light dark">
+  <meta name="theme-color" content="#FFFBF5">
+  <link rel="icon" href="/assets/icons/favicon.png" type="image/png">
+
+  <script>
+    // Pre-paint theme setter to avoid FOUC
+    (function () {
+      try {
+        var d = document.documentElement;
+        var key = 'theme-preference';
+        var stored = null;
+        try { stored = localStorage.getItem(key); } catch (_) {}
+
+        var NEW = { sunsetGlow: 1, midnightAurora: 1, forestMist: 1, cosmicDust: 1, oceanBreeze: 1 };
+        var LEGACY_MAP = {
+          spice: 'sunsetGlow',
+          holi: 'sunsetGlow',
+          heritage: 'midnightAurora',
+          dark: 'midnightAurora',
+          light: 'sunsetGlow',
+          saffronSunrise: 'sunsetGlow',
+          indigoMidnight: 'midnightAurora',
+          spiceOxide: 'sunsetGlow',
+          rajasthanHoli: 'sunsetGlow',
+          templeHeritage: 'midnightAurora'
+        };
+
+        if (!NEW[stored]) {
+          var legacy = null; try { legacy = localStorage.getItem('theme'); } catch(_) {}
+          if (legacy && LEGACY_MAP[legacy]) {
+            stored = LEGACY_MAP[legacy];
+            try { localStorage.setItem(key, stored); localStorage.removeItem('theme'); } catch(_) {}
+          } else if (LEGACY_MAP[stored]) {
+            stored = LEGACY_MAP[stored];
+            try { localStorage.setItem(key, stored); } catch(_) {}
+          } else {
+            var mql = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)');
+            stored = (mql && mql.matches) ? 'midnightAurora' : 'sunsetGlow';
+          }
+        }
+
+        d.setAttribute('data-theme', stored);
+        d.classList.remove('dark');
+      } catch (_) {}
+    })();
+  </script>
+
+  <!-- Base styles + page styles -->
+  <link rel="stylesheet" href="/css/styles.css?v=20250814">
+  <link rel="stylesheet" href="/css/themes.css?v=20250814">
+  <link rel="stylesheet" href="/css/utilities.css?v=20250814">
+  <link rel="stylesheet" href="/css/donate.css?v=20250818">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Dāna — Donate">
+  <meta property="og:description" content="Fuel the library, fieldwork, and community spaces. No paywalls—give only if it feels right.">
+  <meta property="og:image" content="https://example.netlify.app/assets/og/og-image.png">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://example.netlify.app/pages/donate.html">
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Dāna — Donate">
+  <meta name="twitter:description" content="Fuel the library, fieldwork, and community spaces.">
+  <meta name="twitter:image" content="https://example.netlify.app/assets/og/og-image.png">
+</head>
+<body>
+  <div class="gradient-mesh" aria-hidden="true" style="position: fixed; inset: 0; z-index: 0; opacity: 0.08; pointer-events: none;"></div>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <!-- Header (mirrors main site) -->
+  <header class="site-header glass">
+    <div class="container header-inner">
+      <div class="brand">
+        <a href="/" class="brand-link" aria-label="Go to home">
+          <img class="brand-logo" src="/assets/icons/favicon.png" alt="Nishit logo" width="28" height="28" decoding="async">
+          <h1 class="brand-title">
+            <span class="brand-fixed">Nishit</span>
+          </h1>
+        </a>
+      </div>
+      <nav class="site-nav" aria-label="Site navigation">
+        <div class="site-actions" style="display:flex;align-items:center;gap:18px;">
+          <div class="theme-switcher" aria-label="Theme switcher">
+            <div role="group" aria-label="Select color theme" class="theme-switcher-group" style="display:flex;gap:14px;align-items:center;"></div>
+          </div>
+          <!-- Streams -->
+          <a href="/pages/microblog.html" class="cv-link-header" aria-label="Open Streams (microblog)" title="Streams">
+            <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="#pencil"></use></svg>
+          </a>
+          <!-- CV -->
+          <a href="/assets/Nishit_cv.pdf" class="cv-link-header" target="_blank" rel="noopener noreferrer" aria-label="Open CV PDF in a new tab" title="CV (PDF)">
+            <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+              <path fill="currentColor" d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zM13 9V3.5L18.5 9H13z"/>
+            </svg>
+          </a>
+          <!-- Donate (current page) -->
+          <a href="/pages/donate.html" class="cv-link-header" aria-current="page" aria-label="Donate" title="Donate">
+            <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+              <path fill="currentColor" d="M12.1 21.35l-1.1-.99C5.14 15.24 2 12.36 2 8.98 2 6.5 4.02 4.5 6.5 4.5c1.54 0 3.04.73 3.98 1.87A5.16 5.16 0 0 1 14.5 4.5c2.48 0 4.5 2 4.5 4.48 0 3.38-3.14 6.26-8.02 11.38l-1.0.99z"/>
+            </svg>
+          </a>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main" class="site-main donate-page">
+    <!-- Hero -->
+    <section class="section" aria-labelledby="donate-title">
+      <div class="container">
+        <h1 id="donate-title">Dāna</h1>
+        <p class="subheadline">
+          My work is to be a quiet bridge so the right people meet, share care and build together. If our connection helped you, you can keep supporting me by donating.
+          Give only if it feels right. You will receive my gratitude in different modalities along with milestone updates.
+        </p>
+      </div>
+    </section>
+
+    <!-- Donate panel -->
+    <section class="section" aria-labelledby="ways-title">
+      <div class="container">
+        <h2 id="ways-title" class="visually-hidden">Ways to support</h2>
+
+        <!-- Top controls -->
+        <div class="donate-top">
+          <div class="donate-switch" role="tablist" aria-label="Choose frequency">
+            <button id="tab-onetime" class="switch-btn" role="tab" aria-selected="true" aria-controls="panel-onetime">
+              one-time donation
+            </button>
+            <button id="tab-monthly" class="switch-btn" role="tab" aria-selected="false" aria-controls="panel-monthly" tabindex="-1">
+              monthly donation
+            </button>
+          </div>
+
+          <div class="currency-switch" aria-label="Currency selector">
+            <label for="currency" class="visually-hidden">Currency</label>
+            <select id="currency" aria-label="Select currency">
+              <option value="USD" selected>$ USD</option>
+              <option value="INR">₹ INR</option>
+              <option value="EUR">€ EUR</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="donate-panels">
+          <!-- One-time panel -->
+          <section id="panel-onetime" class="donate-panel" role="tabpanel" aria-labelledby="tab-onetime">
+            <!-- Horizontal slider of presets -->
+            <div class="preset-scroller" data-type="onetime">
+              <button class="scroll-btn prev" type="button" aria-label="Scroll left">◀</button>
+              <div class="preset-viewport">
+                <div class="preset-track" role="list"></div>
+              </div>
+              <button class="scroll-btn next" type="button" aria-label="Scroll right">▶</button>
+            </div>
+
+            <div class="custom-amount">
+              <label for="amount-onetime" class="visually-hidden">Custom amount</label>
+              <div class="input-wrap">
+                <span class="currency" id="currency-symbol-onetime">$</span>
+                <input id="amount-onetime" inputmode="decimal" placeholder="custom amount" aria-describedby="custom-help-onetime">
+                <button id="go-onetime" class="button primary" type="button" aria-label="Continue">→</button>
+              </div>
+              <p id="custom-help-onetime" class="muted" style="margin:8px 2px 0;">
+                Amounts are shown in your chosen currency.
+              </p>
+            </div>
+          </section>
+
+          <!-- Monthly panel -->
+          <section id="panel-monthly" class="donate-panel hidden" role="tabpanel" aria-labelledby="tab-monthly" hidden>
+            <div class="preset-scroller" data-type="monthly">
+              <button class="scroll-btn prev" type="button" aria-label="Scroll left">◀</button>
+              <div class="preset-viewport">
+                <div class="preset-track" role="list"></div>
+              </div>
+              <button class="scroll-btn next" type="button" aria-label="Scroll right">▶</button>
+            </div>
+
+            <div class="custom-amount">
+              <label for="amount-monthly" class="visually-hidden">Custom amount monthly</label>
+              <div class="input-wrap">
+                <span class="currency" id="currency-symbol-monthly">$</span>
+                <input id="amount-monthly" inputmode="decimal" placeholder="custom amount" aria-describedby="custom-help-monthly">
+                <button id="go-monthly" class="button outline" type="button" aria-label="Continue monthly">→</button>
+              </div>
+              <p id="custom-help-monthly" class="muted" style="margin:8px 2px 0;">
+                Monthly pledge preview — provider will be added later.
+              </p>
+            </div>
+          </section>
+        </div>
+
+        <!-- share panel removed per user request -->
+      </div>
+    </section>
+
+    <!-- Narrative copy -->
+    <section class="section" aria-labelledby="impact-title">
+      <div class="container narrow">
+        <h2 id="impact-title">What your gift powers</h2>
+        <ul>
+          <li>A tiny public library: books, shelving, simple cataloging</li>
+          <li>Community space and rent for unhurried work and conversation</li>
+          <li>Field notes and documentation with a Ricoh GR IIIx</li>
+          <li>Tools that make me better at this work: AI, hosting, backups</li>
+          <li>Time to connect people who should meet with care and clarity</li>
+        </ul>
+        <p class="muted">In-kind gifts are also welcome like books or something that you'd like to provide. I shall share a wishlist that might help.</p>
+      </div>
+    </section>
+
+    <!-- Alternative ways -->
+    <section class="section" aria-labelledby="alt-title">
+      <div class="container">
+        <h2 id="alt-title">Alternative ways to donate</h2>
+
+        <div class="wallet-list" role="list">
+          <!-- Crypto: BTC -->
+          <div class="wallet-holder" role="listitem">
+            <button class="button wallet" data-type="copy" data-name="bitcoin (bio84)" data-address="bc1qr47exwupular8jdu5pr6jx9apcc3yxv3lg7t6x" aria-label="Copy bitcoin address">
+              <div class="wallet-icon" aria-hidden="true">₿</div>
+              <div class="wallet-text">
+                <div class="wallet-name">bitcoin (BIP84)</div>
+                <code class="wallet-address addr">bc1qr47exwupular8jdu5pr6jx9apcc3yxv3lg7t6x</code>
+              </div>
+              <span class="wallet-copy" aria-hidden="true">
+                <svg class="icon-clipboard" viewBox="0 0 24 24" width="18" height="18" focusable="false" aria-hidden="true">
+                  <path fill="currentColor" d="M16 4h-2.2a2 2 0 0 0-3.6 0H8a3 3 0 0 0-3 3v11a3 3 0 0 0 3 3h8a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3Zm1 14a1 1 0 0 1-1 1H8a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h1.2a2 2 0 0 0 3.6 0H15a1 1 0 0 1 1 1v11Z"/>
+                </svg>
+              </span>
+            </button>
+          </div>
+
+          <!-- Crypto: ETH -->
+          <div class="wallet-holder" role="listitem">
+            <button class="button wallet" data-type="copy" data-name="ethereum (eth, arbitrum, optimism, base, zksync)" data-address="0x1E965D8002C4dd60B900A8DA21533a8482acd164" aria-label="Copy ethereum address">
+              <div class="wallet-icon" aria-hidden="true">
+                <img src="/assets/icons/crypto/ethereum-eth-logo.svg" alt="" width="18" height="18" decoding="async">
+              </div>
+              <div class="wallet-text">
+                <div class="wallet-name">ethereum (eth, arbitrum, optimism, base, zksync)</div>
+                <code class="wallet-address addr">0x1E965D8002C4dd60B900A8DA21533a8482acd164</code>
+              </div>
+              <span class="wallet-copy" aria-hidden="true">
+                <svg class="icon-clipboard" viewBox="0 0 24 24" width="18" height="18" focusable="false" aria-hidden="true">
+                  <path fill="currentColor" d="M16 4h-2.2a2 2 0 0 0-3.6 0H8a3 3 0 0 0-3 3v11a3 3 0 0 0 3 3h8a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3Zm1 14a1 1 0 0 1-1 1H8a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h1.2a2 2 0 0 0 3.6 0H15a1 1 0 0 1 1 1v11Z"/>
+                </svg>
+              </span>
+            </button>
+          </div>
+
+          <!-- Crypto: USDC (all EVM chains) -->
+          <div class="wallet-holder" role="listitem">
+            <button class="button wallet" data-type="copy" data-name="usdc (evm)" data-address="0x31f6581126D497e4d98F69A0f83881743faaBBE6" aria-label="Copy USDC address">
+              <div class="wallet-icon" aria-hidden="true">
+                <img src="/assets/icons/crypto/usd-coin-usdc-logo.svg" alt="" width="18" height="18" decoding="async">
+              </div>
+              <div class="wallet-text">
+                <div class="wallet-name">usdc (all evm chains)</div>
+                <code class="wallet-address addr">0x31f6581126D497e4d98F69A0f83881743faaBBE6</code>
+              </div>
+              <span class="wallet-copy" aria-hidden="true">
+                <svg class="icon-clipboard" viewBox="0 0 24 24" width="18" height="18" focusable="false" aria-hidden="true">
+                  <path fill="currentColor" d="M16 4h-2.2a2 2 0 0 0-3.6 0H8a3 3 0 0 0-3 3v11a3 3 0 0 0 3 3h8a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3Zm1 14a1 1 0 0 1-1 1H8a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h1.2a2 2 0 0 0 3.6 0H15a1 1 0 0 1 1 1v11Z"/>
+                </svg>
+              </span>
+            </button>
+          </div>
+        </div>
+
+        <div class="sr-only" aria-live="polite" id="copy-status"></div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer (match main site) -->
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <nav class="footer-social" aria-label="Footer links">
+        <ul class="footer-links">
+          <li>
+            <a class="flip-link" href="/pages/donate.html" aria-label="Donate" data-text="Donate">
+              <span class="flip-vis" aria-hidden="true"></span>
+              <span class="visually-hidden">Donate</span>
+            </a>
+          </li>
+          <li>
+            <a class="flip-link" href="https://github.com/vyakart" target="_blank" rel="noopener noreferrer" aria-label="GitHub profile" data-text="GitHub">
+              <span class="flip-vis" aria-hidden="true"></span>
+              <span class="visually-hidden">GitHub</span>
+            </a>
+          </li>
+          <li>
+            <a class="flip-link" href="https://x.com/vyakart" target="_blank" rel="noopener noreferrer" aria-label="Twitter profile" data-text="Twitter">
+              <span class="flip-vis" aria-hidden="true"></span>
+              <span class="visually-hidden">Twitter</span>
+            </a>
+          </li>
+          <li>
+            <a class="flip-link" href="mailto:imayreply@vyakart.com" aria-label="Email: imayreply@vyakart.com" data-text="Contact">
+              <span class="flip-vis" aria-hidden="true"></span>
+              <span class="visually-hidden">Contact</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="/js/theme-provider.js?v=20250814" defer></script>
+  <script src="/js/main.js?v=20250814" defer></script>
+  <script src="/js/donate.js?v=20250818" defer></script>
+</body>
+</html>

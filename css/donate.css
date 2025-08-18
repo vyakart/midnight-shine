@@ -1,0 +1,485 @@
+/*
+  donate.css
+  Scoped styles for the donation page.
+  - Reuses design tokens from themes.css/styles.css
+  - Accessible focus rings and large touch targets
+  - 2-space indentation per coding standards
+*/
+
+.donate-page h1 {
+  font-size: clamp(1.6rem, 1.2rem + 2.5vw, 2.4rem);
+  margin-bottom: 6px;
+}
+
+.donate-page .subheadline {
+  margin-top: 6px;
+  max-width: none; /* allow full-width body across container */
+}
+
+/* Processor switch (tab-style) */
+.donate-switch {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin: 14px 0 14px;
+}
+
+.switch-btn {
+  appearance: none;
+  border: 1px solid var(--color-border, var(--border, #e5e7eb));
+  background: linear-gradient(180deg, color-mix(in srgb, var(--color-surface, #fff) 92%, transparent), color-mix(in srgb, var(--color-surface, #fff) 84%, transparent));
+  color: var(--color-text-primary, var(--fg, #111));
+  font: 700 1rem/1.15 var(--font-sans, system-ui);
+  padding: 14px 12px;
+  border-radius: 12px;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color var(--transition-fast, 180ms) ease, background var(--transition-fast, 180ms) ease;
+}
+
+.switch-btn[aria-selected="true"] {
+  border-color: var(--link, #0057ff);
+  background: color-mix(in srgb, var(--color-surface, #fff) 70%, var(--link, #0057ff) 10%);
+}
+
+.switch-btn .muted {
+  display: block;
+  font: 600 0.86rem/1.2 var(--font-sans, system-ui);
+  opacity: 0.75;
+  margin-top: 4px;
+}
+
+.switch-btn:focus-visible {
+  outline: 3px solid var(--focus, #ff7a00);
+  outline-offset: 3px;
+}
+
+/* Panels */
+.donate-panels {
+  margin-top: 12px;
+}
+
+.donate-panel {
+  display: block;
+  border: 1px solid var(--color-border, var(--border, #e5e7eb));
+  border-radius: 14px;
+  padding: 14px;
+  background: var(--color-surface, #fff);
+}
+
+.donate-panel.hidden,
+.donate-panel[hidden] {
+  display: none;
+}
+
+/* Preset amounts */
+.preset-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+}
+
+@media (max-width: 780px) {
+  .preset-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.preset {
+  appearance: none;
+  border: 1px solid var(--color-border, var(--border, #e5e7eb));
+  background: linear-gradient(180deg, color-mix(in srgb, var(--color-surface, #fff) 88%, transparent), color-mix(in srgb, var(--color-surface, #fff) 82%, transparent));
+  color: var(--color-text-primary, var(--fg));
+  border-radius: 12px;
+  padding: 12px 10px;
+  text-align: left;
+  font: 800 1rem/1.15 var(--font-sans, system-ui);
+  cursor: pointer;
+  min-height: 64px;
+  transition: transform 120ms ease, border-color 120ms ease, background 120ms ease;
+}
+
+.preset:hover {
+  transform: translateY(-1px);
+}
+
+.preset[aria-pressed="true"] {
+  border-color: var(--link, #0057ff);
+  background: color-mix(in srgb, var(--color-surface, #fff) 64%, var(--link, #0057ff) 14%);
+}
+
+.preset-sub {
+  display: block;
+  font: 600 0.82rem/1.2 var(--font-sans, system-ui);
+  color: var(--color-text-secondary, #555);
+  margin-top: 4px;
+}
+
+/* Custom amount row */
+.custom-amount {
+  margin-top: 12px;
+}
+
+.input-wrap {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid var(--color-border, var(--border, #e5e7eb));
+  background: var(--color-surface, #fff);
+  border-radius: 12px;
+  padding: 8px 8px 8px 10px;
+}
+
+.currency {
+  font: 800 1rem/1 var(--font-sans, system-ui);
+  color: var(--color-text-secondary, #444);
+}
+
+.input-wrap input {
+  appearance: none;
+  border: none;
+  outline: none;
+  background: transparent;
+  color: var(--color-text-primary, #111);
+  font: 700 1rem/1 var(--font-sans, system-ui);
+  min-height: 40px;
+}
+
+.input-wrap input::placeholder {
+  color: var(--color-text-muted, #777);
+}
+
+.input-wrap .button {
+  min-width: 44px;
+  min-height: 44px;
+}
+
+/* UPI QR block */
+.upi-qr-block {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 14px;
+  align-items: center;
+  margin-top: 12px;
+}
+
+.qr-area {
+  width: 180px;
+  height: 180px;
+  border-radius: 12px;
+  border: 1px solid var(--color-border, var(--border));
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  background: #fff;
+}
+
+.upi-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+/* Share card */
+.share-card {
+  margin-top: 16px;
+  border: 1px solid var(--color-border, var(--border));
+  border-radius: 14px;
+  padding: 12px;
+  background: linear-gradient(180deg, color-mix(in srgb, var(--color-surface, #fff) 94%, transparent), color-mix(in srgb, var(--color-surface, #fff) 86%, transparent));
+}
+
+.share-card h3 {
+  margin: 0 0 8px 0;
+}
+
+.share-grid {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 12px;
+  align-items: center;
+}
+
+.qr {
+  display: grid;
+  gap: 6px;
+  justify-items: center;
+}
+
+.qr-caption {
+  font: 600 0.8rem/1 var(--font-sans, system-ui);
+  color: var(--color-text-secondary, #666);
+}
+
+/* Wallet list (alt ways + crypto) */
+.wallet-list {
+  display: grid;
+  gap: 8px;
+}
+
+.wallet-holder {
+  display: flex;
+  gap: 6px;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.wallet-name {
+  font-size: 13px;
+  color: var(--color-text-secondary, #666);
+  font-weight: 600;
+}
+
+.wallet {
+  overflow: clip;
+  display: flex;                 /* lay out icon | text | copy */
+  justify-content: flex-start;
+  align-items: center;
+  text-align: start;
+  line-break: anywhere;
+  padding: 6px 10px;
+  gap: 12px;
+  width: 100%;
+  border: 1px solid var(--color-border, var(--border));
+  background: var(--color-surface, #fff);
+  color: var(--color-text-primary, #111) !important;
+}
+html.dark .wallet { color: #ffffff !important; }
+
+.wallet-icon {
+  min-width: 42px;
+  max-width: 42px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-right: 1px var(--color-border, var(--border)) solid;
+  margin-left: 3px;
+  font-size: 16px;
+}
+
+.wallet-text {
+  display: flex;
+  flex-direction: column;
+  padding: 4px 0;
+  flex: 1 1 auto;                /* take remaining space so address is visible */
+  min-width: 0;
+}
+
+.wallet-text,
+.wallet-address {
+  overflow: visible;
+  white-space: normal;
+  text-overflow: clip;
+}
+
+.wallet-address {
+  font-size: 14px;
+  color: inherit !important;
+  white-space: normal !important;
+  word-break: break-all !important;
+  text-overflow: clip !important;
+}
+
+/* Utilities */
+.sr-only,
+.visually-hidden {
+  position: absolute !important;
+  height: 1px;
+  width: 1px;
+  overflow: hidden;
+  clip: rect(1px, 1px, 1px, 1px);
+  white-space: nowrap;
+}
+
+/* Dark theme tweaks */
+html.dark .donate-panel,
+html.dark .share-card,
+html.dark .wallet {
+  background: var(--bg, #000);
+}
+
+html.dark .qr-area {
+  background: #fff;
+}
+
+/* Ensure controls remain large enough */
+.preset,
+.switch-btn,
+.wallet,
+#go-razorpay,
+#go-upi,
+#copy-link,
+#share,
+#open-upi-intent,
+#copy-upi-string {
+  min-height: 44px;
+}
+/* New — top controls and horizontal preset slider */
+.donate-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin: 8px 0 12px;
+}
+
+/* Currency switcher */
+.currency-switch select {
+  appearance: none;
+  border: 1px solid var(--color-border, var(--border, #e5e7eb));
+  background: var(--color-surface, #fff);
+  color: var(--color-text-primary, #111);
+  border-radius: 10px;
+  padding: 10px 12px;
+  font: 600 0.95rem/1 var(--font-sans, system-ui);
+}
+
+/* Horizontal scroller of preset cards */
+.preset-scroller {
+  position: relative;
+  margin-top: 10px;
+}
+
+.preset-viewport {
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  scroll-snap-type: x mandatory;
+  padding: 2px 4px;
+}
+
+.preset-track {
+  display: inline-flex;
+  gap: 10px;
+  padding: 6px 2px 8px;
+}
+
+.preset-card {
+  min-width: clamp(200px, 42vw, 280px);
+  border: 1px solid var(--color-border, var(--border, #e5e7eb));
+  border-radius: 12px;
+  background: linear-gradient(180deg,
+    color-mix(in srgb, var(--color-surface, #fff) 92%, transparent),
+    color-mix(in srgb, var(--color-surface, #fff) 84%, transparent));
+  color: var(--color-text-primary, var(--fg, #111));
+  padding: 12px 12px;
+  text-align: left;
+  cursor: pointer;
+  scroll-snap-align: start;
+  transition: transform 120ms ease, border-color 120ms ease, background 120ms ease;
+}
+
+.preset-card:hover {
+  transform: translateY(-1px);
+}
+
+.preset-card[aria-pressed="true"] {
+  border-color: var(--link, #0057ff);
+  background: color-mix(in srgb, var(--color-surface, #fff) 64%, var(--link, #0057ff) 14%);
+}
+
+.preset-price {
+  font: 800 1.05rem/1.2 var(--font-sans, system-ui);
+  margin-bottom: 4px;
+}
+
+/* Prev/Next scroll buttons */
+.scroll-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 36px;
+  height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--color-border, #e5e7eb);
+  border-radius: 9999px;
+  background: var(--color-surface, #fff);
+  color: var(--color-text-primary, #111);
+  cursor: pointer;
+}
+
+.scroll-btn.prev { left: -6px; }
+.scroll-btn.next { right: -6px; }
+
+.scroll-btn:focus-visible {
+  outline: 3px solid var(--focus, #ff7a00);
+  outline-offset: 3px;
+}
+
+@media (max-width: 640px) {
+  .scroll-btn { display: none; }
+  .preset-card { min-width: clamp(200px, 72vw, 300px); }
+}
+/* Visibility + explicit copy affordance */
+.wallet { align-items: center; }
+.wallet-text, .wallet-address { overflow: visible; }
+.wallet .wallet-address,
+.wallet code.addr {
+  display: block;
+  width: 100%;
+  font-family: var(--font-mono, ui-monospace, SFMono-Regular, Menlo, Consolas, monospace);
+  font-size: 14px;
+  line-height: 1.35;
+  margin-top: 2px;
+  user-select: text;
+}
+
+/* Copy glyph on the right */
+.wallet-copy {
+  margin-left: auto;            /* push to the far right */
+  opacity: 0.9;
+  font-size: 14px;
+  cursor: pointer;
+  user-select: none;
+}
+.wallet:hover .wallet-copy { opacity: 1; }
+/* Wallet text colors per theme tokens */
+.wallet .wallet-name {
+  color: var(--color-text-secondary, #555) !important;
+}
+.wallet .wallet-address,
+.wallet code.addr {
+  color: var(--color-text-primary, #111) !important;
+}
+html.dark .wallet .wallet-address,
+html.dark .wallet code.addr {
+  color: #ffffff !important;
+}
+/* Strong overrides to ensure wallet texts render visibly */
+.wallet {
+  padding: 8px 10px;               /* breathing room so text is not clipped */
+}
+.wallet-text {
+  flex: 1 1 auto;                  /* take remaining width */
+  min-width: 0;                    /* allow text to wrap */
+  display: flex;
+  flex-direction: column;
+}
+.wallet .wallet-name {
+  color: var(--color-text-secondary, #cfd4ff) !important;
+  font-weight: 700;
+}
+.wallet .wallet-address,
+.wallet code.addr {
+  display: block;
+  color: var(--color-text-primary, #ffffff) !important;
+  font-family: var(--font-mono, ui-monospace, SFMono-Regular, Menlo, Consolas, monospace);
+  white-space: normal !important;
+  word-break: break-all !important;
+  text-overflow: clip !important;
+}
+/* Ensure wallet details are fully visible and selectable */
+.wallet .wallet-text,
+.wallet .wallet-address,
+.wallet code.addr {
+  opacity: 1 !important;
+  display: block;
+  user-select: text;
+}
+}
