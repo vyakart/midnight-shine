@@ -1605,3 +1605,24 @@ html.dark .ruler-controls .ruler-next:hover {
   outline-offset: 3px;
   text-decoration-color: var(--link, #0057ff);
 }
+/* Decrypted Text animation hooks */
+.decrypt-letters.decrypt-all {
+  display: inline;
+}
+
+.decrypt-letter {
+  display: inline-block;
+  white-space: pre;
+  vertical-align: baseline;
+  transition: opacity 120ms linear;
+}
+
+.decrypt-encrypted {
+  opacity: 0.7;
+}
+
+.decrypt-revealed {
+  opacity: 1;
+}
+
+/* Brand title inherits color; no additional styles needed */
