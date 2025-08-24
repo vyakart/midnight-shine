@@ -113,6 +113,155 @@
     imgEl.alt = 'QR code';
   }
 
+// ---------- Cashfree integration helpers ----------
+  async function cfCreateOrder(amountInRupees, donor) {
+    var res = await fetch('/.netlify/functions/cf-create-order', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        amount: amountInRupees,        // rupees (Cashfree expects decimal rupees)
+        currency: 'INR',
+        donor: donor || {},
+        notes: { page: 'donate' }
+      })
+    });
+    if (!res.ok) {
+      var txt = '';
+      try { txt = await res.text(); } catch (_) {}
+      throw new Error('cf-create-order failed (' + res.status + '): ' + txt);
+    }
+    return res.json(); // { mode, order_id, payment_session_id, order }
+  }
+
+  async function cfVerifyOrder(orderId) {
+    var res = await fetch('/.netlify/functions/cf-verify-order', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ order_id: orderId })
+    });
+    if (!res.ok) {
+      var txt = '';
+      try { txt = await res.text(); } catch (_) {}
+      throw new Error('cf-verify-order failed: ' + txt);
+    }
+    return res.json(); // { verified, status, amount, currency, order }
+  }
+
+  function toInrAmountFromActiveCurrency(value) {
+    var v = Number(value);
+    if (!isFinite(v) || v <= 0) return 0;
+    if (ACTIVE_CURRENCY === 'INR') {
+      return Math.round(v * 100) / 100;
+    }
+    // Convert selected currency -> USD -> INR using current rates
+    var rateSel = (CURRENCIES[ACTIVE_CURRENCY] && CURRENCIES[ACTIVE_CURRENCY].rate) || 1;
+    var rateINR = (CURRENCIES.INR && CURRENCIES.INR.rate) || 83;
+    var asUSD = ACTIVE_CURRENCY === 'USD' ? v : (v / rateSel);
+    var inr = asUSD * rateINR;
+    return Math.round(inr * 100) / 100;
+  }
+// Dynamically ensure Cashfree UI SDK is available
+function loadScript(src) {
+  return new Promise(function (resolve, reject) {
+    try {
+      var s = document.createElement('script');
+      s.src = src;
+      s.async = true;
+      s.onload = function () { resolve(); };
+      s.onerror = function () { reject(new Error('Failed to load ' + src)); };
+      (document.head || document.documentElement).appendChild(s);
+    } catch (e) {
+      reject(e);
+    }
+  });
+}
+
+async function ensureCashfree(mode) {
+  if (typeof window === 'undefined') throw new Error('Browser environment required');
+  // If already available and has checkout(), use it
+  if (window.cashfree && typeof window.cashfree.checkout === 'function') return window.cashfree;
+
+  // Always load core first
+  if (!window.cashfree && !window.Cashfree) {
+    await loadScript('https://sdk.cashfree.com/js/ui/2.0.0/cashfree.js');
+  }
+
+  // Then load environment-specific bundle
+  var isProd = String(mode || '').toLowerCase() === 'production';
+  var envUrl = isProd
+    ? 'https://sdk.cashfree.com/js/ui/2.0.0/cashfree.prod.js'
+    : 'https://sdk.cashfree.com/js/ui/2.0.0/cashfree.sandbox.js';
+  await loadScript(envUrl);
+
+  // Prefer official loader if present
+  var cf = null;
+  if (window.Cashfree && typeof window.Cashfree.load === 'function') {
+    try { cf = await window.Cashfree.load({ mode: isProd ? 'production' : 'sandbox' }); } catch (_) {}
+  }
+  if (!cf) cf = window.cashfree || window.Cashfree || null;
+
+  if (!cf || typeof cf.checkout !== 'function') {
+    throw new Error('Cashfree SDK failed to expose checkout()');
+  }
+  return cf;
+}
+
+  async function openCashfreeCheckout(inrAmount, donor) {
+    if (typeof window === 'undefined') {
+      throw new Error('Browser environment required');
+    }
+
+    var order = await cfCreateOrder(inrAmount, donor);
+    var mode = (order && order.mode) || 'sandbox';
+    var sessionId = order && order.payment_session_id;
+    var orderId = order && order.order_id;
+    if (!sessionId || !orderId) throw new Error('Invalid order response');
+
+    try { console.debug('cf order', { mode: mode, sessionId: sessionId, orderId: orderId }); } catch (_) {}
+    await ensureCashfree(mode);
+ 
+    // Resolve the correct Cashfree object across SDK variants
+    var cashfree = null;
+    if (window.Cashfree && typeof window.Cashfree.load === 'function') {
+      // Official v2 usage: await Cashfree.load({ mode })
+      try { cashfree = await window.Cashfree.load({ mode: mode }); } catch (_) {}
+    }
+    if (!cashfree && window.cashfree && typeof window.cashfree.checkout === 'function') {
+      cashfree = window.cashfree;
+    }
+    if (!cashfree && window.Cashfree && typeof window.Cashfree.checkout === 'function') {
+      cashfree = window.Cashfree;
+    }
+    if (!cashfree || typeof cashfree.checkout !== 'function') {
+      throw new Error('Cashfree checkout() API not available');
+    }
+ 
+    // Open Checkout; prefer hard redirect to top window
+    try {
+      var origin = (typeof window !== 'undefined' && window.location && window.location.origin) ? window.location.origin : '';
+      await cashfree.checkout({
+        paymentSessionId: sessionId,
+        redirectTarget: 'top',
+        returnUrl: origin + '/pages/donate.html?order={order_id}'
+      });
+    } catch (err) {
+      try { console.error('cashfree.checkout error', err); } catch (_) {}
+      throw new Error('cashfree.checkout: ' + (err && (err.message || err.reason || JSON.stringify(err)) || 'unknown'));
+    }
+
+    // After checkout, verify status server-side
+    try {
+      var verify = await cfVerifyOrder(orderId);
+      if (verify && verify.verified) {
+        alert('Thank you! Your donation was successful.');
+      } else {
+        alert('Payment not verified yet. If debited, it may reflect shortly.');
+      }
+    } catch (e) {
+      try { console.error(e); } catch (_) {}
+      alert('Could not verify payment. If you completed payment, it may reflect soon.');
+    }
+  }
   // ---------- Tabs (one-time / monthly) ----------
   var tabOnce = $('#tab-onetime');
   var tabMonthly = $('#tab-monthly');
@@ -233,6 +382,9 @@
   var symbolMonthly = $('#currency-symbol-monthly');
   var inputOnce = $('#amount-onetime');
   var inputMonthly = $('#amount-monthly');
+  // Donor inputs (one-time)
+  var phoneOnce = $('#phone-onetime');
+  var emailOnce = $('#email-onetime');
 
   function updateCurrencyUI() {
     var sym = (CURRENCIES[ACTIVE_CURRENCY] && CURRENCIES[ACTIVE_CURRENCY].symbol) || '$';
@@ -294,7 +446,34 @@
       try { console.log('Donation summary copied:', summary); } catch(_) {}
     };
   }
-  if (btnOnce && inputOnce) btnOnce.addEventListener('click', continueHandler('onetime', inputOnce));
+  if (btnOnce && inputOnce) {
+  btnOnce.addEventListener('click', async function () {
+    var val = parseNumberLocal(inputOnce.value);
+    if (!(val > 0)) { inputOnce.focus(); inputOnce.select && inputOnce.select(); return; }
+
+    // Convert active currency to INR (Cashfree expects INR rupees)
+    var inrAmount = toInrAmountFromActiveCurrency(val);
+
+    // Collect donor details (phone required by provider)
+    var rawPhone = (phoneOnce && phoneOnce.value) || '';
+    var phoneDigits = String(rawPhone).replace(/\D/g, '');
+    if (phoneDigits.length < 10 || phoneDigits.length > 14) {
+      if (phoneOnce) { phoneOnce.focus(); phoneOnce.select && phoneOnce.select(); }
+      alert('Please enter a valid phone number (10–14 digits).');
+      return;
+    }
+    var emailVal = (emailOnce && emailOnce.value.trim()) || '';
+    var donor = { email: emailVal, phone: phoneDigits };
+
+    try {
+      await openCashfreeCheckout(inrAmount, donor);
+    } catch (e) {
+      try { console.error('start payment error', e); } catch (_) {}
+      var msg = (e && (e.message || e.reason)) || String(e) || 'unknown error';
+      alert('Unable to start payment: ' + msg);
+    }
+  });
+}
   if (btnMonthly && inputMonthly) btnMonthly.addEventListener('click', continueHandler('monthly', inputMonthly));
 
   // ---------- Share module ----------

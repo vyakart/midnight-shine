@@ -5,10 +5,8 @@
   - Smooth transitions and accessibility support
 */
 
-/* Font imports */
-@import url('https://fonts.googleapis.com/css2?family=Hind:wght@400;600;700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;600;700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&display=swap');
+/* Font imports removed to reduce third-party requests.
+   Fonts are now self-hosted via @font-face in [css/styles.css](css/styles.css) using Recursive WOFF2 sets. */
 
 /* Base theme tokens */
 :root {

@@ -8,7 +8,7 @@
   <meta name="robots" content="index, follow">
   <meta name="color-scheme" content="light dark">
   <meta name="theme-color" content="#FFFBF5">
-  <link rel="icon" href="/assets/icons/favicon.png" type="image/png">
+  <link rel="icon" href="/assets/icons/favicon.svg" type="image/svg+xml">
 
   <script>
     // Pre-paint theme setter to avoid FOUC: enforce new themes with legacy mapping
@@ -56,11 +56,16 @@
     })();
   </script>
 
-  <!-- Base styles for consistent header/footer + page styles -->
-  <link rel="stylesheet" href="/css/styles.css">
-  <link rel="stylesheet" href="/css/themes.css">
-  <link rel="stylesheet" href="/css/utilities.css">
-  <link rel="stylesheet" href="/css/microblog.css">
+  <!-- Base styles for consistent header/footer + page styles (bundled + hashed) -->
+  <link rel="stylesheet" href="/dist/css/styles-HUUNELUM.css">
+  <link rel="preload" href="/dist/css/themes-TMRW55YK.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <link rel="preload" href="/dist/css/utilities-Q46L33KO.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <link rel="preload" href="/dist/css/microblog-JCWNVPNO.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript>
+    <link rel="stylesheet" href="/dist/css/themes-TMRW55YK.css">
+    <link rel="stylesheet" href="/dist/css/utilities-Q46L33KO.css">
+    <link rel="stylesheet" href="/dist/css/microblog-JCWNVPNO.css">
+  </noscript>
 </head>
 <body>
   <!-- Fixed gradient mesh background layer (match main site) -->
@@ -73,7 +78,7 @@
     <div class="container header-inner">
       <div class="brand">
         <a href="/" class="brand-link" aria-label="Go to home">
-          <img class="brand-logo" src="/assets/icons/favicon.png" alt="Nishit logo" width="28" height="28" decoding="async">
+          <img class="brand-logo" src="/assets/icons/favicon.svg" alt="Nishit logo" width="28" height="28" decoding="async">
           <h1 class="brand-title">
             <span class="brand-fixed">Nishit</span>
           </h1>
@@ -216,11 +221,11 @@
     </div>
   </footer>
 
-  <!-- Scripts: ThemeProvider first, then main, then page JS -->
-  <script src="/js/theme-provider.js?v=20250814" defer></script>
-  <script src="/js/decrypted-text.js?v=20250819" defer></script>
-  <script src="/js/main.js?v=20250814" defer></script>
-  <script src="/js/microblog-data.js?v=20250814" defer></script>
-  <script src="/js/microblog.js?v=20250814" defer></script>
+  <!-- Scripts: ThemeProvider first, then main, then page JS (bundled + hashed) -->
+  <script src="/dist/js/theme-provider-6I35RNTJ.js" defer></script>
+  <script src="/dist/js/decrypted-text-SB55CFEX.js" defer></script>
+  <script src="/dist/js/main-ACGFQTAZ.js" defer></script>
+  <script src="/dist/js/microblog-data-LRGP4FAU.js" defer></script>
+  <script src="/dist/js/microblog-O3UOCEHV.js" defer></script>
 </body>
 </html>

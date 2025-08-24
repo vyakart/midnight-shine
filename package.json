@@ -1,0 +1,29 @@
+{
+  "name": "midnight-shine",
+  "version": "1.0.0",
+  "description": "A lightweight static portfolio site.",
+  "main": "index.js",
+  "scripts": {
+    "clean": "rm -rf dist && mkdir -p dist/js dist/css",
+    "build:js": "esbuild js/*.js --bundle --minify --format=iife --sourcemap --outdir=dist/js --entry-names=[name]-[hash]",
+    "build:css": "esbuild css/styles.css css/themes.css css/preview-card.css css/utilities.css css/donate.css css/microblog.css --bundle --minify --outdir=dist/css --entry-names=[name]-[hash] --loader:.woff2=file",
+    "build": "npm run clean && npm run build:js && npm run build:css",
+    "serve": "python3 -m http.server 5501",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vyakart/midnight-shine.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/vyakart/midnight-shine/issues"
+  },
+  "homepage": "https://github.com/vyakart/midnight-shine#readme",
+  "devDependencies": {
+    "esbuild": "^0.25.9"
+  }
+}

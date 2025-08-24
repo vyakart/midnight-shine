@@ -1,0 +1,55 @@
+# Netlify configuration for static site + serverless functions
+# Functions live under netlify/functions and are bundled with esbuild.
+
+[build]
+# Build hashed bundles into /dist on deploy, then serve from repo root
+command = "npm ci && npm run build"
+publish = "."
+
+[functions]
+directory = "netlify/functions"
+node_bundler = "esbuild"
+
+[dev]
+# Serve the static files and emulate functions locally
+framework = "#static"
+port = 8888
+# Security and caching headers
+[[headers]]
+for = "/*"
+  [headers.values]
+  Content-Security-Policy = "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self'; media-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'"
+  Cross-Origin-Opener-Policy = "same-origin"
+  X-Frame-Options = "DENY"
+  Referrer-Policy = "strict-origin-when-cross-origin"
+  X-Content-Type-Options = "nosniff"
+  Strict-Transport-Security = "max-age=31536000; includeSubDomains; preload"
+
+# Long cache for static assets (immutable)
+[[headers]]
+for = "/assets/*"
+  [headers.values]
+  Cache-Control = "public, max-age=31536000, immutable"
+
+# Long cache for CSS and JS (versioned via query param)
+[[headers]]
+for = "/css/*"
+  [headers.values]
+  Cache-Control = "public, max-age=31536000"
+
+[[headers]]
+for = "/js/*"
+  [headers.values]
+  Cache-Control = "public, max-age=31536000"
+
+# Long cache for bundled & hashed assets under /dist (immutable)
+[[headers]]
+for = "/dist/*"
+  [headers.values]
+  Cache-Control = "public, max-age=31536000, immutable"
+
+# Moderate cache for videos (can be replaced independently)
+[[headers]]
+for = "/assets/video/*"
+  [headers.values]
+  Cache-Control = "public, max-age=604800"

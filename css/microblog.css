@@ -577,3 +577,32 @@ body {
   .streams-page .values-heading { margin-top: 0.75rem; }
   .detail-hero { height: clamp(180px, 35vh, 380px); border-radius: 1rem; }
 }
+/* Reduced motion: disable non-essential animations/transitions on Streams */
+@media (prefers-reduced-motion: reduce) {
+  /* Stop animated blobs and grain scroll */
+  .base-gradient,
+  .blob-1,
+  .blob-2,
+  .blob-3,
+  .grain-secondary {
+    animation: none !important;
+  }
+
+  /* Remove hover motion/scale and heavy shadows */
+  .microblog-card {
+    transition: none !important;
+  }
+  .microblog-card:hover {
+    transform: none !important;
+    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06) !important;
+  }
+
+  /* Buttons: no scale-on-hover */
+  .load-more-btn {
+    transition: none !important;
+  }
+  .load-more-btn:hover {
+    transform: none !important;
+    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1) !important;
+  }
+}

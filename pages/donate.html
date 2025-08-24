@@ -8,7 +8,7 @@
   <meta name="robots" content="index, follow">
   <meta name="color-scheme" content="light dark">
   <meta name="theme-color" content="#FFFBF5">
-  <link rel="icon" href="/assets/icons/favicon.png" type="image/png">
+  <link rel="icon" href="/assets/icons/favicon.svg" type="image/svg+xml">
 
   <script>
     // Pre-paint theme setter to avoid FOUC
@@ -53,11 +53,16 @@
     })();
   </script>
 
-  <!-- Base styles + page styles -->
-  <link rel="stylesheet" href="/css/styles.css?v=20250814">
-  <link rel="stylesheet" href="/css/themes.css?v=20250814">
-  <link rel="stylesheet" href="/css/utilities.css?v=20250814">
-  <link rel="stylesheet" href="/css/donate.css?v=20250818">
+  <!-- Base styles + page styles (bundled + hashed) -->
+  <link rel="stylesheet" href="/dist/css/styles-HUUNELUM.css">
+  <link rel="preload" href="/dist/css/themes-TMRW55YK.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <link rel="preload" href="/dist/css/utilities-Q46L33KO.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <link rel="preload" href="/dist/css/donate-AGTA66K6.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript>
+    <link rel="stylesheet" href="/dist/css/themes-TMRW55YK.css">
+    <link rel="stylesheet" href="/dist/css/utilities-Q46L33KO.css">
+    <link rel="stylesheet" href="/dist/css/donate-AGTA66K6.css">
+  </noscript>
 
   <!-- Open Graph -->
   <meta property="og:title" content="Dāna — Donate">
@@ -80,7 +85,7 @@
     <div class="container header-inner">
       <div class="brand">
         <a href="/" class="brand-link" aria-label="Go to home">
-          <img class="brand-logo" src="/assets/icons/favicon.png" alt="Nishit logo" width="28" height="28" decoding="async">
+          <img class="brand-logo" src="/assets/icons/favicon.svg" alt="Nishit logo" width="28" height="28" decoding="async">
           <h1 class="brand-title">
             <span class="brand-fixed">Nishit</span>
           </h1>
@@ -172,6 +177,15 @@
               <p id="custom-help-onetime" class="muted" style="margin:8px 2px 0;">
                 Amounts are shown in your chosen currency.
               </p>
+              <div class="donor-info" style="margin-top:10px;">
+                <label for="phone-onetime" class="visually-hidden">Phone (required for payment)</label>
+                <input id="phone-onetime" type="tel" inputmode="tel" placeholder="phone (required)" aria-describedby="donor-help-onetime" autocomplete="tel">
+                <label for="email-onetime" class="visually-hidden">Email (optional)</label>
+                <input id="email-onetime" type="email" inputmode="email" placeholder="email (optional)" autocomplete="email">
+                <p id="donor-help-onetime" class="muted" style="margin:8px 2px 0;">
+                  Phone is required by the provider to start payment.
+                </p>
+              </div>
             </div>
           </section>
 
@@ -195,6 +209,12 @@
               <p id="custom-help-monthly" class="muted" style="margin:8px 2px 0;">
                 Monthly pledge preview — provider will be added later.
               </p>
+              <div class="donor-info" style="margin-top:10px;">
+                <label for="phone-monthly" class="visually-hidden">Phone (required for payment)</label>
+                <input id="phone-monthly" type="tel" inputmode="tel" placeholder="phone (required)" autocomplete="tel">
+                <label for="email-monthly" class="visually-hidden">Email (optional)</label>
+                <input id="email-monthly" type="email" inputmode="email" placeholder="email (optional)" autocomplete="email">
+              </div>
             </div>
           </section>
         </div>
@@ -316,10 +336,11 @@
     </div>
   </footer>
 
-  <!-- Scripts -->
-  <script src="/js/theme-provider.js?v=20250814" defer></script>
-  <script src="/js/decrypted-text.js?v=20250819" defer></script>
-  <script src="/js/main.js?v=20250814" defer></script>
-  <script src="/js/donate.js?v=20250818" defer></script>
+  <!-- Scripts (bundled + hashed) -->
+  <script src="/dist/js/theme-provider-6I35RNTJ.js" defer></script>
+  <script src="/dist/js/decrypted-text-SB55CFEX.js" defer></script>
+  <script src="/dist/js/main-ACGFQTAZ.js" defer></script>
+  <!-- Cashfree UI SDK is loaded dynamically based on env in [JavaScript.ensureCashfree()](js/donate.js:176); static tag removed -->
+  <script src="/dist/js/donate-ZPN7CNQK.js" defer></script>
 </body>
 </html>

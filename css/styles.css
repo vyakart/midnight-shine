@@ -1626,3 +1626,25 @@ html.dark .ruler-controls .ruler-next:hover {
 }
 
 /* Brand title inherits color; no additional styles needed */
+/* Reduced motion: prefer no animations/transitions where not essential */
+@media (prefers-reduced-motion: reduce) {
+  /* Disable general transitions/animations on interactive UI */
+  .flip-link .flip-row span,
+  .nf-card .preview,
+  .nf-overlay,
+  .button,
+  .rc-item,
+  .ruler-track {
+    transition-duration: 0.01ms !important;
+    animation: none !important;
+  }
+
+  /* Prevent hover/focus video reveal on cards */
+  .nf-card .preview { opacity: 0 !important; }
+  .nf-card:hover .preview,
+  .nf-card:focus-visible .preview { opacity: 0 !important; }
+
+  /* Stop gradient animations */
+  .gradient-animate { animation: none !important; }
+  .gradient-overlay.gradient-animate::before { animation: none !important; }
+}

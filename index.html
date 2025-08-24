@@ -75,18 +75,47 @@
   <meta name="twitter:description" content="Brazilian Jiu-Jitsu, astrophotography, mathematics, physics, effective altruism, phenomenology, meditation, and design—woven into a single practice.">
   <meta name="twitter:image" content="https://example.netlify.app/assets/og/og-image.png">
 
-  <link rel="icon" href="/assets/icons/favicon.png" type="image/png">
-
+  <link rel="icon" href="/assets/icons/favicon.svg" type="image/svg+xml">
+  
+  <!-- Critical CSS: header + hero + initial carousel layout -->
+  <style data-critical>
+    :root{--bg:#ffffff;--fg:#0b1a34}
+    html,body{margin:0;padding:0}
+    body{
+      font-family:"Recursive Sans Linear",system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial,sans-serif;
+      line-height:1.6;color:var(--fg);background:var(--bg);min-height:100%
+    }
+    .container{width:min(1100px,92vw);margin-inline:auto}
+    .site-header{position:sticky;top:0;z-index:10;background:var(--bg);border-bottom:1px solid #e5e7eb;color:var(--fg)}
+    .header-inner{display:flex;align-items:center;justify-content:space-between;min-height:68px}
+    .brand{display:inline-flex;align-items:center;gap:12px;font-weight:700;letter-spacing:.02em}
+    .brand-logo{width:28px;height:28px;display:inline-block;object-fit:contain}
+    .brand-title{display:inline-flex;align-items:baseline;gap:6px;margin:0;font-size:clamp(1.25rem,1.1rem + .5vw,1.6rem);line-height:1.1}
+    .site-nav a{display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:8px;font-size:18px}
+    .section{padding:56px 0}
+    .section.hero{padding:0}
+    .hero-media{position:relative;width:100%;min-height:70svh;max-height:90svh;overflow:hidden;background:transparent}
+    .hero-video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;opacity:1}
+    .nf-viewport{position:relative;width:100%;overflow:hidden;border-radius:16px}
+    .nf-track{display:inline-flex;flex-wrap:nowrap;gap:14px;padding:8px;transform:translateX(0)}
+    .nf-card{position:relative;display:block;flex:0 0 auto;width:clamp(140px,22vw,240px);aspect-ratio:1/1;border-radius:12px;overflow:hidden;background:#000;box-shadow:0 8px 20px rgba(0,0,0,.18),0 1px 3px rgba(0,0,0,.12)}
+    .nf-card .poster{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+  </style>
   <!-- Styles -->
-  <link rel="stylesheet" href="./css/styles.css?v=20250814">
-  <link rel="stylesheet" href="./css/themes.css?v=20250814">
-  <link rel="stylesheet" href="./css/utilities.css?v=20250814">
-  <link rel="stylesheet" href="./css/preview-card.css?v=20250814">
-
-  <!-- Fonts (consider self-hosting in production) -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./dist/css/styles-HUUNELUM.css">
+  <link rel="preload" href="./dist/css/themes-TMRW55YK.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <link rel="preload" href="./dist/css/utilities-Q46L33KO.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <link rel="preload" href="./dist/css/preview-card-65OXTVWY.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript>
+    <link rel="stylesheet" href="./dist/css/themes-TMRW55YK.css">
+    <link rel="stylesheet" href="./dist/css/utilities-Q46L33KO.css">
+    <link rel="stylesheet" href="./dist/css/preview-card-65OXTVWY.css">
+  </noscript>
+  
+  <!-- Preload LCP image -->
+  <link rel="preload" as="image" href="./assets/video/poster.png" fetchpriority="high">
+  
+  <!-- Fonts: self-hosted Recursive WOFF2 (see css/styles.css). Google Fonts removed to reduce third-party requests. -->
 </head>
 <body>
 <!-- Fixed gradient mesh background layer -->
@@ -96,7 +125,7 @@
     <div class="container header-inner">
       <div class="brand">
         <a href="/" class="brand-link" aria-label="Go to home">
-          <img class="brand-logo" src="./assets/icons/favicon.png" alt="Nishit logo" width="28" height="28" decoding="async">
+          <img class="brand-logo" src="/assets/icons/favicon.svg" alt="Nishit logo" width="28" height="28" decoding="async">
           <h1 class="brand-title">
             <span class="brand-fixed">Nishit</span>
           </h1>
@@ -154,23 +183,35 @@
     <section class="section hero" aria-labelledby="hero-title">
       <h2 id="hero-title" class="visually-hidden">Hero</h2>
       <div class="hero-media gradient-overlay gradient-animate">
+        <img
+          id="hero-poster"
+          class="hero-poster"
+          src="./assets/video/poster.png"
+          alt=""
+          width="1920"
+          height="1080"
+          fetchpriority="high"
+          loading="eager"
+          decoding="async"
+          style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;"
+        >
         <video
           id="hero-video"
           class="hero-video"
-          autoplay
           muted
-          loop
           playsinline
-          preload="metadata"
+          preload="none"
+          loop
           aria-hidden="true"
           width="1920"
           height="1080"
+          poster="./assets/video/poster.png"
         >
-          <source src="./assets/video/hero_post.mp4" type="video/mp4">
+          <track kind="captions" srclang="en" label="English" src="data:text/vtt;charset=utf-8,WEBVTT">
+          <source src="./assets/video/hero_post.min.webm" type="video/webm">
+          <source src="./assets/video/hero_post.min.mp4" type="video/mp4">
           Your browser does not support the video tag.
         </video>
-
-
       </div>
     </section>
 
@@ -192,21 +233,63 @@
             <div class="nf-track" role="list">
               <!-- Cards injected by JS; fallback for no-JS: -->
               <div class="nf-card" role="listitem" tabindex="0" aria-label="Meditation">
-                <img class="poster" src="./assets/posters/meditation.png" alt="Meditation poster" decoding="async" loading="eager">
+                <picture>
+                  <source type="image/avif"
+                          srcset="
+                            ./assets/posters/optimized/320/meditation-320.avif 320w,
+                            ./assets/posters/optimized/640/meditation-640.avif 640w
+                          "
+                          sizes="(max-width: 480px) 120px, (max-width: 768px) 180px, 240px">
+                  <source type="image/webp"
+                          srcset="
+                            ./assets/posters/optimized/320/meditation-320.webp 320w,
+                            ./assets/posters/optimized/640/meditation-640.webp 640w
+                          "
+                          sizes="(max-width: 480px) 120px, (max-width: 768px) 180px, 240px">
+                  <img class="poster" src="./assets/posters/meditation.png" alt="Meditation poster" decoding="async" loading="eager" width="240" height="240">
+                </picture>
                 <div class="nf-overlay">
                   <div class="nf-title">Meditation</div>
                   <div class="nf-sub">Awareness as Craft</div>
                 </div>
               </div>
               <div class="nf-card" role="listitem" tabindex="-1" aria-label="Brazilian Jiu‑Jitsu">
-                <img class="poster" src="./assets/posters/bjj.png" alt="Brazilian Jiu‑Jitsu poster" decoding="async" loading="lazy">
+                <picture>
+                  <source type="image/avif"
+                          srcset="
+                            ./assets/posters/optimized/320/bjj-320.avif 320w,
+                            ./assets/posters/optimized/640/bjj-640.avif 640w
+                          "
+                          sizes="(max-width: 480px) 120px, (max-width: 768px) 180px, 240px">
+                  <source type="image/webp"
+                          srcset="
+                            ./assets/posters/optimized/320/bjj-320.webp 320w,
+                            ./assets/posters/optimized/640/bjj-640.webp 640w
+                          "
+                          sizes="(max-width: 480px) 120px, (max-width: 768px) 180px, 240px">
+                  <img class="poster" src="./assets/posters/bjj.png" alt="Brazilian Jiu‑Jitsu poster" decoding="async" loading="lazy" width="240" height="240">
+                </picture>
                 <div class="nf-overlay">
                   <div class="nf-title">Brazilian Jiu‑Jitsu</div>
                   <div class="nf-sub">Dialogue in Movement</div>
                 </div>
               </div>
               <div class="nf-card" role="listitem" tabindex="-1" aria-label="Photography">
-                <img class="poster" src="./assets/posters/astro.png" alt="Photography poster" decoding="async" loading="lazy">
+                <picture>
+                  <source type="image/avif"
+                          srcset="
+                            ./assets/posters/optimized/320/astro-320.avif 320w,
+                            ./assets/posters/optimized/640/astro-640.avif 640w
+                          "
+                          sizes="(max-width: 480px) 120px, (max-width: 768px) 180px, 240px">
+                  <source type="image/webp"
+                          srcset="
+                            ./assets/posters/optimized/320/astro-320.webp 320w,
+                            ./assets/posters/optimized/640/astro-640.webp 640w
+                          "
+                          sizes="(max-width: 480px) 120px, (max-width: 768px) 180px, 240px">
+                  <img class="poster" src="./assets/posters/astro.png" alt="Photography poster" decoding="async" loading="lazy" width="240" height="240">
+                </picture>
                 <div class="nf-overlay">
                   <div class="nf-title">Photography</div>
                   <div class="nf-sub">The Art of Noticing</div>
@@ -319,12 +402,12 @@
     </div>
   </footer>
 
-  <!-- Defer scripts: ThemeProvider first, then main -->
-  <script src="./js/theme-provider.js" defer></script>
-  <script src="./js/projects-carousel.js" defer></script>
-  <script src="./js/decrypted-text.js?v=20250819" defer></script>
-  <script src="./js/main.js" defer></script>
-  <script src="./js/terminal.js" defer></script>
-  <script src="./js/preview-card.js" defer></script>
+  <!-- Defer scripts: ThemeProvider first, then main (bundled + minified) -->
+  <script src="./dist/js/theme-provider-6I35RNTJ.js" defer></script>
+  <script src="./dist/js/projects-carousel-HE6TQUUH.js" defer></script>
+  <script src="./dist/js/decrypted-text-SB55CFEX.js" defer></script>
+  <script src="./dist/js/main-ACGFQTAZ.js" defer></script>
+  <script src="./dist/js/terminal-Z7F5DWGZ.js" defer></script>
+  <script src="./dist/js/preview-card-JJO4J5NU.js" defer></script>
 </body>
 </html>

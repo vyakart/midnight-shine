@@ -174,19 +174,76 @@
   // Motion preference
   var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  // Hero lazy observer (kept)
+  // Hero media: prepare video on visibility and play on user gesture; poster is the LCP
   var video = document.getElementById('hero-video');
-  if (video && 'IntersectionObserver' in window) {
-    var loaded = false;
-    var io = new IntersectionObserver(function (entries) {
-      entries.forEach(function (entry) {
-        if (!loaded && entry.isIntersecting) {
-          loaded = true;
-          io.disconnect();
-        }
+  var heroMedia = document.querySelector('.hero-media');
+  var posterImg = document.getElementById('hero-poster');
+  if (video) {
+    // Ensure smooth fade between poster <img> and <video>
+    if (posterImg) {
+      try {
+        posterImg.style.transition = 'opacity 200ms ease';
+        posterImg.style.opacity = '1';
+      } catch (_) {}
+    }
+
+    function prepareVideo() {
+      if (video.dataset.prepared === '1') return;
+      video.dataset.prepared = '1';
+      try { video.load(); } catch (_) {}
+    }
+    function playOnGesture() {
+      prepareVideo();
+      try {
+        var p = video.play();
+        if (p && typeof p.then === 'function') p.catch(function(){});
+      } catch (_) {}
+    }
+
+    // Show/hide poster based on playback state
+    function hidePoster() {
+      if (!posterImg) return;
+      posterImg.style.opacity = '0';
+      posterImg.setAttribute('aria-hidden', 'true');
+    }
+    function showPoster() {
+      if (!posterImg) return;
+      posterImg.style.opacity = '1';
+      posterImg.setAttribute('aria-hidden', 'false');
+    }
+
+    // Prefer going back to poster when motion is reduced
+    if (reduceMotion) {
+      try { video.loop = false; } catch (_) {}
+    }
+
+    video.addEventListener('playing', hidePoster);
+    video.addEventListener('pause', showPoster);
+    video.addEventListener('ended', showPoster);
+    video.addEventListener('error', showPoster);
+    document.addEventListener('visibilitychange', function () {
+      if (document.hidden) showPoster();
+    });
+
+    // Prepare when near viewport; keep paused to avoid autoplay at first paint
+    if ('IntersectionObserver' in window) {
+      var io = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+          if (entry.isIntersecting) {
+            prepareVideo();
+            io.disconnect();
+          }
+        });
+      }, { rootMargin: '200px' });
+      io.observe(video);
+    }
+    // Start playback only after explicit user gesture on hero
+    ['click', 'touchstart', 'keydown'].forEach(function(evt) {
+      (heroMedia || video).addEventListener(evt, function onFirst() {
+        playOnGesture();
+        (heroMedia || video).removeEventListener(evt, onFirst);
       });
-    }, { rootMargin: '200px' });
-    io.observe(video);
+    });
   }
 
   // Terminal toggle (kept)
@@ -221,6 +278,13 @@
     function encodeFile(name) { return encodeURIComponent(name); }
     function moviePath(name) { return '/assets/movies/' + encodeFile(name) + '.mp4'; }
     function posterPath(name){ return '/assets/posters/' + encodeFile(name) + '.png'; }
+    // Optimized poster helper paths (AVIF/WebP variants generated under assets/posters/optimized/)
+    function optPath(name, w, ext) {
+      return '/assets/posters/optimized/' + w + '/' + encodeFile(name) + '-' + w + '.' + ext;
+    }
+    function cardSrcset(name, ext) {
+      return optPath(name, 320, ext) + ' 320w, ' + optPath(name, 640, ext) + ' 640w';
+    }
 
     // Prepare container
     var viewport = carouselRoot.querySelector('.nf-viewport');
@@ -254,12 +318,32 @@
         card.setAttribute('aria-labelledby', 'nf-title-' + name);
         card.setAttribute('aria-describedby', 'nf-sub-' + name);
 
+        // Optimized poster with AVIF/WebP + PNG fallback
+        var picture = document.createElement('picture');
+
+        var sAvif = document.createElement('source');
+        sAvif.type = 'image/avif';
+        sAvif.setAttribute('srcset', cardSrcset(name, 'avif'));
+        sAvif.setAttribute('sizes', '(max-width: 480px) 120px, (max-width: 768px) 180px, 240px');
+        picture.appendChild(sAvif);
+
+        var sWebp = document.createElement('source');
+        sWebp.type = 'image/webp';
+        sWebp.setAttribute('srcset', cardSrcset(name, 'webp'));
+        sWebp.setAttribute('sizes', '(max-width: 480px) 120px, (max-width: 768px) 180px, 240px');
+        picture.appendChild(sWebp);
+
         var img = document.createElement('img');
         img.className = 'poster';
         img.alt = meta.title + ' poster';
         img.decoding = 'async';
         img.loading = idx === 0 ? 'eager' : 'lazy';
         img.src = posterPath(name);
+        // Explicit dimensions to avoid layout shifts; matches CSS square aspect
+        img.width = 240;
+        img.height = 240;
+
+        picture.appendChild(img);
 
         var video = document.createElement('video');
         video.className = 'preview';
@@ -287,7 +371,7 @@
         overlay.appendChild(t);
         overlay.appendChild(s);
 
-        card.appendChild(img);
+        card.appendChild(picture);
         card.appendChild(video);
         card.appendChild(overlay);
         targetTrack.appendChild(card);
@@ -326,7 +410,7 @@
     var translateX = 0;
     var speedPxPerSec = 60; // constant speed across devices
     var setW = 0;
-    var running = true;
+    var running = !reduceMotion; // respect prefers-reduced-motion
     var lastTs = 0;
 
     function ensureMeasurements() {
@@ -384,13 +468,15 @@
       });
     });
 
-    // Start
-    requestAnimationFrame(function(){
-      ensureMeasurements();
-      // If measurement zero (not laid out yet), try again shortly
-      if (!setW) setTimeout(ensureMeasurements, 50);
-      requestAnimationFrame(step);
-    });
+    // Start (disable autoscroll when prefers-reduced-motion is enabled)
+    if (!reduceMotion) {
+      requestAnimationFrame(function(){
+        ensureMeasurements();
+        // If measurement zero (not laid out yet), try again shortly
+        if (!setW) setTimeout(ensureMeasurements, 50);
+        requestAnimationFrame(step);
+      });
+    }
 
     // On resize, re-measure set width to keep loop seamless
     window.addEventListener('resize', function(){
@@ -570,4 +656,66 @@
   } else {
     setupFlipLinks();
   }
+})();
+// PerformanceObserver: collect basic field metrics (LCP, CLS, TBT approx)
+(function () {
+  'use strict';
+  if (window.__perfObsInstalled) return;
+  window.__perfObsInstalled = true;
+
+  var lcp = 0;
+  var cls = 0;
+  var tbt = 0;
+
+  // Largest Contentful Paint (ms)
+  try {
+    var poLCP = new PerformanceObserver(function (list) {
+      list.getEntries().forEach(function (e) {
+        var ts = e.renderTime || e.loadTime || 0;
+        if (ts > lcp) lcp = ts;
+      });
+    });
+    poLCP.observe({ type: 'largest-contentful-paint', buffered: true });
+    document.addEventListener('visibilitychange', function () {
+      if (document.visibilityState === 'hidden') {
+        try { poLCP.disconnect(); } catch (_) {}
+      }
+    });
+  } catch (_) {}
+
+  // Cumulative Layout Shift
+  try {
+    var poCLS = new PerformanceObserver(function (list) {
+      list.getEntries().forEach(function (e) {
+        if (!e.hadRecentInput) cls += e.value;
+      });
+    });
+    poCLS.observe({ type: 'layout-shift', buffered: true });
+  } catch (_) {}
+
+  // Total Blocking Time (approx from Long Tasks)
+  try {
+    var poLT = new PerformanceObserver(function (list) {
+      list.getEntries().forEach(function (e) {
+        var block = e.duration - 50;
+        if (block > 0) tbt += block;
+      });
+    });
+    poLT.observe({ entryTypes: ['longtask'] });
+  } catch (_) {}
+
+  function report() {
+    // Skip during Lighthouse synthetic runs
+    if ((navigator.userAgent || '').includes('Chrome-Lighthouse')) return;
+    var data = {
+      lcp: Math.round(lcp),
+      cls: +cls.toFixed(3),
+      tbt: Math.round(tbt)
+    };
+    try { console.info('[Perf]', data); } catch (_) {}
+    // Hook: send to your analytics endpoint if needed
+    // navigator.sendBeacon('/perf', JSON.stringify(data));
+  }
+
+  window.addEventListener('pagehide', report, { once: true });
 })();
