@@ -18,7 +18,7 @@ export async function handler(event) {
 
     const appId = process.env.CASHFREE_APP_ID || process.env.CASHFREE_CLIENT_ID;
     const secret = process.env.CASHFREE_SECRET_KEY || process.env.CASHFREE_CLIENT_SECRET;
-    const env = String(process.env.CF_ENV || 'SANDBOX').toUpperCase();
+    const env = resolveEnv(event);
     const apiVersion = process.env.CF_API_VERSION || '2023-08-01';
     if (!appId || !secret) {
       safeLog('ERROR', 'cf-verify-order', {
@@ -42,6 +42,17 @@ export async function handler(event) {
     }
 
     const base = env === 'PRODUCTION' ? 'https://api.cashfree.com' : 'https://sandbox.cashfree.com';
+    const host = String((event && event.headers && (event.headers['x-forwarded-host'] || event.headers.host)) || '').toLowerCase();
+    safeLog('INFO', 'cf-verify-order.debug', {
+      order_id: orderId,
+      env,
+      base,
+      apiVersion,
+      host,
+      creds_source: (process.env.CASHFREE_CLIENT_ID ? 'CLIENT' : (process.env.CASHFREE_APP_ID ? 'APP' : 'NONE')),
+      have_app: !!process.env.CASHFREE_APP_ID,
+      have_client: !!process.env.CASHFREE_CLIENT_ID
+    });
     safeLog('INFO', 'cf-verify-order.debug', {
       order_id: orderId,
       env,
@@ -95,6 +106,21 @@ export async function handler(event) {
     safeLog('ERROR', 'cf-verify-order', { message: 'Unhandled error', detail: String(e && (e.stack || e)) });
     return jsonResponse(500, { error: 'server_error' });
   }
+}
+
+function resolveEnv(event) {
+  try {
+    const explicit = String(process.env.CF_ENV || '').trim().toUpperCase();
+    if (explicit === 'PRODUCTION' || explicit === 'SANDBOX') return explicit;
+  } catch (_) {}
+
+  try {
+    const h = (event && event.headers) || {};
+    const host = String(h['x-forwarded-host'] || h['host'] || '').toLowerCase();
+    if (host.endsWith('vyakart.com')) return 'PRODUCTION';
+  } catch (_) {}
+
+  return 'SANDBOX';
 }
 
 /* ------------------------ Helpers ------------------------ */
