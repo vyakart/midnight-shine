@@ -1,8 +1,7 @@
 // netlify/functions/cf-create-order.js
-// Create Cashfree Order and return payment_session_id
-// - Expects JSON body: { amount: number (rupees), currency: "INR", donor?: { id?, email?, phone? }, notes?: { note?, description? } }
+// Fresh Cashfree order creation (Sandbox by default)
+// - Expects: POST JSON { amount: number (INR rupees), currency?: "INR", donor?: { id?, email?, phone? }, notes?: { note?, description? } }
 // - Returns: { mode, order_id, payment_session_id, order }
-// Security: never log secrets or PII. Logs are structured JSON per repo standards.
 
 export async function handler(event) {
   if (event.httpMethod !== 'POST') {
@@ -12,53 +11,43 @@ export async function handler(event) {
   try {
     const body = JSON.parse(event.body || '{}');
 
-    // Inputs (UI may send amount or order_amount)
     const rawAmount = body.amount ?? body.order_amount ?? null;
     const currency = String(body.currency || body.order_currency || 'INR').toUpperCase();
     const donor = body.donor || {};
     const notes = body.notes || {};
 
-    // Basic validation
     if (!isFinite(rawAmount) || Number(rawAmount) <= 0) {
-      return jsonResponse(400, { error: 'Invalid amount' });
+      return jsonResponse(400, { error: 'invalid_amount' });
     }
     if (currency !== 'INR') {
-      return jsonResponse(400, { error: 'Currency must be INR' });
+      return jsonResponse(400, { error: 'currency_must_be_INR' });
     }
 
-    // Cashfree expects rupees (decimal), not paise
     const amount = round2(Number(rawAmount));
 
-    // Secrets / env
     const appId = process.env.CASHFREE_APP_ID;
     const secret = process.env.CASHFREE_SECRET_KEY;
-    const env = String(process.env.CF_ENV || 'PRODUCTION').toUpperCase();
+    const env = String(process.env.CF_ENV || 'SANDBOX').toUpperCase();
     const apiVersion = process.env.CF_API_VERSION || '2023-08-01';
     if (!appId || !secret) {
-      safeLog('ERROR', 'cf-create-order', { message: 'Missing Cashfree credentials' });
-      return jsonResponse(500, { error: 'Server not configured' });
+      safeLog('ERROR', 'cf-create-order', { message: 'Missing credentials' });
+      return jsonResponse(500, { error: 'server_not_configured' });
     }
 
-    // API base
     const base = env === 'PRODUCTION' ? 'https://api.cashfree.com' : 'https://sandbox.cashfree.com';
-    // Debug: which API base and version are used (no secrets)
     safeLog('INFO', 'cf-create-order.debug', { env, base, apiVersion });
 
-    // Order id (idempotent per click if client supplies; else server-generated)
     const orderId = (body.order_id && String(body.order_id)) || makeOrderId();
- 
-    // Derive and validate customer details (avoid logging PII)
+
     const customerEmail = sanitizeEmail(donor.email) || undefined;
     const customerPhone = sanitizePhone(donor.phone) || undefined;
     if (!customerPhone) {
-      // Provider (Cashfree v5) requires phone to start payment
-      return jsonResponse(400, { error: 'customer_phone_required', message: 'Phone number is required to start payment.' });
+      return jsonResponse(400, { error: 'customer_phone_required' });
     }
- 
-    // Construct payload (avoid logging PII)
+
     const payload = {
       order_id: orderId,
-      order_amount: amount,          // rupees with up to 2 decimals
+      order_amount: amount,
       order_currency: 'INR',
       customer_details: {
         customer_id: donor.id || `cust_${orderId}`,
@@ -68,7 +57,6 @@ export async function handler(event) {
       order_note: truncate(`${notes.note || notes.description || 'Donation'}`, 120)
     };
 
-    // Server-to-server: Create order
     const resp = await fetch(`${base}/pg/orders`, {
       method: 'POST',
       headers: {
@@ -87,16 +75,14 @@ export async function handler(event) {
         order_id: orderId,
         env,
         api_version: apiVersion,
-        base,
         status: resp.status,
         body: shorten(text, 500)
       });
-      return jsonResponse(502, { error: 'Cashfree order failed', status: resp.status, detail: tryParseJSON(text) || text });
+      return jsonResponse(502, { error: 'provider_error', status: resp.status, detail: tryParseJSON(text) || text });
     }
 
     const data = tryParseJSON(text) || {};
-    // Expected fields: data.order_id, data.order_amount, data.order_currency, data.payment_session_id, ...
-    safeLog('INFO', 'cf-create-order', { order_id: orderId, env, status: 'created', amount, currency: 'INR' });
+    safeLog('INFO', 'cf-create-order', { order_id: orderId, env, status: 'CREATED', amount, currency: 'INR' });
 
     return jsonResponse(200, {
       mode: env === 'PRODUCTION' ? 'production' : 'sandbox',
@@ -105,13 +91,12 @@ export async function handler(event) {
       order: data
     });
   } catch (e) {
-    safeLog('ERROR', 'cf-create-order', { message: 'Unhandled error', detail: String(e && e.stack || e) });
-    return jsonResponse(500, { error: 'Server error' });
+    safeLog('ERROR', 'cf-create-order', { message: 'Unhandled error', detail: String(e && (e.stack || e)) });
+    return jsonResponse(500, { error: 'server_error' });
   }
 }
 
-/* ------------------------ Helpers ------------------------ */
-
+// ------------------------ Helpers ------------------------
 function jsonResponse(status, obj) {
   return {
     statusCode: status,
@@ -130,7 +115,6 @@ function textResponse(status, text) {
 
 function safeLog(level, moduleName, obj) {
   try {
-    // Structured logs per repo standard, avoiding PII
     const log = {
       level,
       timestamp: new Date().toISOString(),
@@ -139,7 +123,7 @@ function safeLog(level, moduleName, obj) {
     };
     console.log(JSON.stringify(log));
   } catch {
-    // swallow
+    // no-op
   }
 }
 
@@ -162,7 +146,7 @@ function tryParseJSON(s) {
 }
 
 function makeOrderId() {
-  const ts = new Date().toISOString().replace(/[-:.TZ]/g, '').slice(0, 14); // YYYYMMDDHHMMSS
+  const ts = new Date().toISOString().replace(/[-:.TZ]/g, '').slice(0, 14);
   const rand = Math.random().toString(36).slice(2, 8);
   return `don-${ts}-${rand}`;
 }
@@ -170,14 +154,12 @@ function makeOrderId() {
 function sanitizeEmail(email) {
   if (!email) return '';
   const s = String(email).trim();
-  // very light validation
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s) ? s : '';
 }
 
 function sanitizePhone(phone) {
   if (!phone) return '';
   const digits = String(phone).replace(/\D/g, '');
-  // Allow 10..14 digits
   if (digits.length < 10 || digits.length > 14) return '';
   return digits;
 }

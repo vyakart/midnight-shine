@@ -1,7 +1,7 @@
 // netlify/functions/cf-verify-order.js
-// Verify Cashfree order status
-// - Expects JSON body: { order_id: string }
-// - Returns: { verified: boolean, status: string, amount: number, currency: string, order?: object }
+// Fresh Cashfree order verification (Sandbox by default)
+// - Expects POST JSON: { order_id: string }
+// - Returns: { verified: boolean, status: string, amount?: number, currency?: string, order?: object }
 
 export async function handler(event) {
   if (event.httpMethod !== 'POST') {
@@ -13,7 +13,7 @@ export async function handler(event) {
     const orderId = String(body.order_id || '').trim();
 
     if (!orderId) {
-      return jsonResponse(400, { error: 'order_id required' });
+      return jsonResponse(400, { error: 'order_id_required' });
     }
 
     const appId = process.env.CASHFREE_APP_ID;
@@ -21,8 +21,8 @@ export async function handler(event) {
     const env = String(process.env.CF_ENV || 'SANDBOX').toUpperCase();
     const apiVersion = process.env.CF_API_VERSION || '2023-08-01';
     if (!appId || !secret) {
-      safeLog('ERROR', 'cf-verify-order', { order_id: orderId, message: 'Missing Cashfree credentials' });
-      return jsonResponse(500, { error: 'Server not configured' });
+      safeLog('ERROR', 'cf-verify-order', { order_id: orderId, message: 'Missing credentials' });
+      return jsonResponse(500, { error: 'server_not_configured' });
     }
 
     const base = env === 'PRODUCTION' ? 'https://api.cashfree.com' : 'https://sandbox.cashfree.com';
@@ -45,13 +45,10 @@ export async function handler(event) {
         status: resp.status,
         body: shorten(text, 500)
       });
-      return jsonResponse(502, { error: 'Cashfree verify failed', status: resp.status, detail: tryParseJSON(text) || text });
+      return jsonResponse(502, { error: 'provider_error', status: resp.status, detail: tryParseJSON(text) || text });
     }
 
     const data = tryParseJSON(text) || {};
-    // Cashfree order fields of interest:
-    // data.order_status: 'PAID' | 'ACTIVE' | 'EXPIRED' | 'CANCELLED' | 'FAILED' etc.
-    // data.order_amount, data.order_currency
     const orderStatus = String(data.order_status || '').toUpperCase();
     const verified = orderStatus === 'PAID';
 
@@ -70,8 +67,8 @@ export async function handler(event) {
       order: data
     });
   } catch (e) {
-    safeLog('ERROR', 'cf-verify-order', { message: 'Unhandled error', detail: String(e && e.stack || e) });
-    return jsonResponse(500, { error: 'Server error' });
+    safeLog('ERROR', 'cf-verify-order', { message: 'Unhandled error', detail: String(e && (e.stack || e)) });
+    return jsonResponse(500, { error: 'server_error' });
   }
 }
 

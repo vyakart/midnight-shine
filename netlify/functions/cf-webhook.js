@@ -1,10 +1,8 @@
 // netlify/functions/cf-webhook.js
-// Cashfree webhook endpoint with signature verification
+// Fresh Cashfree webhook endpoint (Sandbox by default)
 // - Verifies x-webhook-signature using CASHFREE_WEBHOOK_SECRET (HMAC-SHA256, base64)
 // - Accepts POST with JSON body from Cashfree
 // - Responds 200 on success (after verification), non-2xx on failure
-// References:
-//   - [exports.handler()](netlify/functions/cf-webhook.js:16)
 
 import crypto from 'node:crypto';
 
@@ -72,14 +70,12 @@ export async function handler(event) {
     verified: true
   });
 
-  // Optional: reconcile with GET /pg/orders/{order_id} (idempotent), or persist to DB/logs.
+  // Optional TODO: reconcile with GET /pg/orders/{order_id} (idempotent), or persist to DB/logs.
 
   return textResponse(200, 'ok');
 }
 
 /* ------------------------ Helpers ------------------------ */
-
-// [verifySignature()](netlify/functions/cf-webhook.js:83)
 function verifySignature(rawBody, signatureBase64, secret) {
   try {
     const hmac = crypto.createHmac('sha256', secret).update(rawBody).digest('base64');
