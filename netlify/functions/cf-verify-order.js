@@ -16,16 +16,41 @@ export async function handler(event) {
       return jsonResponse(400, { error: 'order_id_required' });
     }
 
-    const appId = process.env.CASHFREE_APP_ID;
-    const secret = process.env.CASHFREE_SECRET_KEY;
+    const appId = process.env.CASHFREE_APP_ID || process.env.CASHFREE_CLIENT_ID;
+    const secret = process.env.CASHFREE_SECRET_KEY || process.env.CASHFREE_CLIENT_SECRET;
     const env = String(process.env.CF_ENV || 'SANDBOX').toUpperCase();
     const apiVersion = process.env.CF_API_VERSION || '2023-08-01';
     if (!appId || !secret) {
-      safeLog('ERROR', 'cf-verify-order', { order_id: orderId, message: 'Missing credentials' });
-      return jsonResponse(500, { error: 'server_not_configured' });
+      safeLog('ERROR', 'cf-verify-order', {
+        order_id: orderId,
+        message: 'Missing credentials',
+        have_app: !!process.env.CASHFREE_APP_ID,
+        have_client: !!process.env.CASHFREE_CLIENT_ID,
+        have_secret_app: !!process.env.CASHFREE_SECRET_KEY,
+        have_secret_client: !!process.env.CASHFREE_CLIENT_SECRET,
+        env
+      });
+      return jsonResponse(500, {
+        error: 'server_not_configured',
+        detail: {
+          missing_client_id: !appId,
+          missing_secret: !secret,
+          env,
+          creds_source: (process.env.CASHFREE_CLIENT_ID ? 'CLIENT' : (process.env.CASHFREE_APP_ID ? 'APP' : 'NONE'))
+        }
+      });
     }
 
     const base = env === 'PRODUCTION' ? 'https://api.cashfree.com' : 'https://sandbox.cashfree.com';
+    safeLog('INFO', 'cf-verify-order.debug', {
+      order_id: orderId,
+      env,
+      base,
+      apiVersion,
+      creds_source: (process.env.CASHFREE_CLIENT_ID ? 'CLIENT' : (process.env.CASHFREE_APP_ID ? 'APP' : 'NONE')),
+      have_app: !!process.env.CASHFREE_APP_ID,
+      have_client: !!process.env.CASHFREE_CLIENT_ID
+    });
 
     const resp = await fetch(`${base}/pg/orders/${encodeURIComponent(orderId)}`, {
       method: 'GET',

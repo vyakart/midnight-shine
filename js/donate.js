@@ -242,7 +242,7 @@ async function ensureCashfree(mode) {
       await cashfree.checkout({
         paymentSessionId: sessionId,
         redirectTarget: 'top',
-        returnUrl: origin + '/pages/donate.html?order={order_id}'
+        returnUrl: origin + '/pages/donate?order={order_id}'
       });
     } catch (err) {
       try { console.error('cashfree.checkout error', err); } catch (_) {}
@@ -532,4 +532,33 @@ async function ensureCashfree(mode) {
     updateCurrencyUI();
   }
   renderAll();
+
+  // Verify order if arriving back from Cashfree (?order={order_id})
+  try {
+    var params = new URLSearchParams((typeof window !== 'undefined' && window.location && window.location.search) ? window.location.search : '');
+    var returnedOrderId = params.get('order');
+    if (returnedOrderId) {
+      cfVerifyOrder(returnedOrderId)
+        .then(function (res) {
+          if (res && res.verified) {
+            alert('Thank you! Your donation was successful.');
+          } else {
+            var status = (res && res.status) ? String(res.status) : 'pending';
+            alert('Payment status: ' + status + '. If debited, it may reflect shortly.');
+          }
+        })
+        .catch(function (e) {
+          try { console.error('verify-on-return error', e); } catch (_){}
+          alert('Could not verify payment right now. If you completed payment, it may reflect soon.');
+        })
+        .finally(function () {
+          // Clean the URL by removing the order param
+          try {
+            var url = new URL(window.location.href);
+            url.searchParams.delete('order');
+            window.history.replaceState({}, document.title, url.pathname + (url.search ? url.search : '') + (url.hash || ''));
+          } catch (_){}
+        });
+    }
+  } catch (_){}
 })();
