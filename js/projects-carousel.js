@@ -51,7 +51,7 @@
         }
 
         // Default category
-        var currentCategory = 'projects';
+        var currentCategory = 'work';
         var titles = getTitlesFrom(json, currentCategory);
         if (!titles.length) titles = ['Projects'];
 
@@ -99,8 +99,8 @@
             });
           }
 
-          // Initial selection: Projects
-          setActive(tabProj);
+          // Initial selection: Work
+          setActive(tabWork);
 
           tabs.forEach(function (btn) {
             btn.addEventListener('click', function () {
@@ -200,8 +200,8 @@
 
         function titlesOf(cat) { return (fallbackData[cat] || []).map(function (o) { return o.title; }); }
 
-        var fbTitles = titlesOf('projects');
-        if (!fbTitles.length) fbTitles = ['Projects'];
+        var fbTitles = titlesOf('work');
+        if (!fbTitles.length) fbTitles = ['Work'];
 
         // Initialize with fallback Projects titles
         var api = initRulerCarousel({
@@ -262,8 +262,8 @@
             });
           }
 
-          // Initial selection: Projects
-          if (tabProj) setActive(tabProj);
+          // Initial selection: Work
+          if (tabWork) setActive(tabWork);
 
           tabs.forEach(function (btn) {
             btn.addEventListener('click', function () { setActive(btn); });
@@ -769,19 +769,23 @@
 
       // Projects
       '0xnarc': {
-        text: "hackathon judge that reads messy repos with gpt, scores them, and mints soulbound “you did the thing” receipts. fewer arguments, faster results.",
+        text: "hackathon judge that reads messy repos with gpt, scores them and mints soulbound “you did the thing badly or well” receipts. fewer arguments, faster results..",
+        captions: ["0xnarc — hackathon judge that reads messy repos with gpt, scores them and mints soulbound “you did the thing badly or well” receipts. fewer arguments, faster results.."],
         srcs: P('OxNARC.png')
       },
       'mario in the stacyverse': {
-        text: "a trippy fan level on a low-bandwidth multiplayer engine. i did the look, the cuts, the background score; mario took a pill and reality blinked.",
+        text: "a trippy fan level on a low-bandwidth multiplayer engine that my friend made from scratch.I did the look, the cuts and the background score; mario took a pill and reality blinked.A tribute to the pillheads community",
+        captions: ["a trippy fan level on a low-bandwidth multiplayer engine that my friend made from scratch.I did the look, the cuts and the background score; mario took a pill and reality blinked.A tribute to the pillheads community"],
         srcs: P('Mario-in-the-StacyVerse-at-Self.mp4') // video supported by preview engine
       },
       '65 delta wing': {
         text: "added a tiny step on the upper surface; simulations smiled: ~6% lift bump. vortices, befriended.",
+        captions: ["65° delta wing — added a tiny step on the upper surface; simulations smiled: ~6% lift bump. vortices, befriended."],
         srcs: P('Numerical-Analysis-of-a-65-Delta-Wing-1.png', 'Numerical-Analysis-of-a-65-Delta-Wing-2.png')
       },
       'e bike': {
-        text: "8 friends, one dirt track. i owned “make it lighter but don’t snap it” (fea), then helped people actually want to ride it.",
+        text: "8 friends, one dirt track. i owned “make it lighter but don’t snap it” (FEA), then helped people to actually want to ride it.",
+        captions: ["e-bike — 8 friends, one dirt track. i owned “make it lighter but don’t snap it” (FEA), then helped people to actually want to ride it."],
         srcs: P('E-bike-1.jpg', 'E-bike-2.jpg', 'E-bike-3.jpg', 'E-bike-4.jpg')
       },
 
@@ -871,6 +875,14 @@
     if (meta.text) el.setAttribute('data-preview-text', meta.text);
     if (Array.isArray(meta.srcs) && meta.srcs.length) {
       el.setAttribute('data-preview-srcs', meta.srcs.join(','));
+    }
+    if (Array.isArray(meta.captions) && meta.captions.length) {
+      try {
+        el.setAttribute('data-preview-captions', JSON.stringify(meta.captions));
+      } catch (_) {
+        // Fallback (less safe for commas inside captions)
+        el.setAttribute('data-preview-captions', meta.captions.join(','));
+      }
     }
     // Also add a marker so the preview engine scan always includes this element
     el.setAttribute('data-preview', '1');

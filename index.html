@@ -307,8 +307,8 @@
 
 <!-- Category Tabs for Projects -->
         <div class="tabs" role="tablist" aria-label="Questlog categories">
-          <button id="projtab-work" class="tab" role="tab" aria-selected="false" tabindex="-1">Work</button>
-          <button id="projtab-projects" class="tab" role="tab" aria-selected="true" tabindex="0">Projects</button>
+          <button id="projtab-work" class="tab" role="tab" aria-selected="true" tabindex="0">Work</button>
+          <button id="projtab-projects" class="tab" role="tab" aria-selected="false" tabindex="-1">Projects</button>
           <button id="projtab-talks" class="tab" role="tab" aria-selected="false" tabindex="-1">Talks &amp; shows</button>
           <button id="projtab-side" class="tab" role="tab" aria-selected="false" tabindex="-1">Easter eggs</button>
           <button id="projtab-vol" class="tab" role="tab" aria-selected="false" tabindex="-1">Volunteering</button>
@@ -404,10 +404,88 @@
 
   <!-- Defer scripts: ThemeProvider first, then main (bundled + minified) -->
   <script src="./dist/js/theme-provider-6I35RNTJ.js" defer></script>
-  <script src="./dist/js/projects-carousel-HE6TQUUH.js" defer></script>
+  <script src="./dist/js/projects-carousel-3MY5LF5B.js" defer></script>
   <script src="./dist/js/decrypted-text-SB55CFEX.js" defer></script>
   <script src="./dist/js/main-ACGFQTAZ.js" defer></script>
   <script src="./dist/js/terminal-Z7F5DWGZ.js" defer></script>
   <script src="./dist/js/preview-card-JJO4J5NU.js" defer></script>
+
+  <!-- Runtime safety override: default Questlog tab to Work and attach Mario caption under video -->
+  <script>
+    window.addEventListener('DOMContentLoaded', function () {
+      // Ensure "Work" is the active tab on load
+      try {
+        var workBtn = document.getElementById('projtab-work');
+        if (workBtn) {
+          workBtn.click();
+          workBtn.focus();
+        }
+      } catch (_) {}
+
+      // Ensure Mario preview shows caption under its video (in case dist build lacks latest mapping)
+      try {
+        function norm(s) { return String(s || '').toLowerCase().replace(/\s+/g, ' ').trim(); }
+        function canon(s) { return String(s || '').toLowerCase().replace(/[^a-z0-9 ]+/g,' ').replace(/\s+/g,' ').trim(); }
+        var items = Array.prototype.slice.call(document.querySelectorAll('#projects-carousel .rc-item'));
+        var marioEls = items.filter(function (el) {
+          var t = norm(el.getAttribute('data-title') || el.textContent);
+          return t === 'mario in stacyverse' || t === 'mario in the stacyverse';
+        });
+  
+        var desc = "a trippy fan level on a low-bandwidth multiplayer engine that my friend made from scratch.I did the look, the cuts and the background score; mario took a pill and reality blinked.A tribute to the pillheads community";
+  
+        marioEls.forEach(function (el) {
+          el.setAttribute('data-preview-srcs', '/assets/projects/Mario-in-the-StacyVerse-at-Self.mp4');
+          try {
+            el.setAttribute('data-preview-captions', JSON.stringify([desc]));
+          } catch (_) {
+            el.setAttribute('data-preview-captions', desc);
+          }
+          el.setAttribute('data-preview', '1');
+          el.setAttribute('data-preview-placement', 'top');
+          el.setAttribute('data-preview-width', '380');
+          if (window.PreviewCard && typeof window.PreviewCard.wire === 'function') {
+            window.PreviewCard.wire(el);
+          }
+        });
+  
+        // Helper: attach image + caption by title predicate
+        function attachByTitle(matchFn, src, caption) {
+          items.filter(matchFn).forEach(function (el) {
+            el.setAttribute('data-preview-srcs', src);
+            try {
+              el.setAttribute('data-preview-captions', JSON.stringify([caption]));
+            } catch (_) {
+              el.setAttribute('data-preview-captions', caption);
+            }
+            el.setAttribute('data-preview', '1');
+            el.setAttribute('data-preview-placement', 'top');
+            el.setAttribute('data-preview-width', '380');
+            if (window.PreviewCard && typeof window.PreviewCard.wire === 'function') {
+              window.PreviewCard.wire(el);
+            }
+          });
+        }
+  
+        // 0xnarc — caption under image
+        attachByTitle(function (el) {
+          var t = canon(el.getAttribute('data-title') || el.textContent);
+          return t === '0xnarc';
+        }, '/assets/projects/OxNARC.png', '0xnarc — hackathon judge that reads messy repos with gpt, scores them and mints soulbound “you did the thing badly or well” receipts. fewer arguments, faster results..');
+  
+        // 65° delta wing — caption under image
+        attachByTitle(function (el) {
+          var t = canon(el.getAttribute('data-title') || el.textContent);
+          return t.indexOf('65') !== -1 && t.indexOf('delta wing') !== -1;
+        }, '/assets/projects/Numerical-Analysis-of-a-65-Delta-Wing-1.png', '65° delta wing — added a tiny step on the upper surface; simulations smiled: ~6% lift bump. vortices, befriended.');
+  
+        // e-bike — caption under image
+        attachByTitle(function (el) {
+          var t = canon(el.getAttribute('data-title') || el.textContent);
+          return t === 'e bike' || t === 'e-bike' || t === 'ebike';
+        }, '/assets/projects/E-bike-1.jpg', 'e-bike — 8 friends, one dirt track. i owned “make it lighter but don’t snap it” (FEA), then helped people to actually want to ride it.');
+      } catch (_) {}
+    });
+  </script>
 </body>
 </html>
