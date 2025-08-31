@@ -1,0 +1,40 @@
+{
+  "_format": "hh-sol-cache-2",
+  "files": {
+    "/Users/ziksartin/Code/Portfolio/midnight-shine/contracts/DonationVault.sol": {
+      "lastModificationDate": 1756628830097,
+      "contentHash": "27c1cdad30cf3fb0f7d6bbbba91e7048",
+      "sourceName": "DonationVault.sol",
+      "solcConfig": {
+        "version": "0.8.19",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "DonationVault"
+      ]
+    }
+  }
+}

@@ -1,13 +1,20 @@
 /**
  * donate.js
- * v2 — Frequency tabs (one-time / monthly), horizontal preset slider, and live currency switching.
- * - Preset labels provided by user (base currency: USD)
- * - Currencies: USD (default), INR, EUR with live rates (exchangerate.host) and offline fallbacks
- * - Share module (Web Share API + clipboard)
- * - Wallet rows: copy/open behavior with polite SR announcements
+ * v2.1 — Complete donation system with Cashfree integration
+ * - Frequency tabs (one-time / monthly) with full payment processing
+ * - Horizontal preset slider with customizable amounts
+ * - Live currency switching (USD, INR, EUR) with exchangerate.host API
+ * - Donor information collection (phone required, email optional)
+ * - Share module (Web Share API + clipboard fallback)
+ * - Crypto wallet copy functionality with accessibility announcements
+ * - Complete Cashfree payment integration for both donation types
  *
- * Notes:
- * - No provider wiring yet (Razorpay/UPI removed). "Continue" buttons are placeholders.
+ * Features:
+ * - Real-time currency conversion with offline fallbacks
+ * - Responsive design with touch-friendly controls
+ * - Accessibility compliant with ARIA labels and keyboard navigation
+ * - Error handling with user-friendly messages
+ * - Payment verification and status updates
  */
 
 (function () {
@@ -385,6 +392,9 @@ async function ensureCashfree(mode) {
   // Donor inputs (one-time)
   var phoneOnce = $('#phone-onetime');
   var emailOnce = $('#email-onetime');
+  // Donor inputs (monthly)
+  var phoneMonthly = $('#phone-monthly');
+  var emailMonthly = $('#email-monthly');
 
   function updateCurrencyUI() {
     var sym = (CURRENCIES[ACTIVE_CURRENCY] && CURRENCIES[ACTIVE_CURRENCY].symbol) || '$';
@@ -430,7 +440,7 @@ async function ensureCashfree(mode) {
   wirePresetClicks(panelOnce, onceSlider, inputOnce);
   wirePresetClicks(panelMonthly, monthlySlider, inputMonthly);
 
-  // ---------- Continue buttons (placeholders) ----------
+  // ---------- Continue buttons (Cashfree integration) ----------
   var btnOnce = $('#go-onetime');
   var btnMonthly = $('#go-monthly');
   function continueHandler(kind, inputEl) {
@@ -474,7 +484,34 @@ async function ensureCashfree(mode) {
     }
   });
 }
-  if (btnMonthly && inputMonthly) btnMonthly.addEventListener('click', continueHandler('monthly', inputMonthly));
+  if (btnMonthly && inputMonthly) {
+    btnMonthly.addEventListener('click', async function () {
+      var val = parseNumberLocal(inputMonthly.value);
+      if (!(val > 0)) { inputMonthly.focus(); inputMonthly.select && inputMonthly.select(); return; }
+
+      // Convert active currency to INR (Cashfree expects INR rupees)
+      var inrAmount = toInrAmountFromActiveCurrency(val);
+
+      // Collect donor details (phone required by provider)
+      var rawPhone = (phoneMonthly && phoneMonthly.value) || '';
+      var phoneDigits = String(rawPhone).replace(/\D/g, '');
+      if (phoneDigits.length < 10 || phoneDigits.length > 14) {
+        if (phoneMonthly) { phoneMonthly.focus(); phoneMonthly.select && phoneMonthly.select(); }
+        alert('Please enter a valid phone number (10–14 digits).');
+        return;
+      }
+      var emailVal = (emailMonthly && emailMonthly.value.trim()) || '';
+      var donor = { email: emailVal, phone: phoneDigits };
+
+      try {
+        await openCashfreeCheckout(inrAmount, donor);
+      } catch (e) {
+        try { console.error('monthly payment error', e); } catch (_) {}
+        var msg = (e && (e.message || e.reason)) || String(e) || 'unknown error';
+        alert('Unable to start monthly payment: ' + msg);
+      }
+    });
+  }
 
   // ---------- Share module ----------
   var pageQR = $('#page-qr');

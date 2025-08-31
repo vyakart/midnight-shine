@@ -482,3 +482,54 @@ html.dark .wallet code.addr {
   display: block;
   user-select: text;
 }
+
+/* ETH Donate Styles */
+.eth-controls {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.eth-progress-wrap {
+  margin-top: 14px;
+}
+
+.eth-progress {
+  height: 16px;
+  border: 1px solid var(--color-border, #e5e7eb);
+  border-radius: 10px;
+  overflow: hidden;
+  background: var(--color-surface, #fff);
+}
+
+.eth-progress-fill {
+  height: 100%;
+  width: 0%;
+  background: var(--link, #0057ff);
+  transition: width 0.3s ease;
+}
+
+.leaderboard table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.leaderboard th,
+.leaderboard td {
+  padding: 10px;
+  border-bottom: 1px solid var(--color-border, #e5e7eb);
+  text-align: left;
+}
+
+.leaderboard th {
+  font-weight: 600;
+}
+
+.leaderboard td:nth-child(1) {
+  font-weight: bold;
+}
+
+.leaderboard td:nth-child(3) {
+  text-align: right;
+}

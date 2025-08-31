@@ -7,7 +7,11 @@
     "clean": "rm -rf dist && mkdir -p dist/js dist/css",
     "build:js": "esbuild js/*.js --bundle --minify --format=iife --sourcemap --outdir=dist/js --entry-names=[name]-[hash]",
     "build:css": "esbuild css/styles.css css/themes.css css/preview-card.css css/utilities.css css/donate.css css/microblog.css --bundle --minify --outdir=dist/css --entry-names=[name]-[hash] --loader:.woff2=file",
-    "build": "npm run clean && npm run build:js && npm run build:css",
+    "build:eth": "esbuild js/eth-donate.js --bundle --minify --format=iife --sourcemap --outfile=dist/js/eth-donate.js",
+    "build": "npm run clean && npm run build:js && npm run build:css && npm run build:eth",
+    "contracts:compile": "HARDHAT_CONFIG=contracts/hardhat.config.js npx hardhat compile",
+    "contracts:deploy:sepolia": "HARDHAT_CONFIG=contracts/hardhat.config.js npx hardhat run contracts/scripts/deploy-sepolia.js --network sepolia",
+    "contracts:deploy:mainnet": "HARDHAT_CONFIG=contracts/hardhat.config.js npx hardhat run contracts/scripts/deploy-mainnet.js --network mainnet",
     "serve": "python3 -m http.server 5501",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -24,6 +28,13 @@
   },
   "homepage": "https://github.com/vyakart/midnight-shine#readme",
   "devDependencies": {
-    "esbuild": "^0.25.9"
+    "esbuild": "^0.25.9",
+    "hardhat": "^2.22.10",
+    "@nomicfoundation/hardhat-toolbox": "^5.0.0",
+    "@types/node": "^22.7.5",
+    "dotenv": "^16.4.5"
+  },
+  "dependencies": {
+    "viem": "^2.21.16"
   }
 }

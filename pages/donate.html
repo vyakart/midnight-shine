@@ -129,175 +129,53 @@
       </div>
     </section>
 
-    <!-- Donate panel -->
-    <section class="section" aria-labelledby="ways-title">
+    <!-- ETH Donate (ETH-only) -->
+    <section class="section" aria-labelledby="eth-donate-title">
       <div class="container">
-        <h2 id="ways-title" class="visually-hidden">Ways to support</h2>
+        <h2 id="eth-donate-title" class="visually-hidden">Donate ETH</h2>
 
-        <!-- Top controls -->
-        <div class="donate-top">
-          <div class="donate-switch" role="tablist" aria-label="Choose frequency">
-            <button id="tab-onetime" class="switch-btn" role="tab" aria-selected="true" aria-controls="panel-onetime">
-              one-time donation
-            </button>
-            <button id="tab-monthly" class="switch-btn" role="tab" aria-selected="false" aria-controls="panel-monthly" tabindex="-1">
-              monthly donation
-            </button>
+        <div class="eth-controls" style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
+          <label for="eth-amount" class="visually-hidden">Amount (ETH)</label>
+          <div class="input-wrap" style="flex:0 1 240px;">
+            <span class="currency">Ξ</span>
+            <input id="eth-amount" inputmode="decimal" placeholder="0.01" aria-describedby="eth-help">
+            <button id="eth-donate" class="button primary" type="button" aria-label="Donate">Donate</button>
           </div>
 
-          <div class="currency-switch" aria-label="Currency selector">
-            <label for="currency" class="visually-hidden">Currency</label>
-            <select id="currency" aria-label="Select currency">
-              <option value="USD" selected>$ USD</option>
-              <option value="INR">₹ INR</option>
-              <option value="EUR">€ EUR</option>
-            </select>
+          <button id="eth-connect" class="button outline" type="button" aria-label="Connect Wallet">Connect Wallet</button>
+
+          <div class="muted" style="margin-left:auto;">
+            Network: <span id="eth-chain">Ethereum</span> • Contract:
+            <a id="eth-contract-link" href="#" rel="noopener noreferrer" target="_blank">—</a>
           </div>
         </div>
 
-        <div class="donate-panels">
-          <!-- One-time panel -->
-          <section id="panel-onetime" class="donate-panel" role="tabpanel" aria-labelledby="tab-onetime">
-            <!-- Horizontal slider of presets -->
-            <div class="preset-scroller" data-type="onetime">
-              <button class="scroll-btn prev" type="button" aria-label="Scroll left">◀</button>
-              <div class="preset-viewport">
-                <div class="preset-track" role="list"></div>
-              </div>
-              <button class="scroll-btn next" type="button" aria-label="Scroll right">▶</button>
-            </div>
+        <p id="eth-help" class="muted" style="margin:8px 2px 0;">Enter amount in ETH and connect your wallet to donate.</p>
+        <div id="eth-status" class="sr-only" aria-live="polite"></div>
+        <p id="tx-link" class="muted" style="margin:6px 2px 0;"></p>
 
-            <div class="custom-amount">
-              <label for="amount-onetime" class="visually-hidden">Custom amount</label>
-              <div class="input-wrap">
-                <span class="currency" id="currency-symbol-onetime">$</span>
-                <input id="amount-onetime" inputmode="decimal" placeholder="custom amount" aria-describedby="custom-help-onetime">
-                <button id="go-onetime" class="button primary" type="button" aria-label="Continue">→</button>
-              </div>
-              <p id="custom-help-onetime" class="muted" style="margin:8px 2px 0;">
-                Amounts are shown in your chosen currency.
-              </p>
-              <div class="donor-info" style="margin-top:10px;">
-                <label for="phone-onetime" class="visually-hidden">Phone (required for payment)</label>
-                <input id="phone-onetime" type="tel" inputmode="tel" placeholder="phone (required)" aria-describedby="donor-help-onetime" autocomplete="tel">
-                <label for="email-onetime" class="visually-hidden">Email (optional)</label>
-                <input id="email-onetime" type="email" inputmode="email" placeholder="email (optional)" autocomplete="email">
-                <p id="donor-help-onetime" class="muted" style="margin:8px 2px 0;">
-                  Phone is required by the provider to start payment.
-                </p>
-              </div>
-            </div>
-          </section>
-
-          <!-- Monthly panel -->
-          <section id="panel-monthly" class="donate-panel hidden" role="tabpanel" aria-labelledby="tab-monthly" hidden>
-            <div class="preset-scroller" data-type="monthly">
-              <button class="scroll-btn prev" type="button" aria-label="Scroll left">◀</button>
-              <div class="preset-viewport">
-                <div class="preset-track" role="list"></div>
-              </div>
-              <button class="scroll-btn next" type="button" aria-label="Scroll right">▶</button>
-            </div>
-
-            <div class="custom-amount">
-              <label for="amount-monthly" class="visually-hidden">Custom amount monthly</label>
-              <div class="input-wrap">
-                <span class="currency" id="currency-symbol-monthly">$</span>
-                <input id="amount-monthly" inputmode="decimal" placeholder="custom amount" aria-describedby="custom-help-monthly">
-                <button id="go-monthly" class="button outline" type="button" aria-label="Continue monthly">→</button>
-              </div>
-              <p id="custom-help-monthly" class="muted" style="margin:8px 2px 0;">
-                Monthly pledge preview — provider will be added later.
-              </p>
-              <div class="donor-info" style="margin-top:10px;">
-                <label for="phone-monthly" class="visually-hidden">Phone (required for payment)</label>
-                <input id="phone-monthly" type="tel" inputmode="tel" placeholder="phone (required)" autocomplete="tel">
-                <label for="email-monthly" class="visually-hidden">Email (optional)</label>
-                <input id="email-monthly" type="email" inputmode="email" placeholder="email (optional)" autocomplete="email">
-              </div>
-            </div>
-          </section>
+        <div class="eth-progress-wrap" style="margin-top:14px;">
+          <div class="eth-progress" style="height:16px;border:1px solid var(--color-border,#e5e7eb);border-radius:10px;overflow:hidden;background:var(--color-surface,#fff);">
+            <div id="eth-progress-fill" style="height:100%;width:0%;background:var(--link,#0057ff);"></div>
+          </div>
+          <p id="eth-progress-text" class="muted" style="margin-top:6px;">0 / 9 ETH received — 0%</p>
         </div>
 
-        <!-- share panel removed per user request -->
-      </div>
-    </section>
-
-    <!-- Narrative copy -->
-    <section class="section" aria-labelledby="impact-title">
-      <div class="container">
-        <h2 id="impact-title">What your gift powers</h2>
-        <ul>
-          <li>A tiny public library: books, shelving, simple cataloging</li>
-          <li>Community space and rent for unhurried work and conversation</li>
-          <li>Field notes and documentation with a Ricoh GR IIIx</li>
-          <li>Tools that make me better at this work: AI, hosting, backups</li>
-          <li>Time to connect people who should meet with care and clarity</li>
-        </ul>
-        <p class="muted">In-kind gifts are also welcome like books or something that you'd like to provide. I shall share a wishlist that might help.</p>
-      </div>
-    </section>
-
-    <!-- Alternative ways -->
-    <section class="section" aria-labelledby="alt-title">
-      <div class="container">
-        <h2 id="alt-title">Alternative ways to donate</h2>
-
-        <div class="wallet-list" role="list">
-          <!-- Crypto: BTC -->
-          <div class="wallet-holder" role="listitem">
-            <button class="button wallet" data-type="copy" data-name="bitcoin (bio84)" data-address="bc1qr47exwupular8jdu5pr6jx9apcc3yxv3lg7t6x" aria-label="Copy bitcoin address">
-              <div class="wallet-icon" aria-hidden="true">₿</div>
-              <div class="wallet-text">
-                <div class="wallet-name">bitcoin (BIP84)</div>
-                <code class="wallet-address addr">bc1qr47exwupular8jdu5pr6jx9apcc3yxv3lg7t6x</code>
-              </div>
-              <span class="wallet-copy" aria-hidden="true">
-                <svg class="icon-clipboard" viewBox="0 0 24 24" width="18" height="18" focusable="false" aria-hidden="true">
-                  <path fill="currentColor" d="M16 4h-2.2a2 2 0 0 0-3.6 0H8a3 3 0 0 0-3 3v11a3 3 0 0 0 3 3h8a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3Zm1 14a1 1 0 0 1-1 1H8a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h1.2a2 2 0 0 0 3.6 0H15a1 1 0 0 1 1 1v11Z"/>
-                </svg>
-              </span>
-            </button>
-          </div>
-
-          <!-- Crypto: ETH -->
-          <div class="wallet-holder" role="listitem">
-            <button class="button wallet" data-type="copy" data-name="ethereum (eth, arbitrum, optimism, base, zksync)" data-address="0x1E965D8002C4dd60B900A8DA21533a8482acd164" aria-label="Copy ethereum address">
-              <div class="wallet-icon" aria-hidden="true">
-                <img src="/assets/icons/crypto/ethereum-eth-logo.svg" alt="" width="18" height="18" decoding="async">
-              </div>
-              <div class="wallet-text">
-                <div class="wallet-name">ethereum (eth, arbitrum, optimism, base, zksync)</div>
-                <code class="wallet-address addr">0x1E965D8002C4dd60B900A8DA21533a8482acd164</code>
-              </div>
-              <span class="wallet-copy" aria-hidden="true">
-                <svg class="icon-clipboard" viewBox="0 0 24 24" width="18" height="18" focusable="false" aria-hidden="true">
-                  <path fill="currentColor" d="M16 4h-2.2a2 2 0 0 0-3.6 0H8a3 3 0 0 0-3 3v11a3 3 0 0 0 3 3h8a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3Zm1 14a1 1 0 0 1-1 1H8a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h1.2a2 2 0 0 0 3.6 0H15a1 1 0 0 1 1 1v11Z"/>
-                </svg>
-              </span>
-            </button>
-          </div>
-
-          <!-- Crypto: USDC (all EVM chains) -->
-          <div class="wallet-holder" role="listitem">
-            <button class="button wallet" data-type="copy" data-name="usdc (evm)" data-address="0x31f6581126D497e4d98F69A0f83881743faaBBE6" aria-label="Copy USDC address">
-              <div class="wallet-icon" aria-hidden="true">
-                <img src="/assets/icons/crypto/usd-coin-usdc-logo.svg" alt="" width="18" height="18" decoding="async">
-              </div>
-              <div class="wallet-text">
-                <div class="wallet-name">usdc (all evm chains)</div>
-                <code class="wallet-address addr">0x31f6581126D497e4d98F69A0f83881743faaBBE6</code>
-              </div>
-              <span class="wallet-copy" aria-hidden="true">
-                <svg class="icon-clipboard" viewBox="0 0 24 24" width="18" height="18" focusable="false" aria-hidden="true">
-                  <path fill="currentColor" d="M16 4h-2.2a2 2 0 0 0-3.6 0H8a3 3 0 0 0-3 3v11a3 3 0 0 0 3 3h8a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3Zm1 14a1 1 0 0 1-1 1H8a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h1.2a2 2 0 0 0 3.6 0H15a1 1 0 0 1 1 1v11Z"/>
-                </svg>
-              </span>
-            </button>
+        <div class="leaderboard" style="margin-top:18px;">
+          <h3 style="margin:0 0 8px 0;">Top donors</h3>
+          <div class="donate-panel" style="padding:0;">
+            <table style="width:100%;border-collapse:collapse;">
+              <thead>
+                <tr>
+                  <th style="text-align:left;padding:10px;border-bottom:1px solid var(--color-border,#e5e7eb);">#</th>
+                  <th style="text-align:left;padding:10px;border-bottom:1px solid var(--color-border,#e5e7eb);">Address</th>
+                  <th style="text-align:right;padding:10px;border-bottom:1px solid var(--color-border,#e5e7eb);">Amount (ETH)</th>
+                </tr>
+              </thead>
+              <tbody id="leaderboard-body"></tbody>
+            </table>
           </div>
         </div>
-
-        <div class="sr-only" aria-live="polite" id="copy-status"></div>
       </div>
     </section>
   </main>
@@ -340,7 +218,16 @@
   <script src="/dist/js/theme-provider-6I35RNTJ.js" defer></script>
   <script src="/dist/js/decrypted-text-SB55CFEX.js" defer></script>
   <script src="/dist/js/main-ACGFQTAZ.js" defer></script>
-  <!-- Cashfree UI SDK is loaded dynamically based on env in [JavaScript.ensureCashfree()](js/donate.js:176); static tag removed -->
-  <script src="/dist/js/donate-TXBY3SBT.js" defer></script>
+  <script>
+    // Runtime configuration for ETH donations (updated for Sepolia staging)
+    window.DONATE_CFG = {
+      chain: 'sepolia',
+      infuraKey: '921f1a6395234e7288ba49e40d38a828',
+      contract: '0xeFbFcA910b7897b019E7c1a4E6f61BfF1EcBD763',
+      goalEth: 9,
+      deploymentBlock: 9102328
+    };
+  </script>
+  <script src="/dist/js/eth-donate.js" defer></script>
 </body>
 </html>
