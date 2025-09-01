@@ -64,6 +64,9 @@
     <link rel="stylesheet" href="/dist/css/donate-FTP4N2W4.css">
   </noscript>
 
+  <!-- Tweeq (Vue widget styles) -->
+  <link rel="stylesheet" href="/assets/vendor/tweeq/style.css">
+
   <!-- Inline styles for the new Support selector (kept small, theme-aware) -->
   <style>
     .support-ui { margin-top: 8px; }
@@ -328,6 +331,11 @@
           </div>
         </div>
 
+        <!-- Tweeq-powered amount control (Vue island) -->
+        <div id="tweeq-amount" class="donate-panel" style="margin-top:10px;padding:10px;">
+          <!-- Vue mounts here -->
+        </div>
+
         <p id="eth-help" class="muted" style="margin:8px 2px 0;">Enter amount in ETH and connect your wallet to donate.</p>
         <div id="eth-status" class="sr-only" aria-live="polite"></div>
         <p id="tx-link" class="muted" style="margin:6px 2px 0;"></p>
@@ -400,6 +408,61 @@
       goalEth: 9,
       deploymentBlock: 9102328
     };
+  </script>
+  <!-- Vue 3 global + Tweeq UMD (vendored) -->
+  <script src="/assets/vendor/vue/vue.global.prod.js" defer></script>
+  <script src="/assets/vendor/tweeq/index.umd.js" defer></script>
+  <script>
+    // Mount a tiny Vue island using Tweeq's InputNumber to control ETH amount
+    (function () {
+      function mountWhenReady() {
+        if (!window.Vue || !window.Tweeq) {
+          return setTimeout(mountWhenReady, 20);
+        }
+        var target = document.getElementById('tweeq-amount');
+        var ethInput = document.getElementById('eth-amount');
+        if (!target || !ethInput) return;
+
+        var createApp = window.Vue.createApp;
+        var ref = window.Vue.ref;
+        var watch = window.Vue.watch;
+
+        var app = createApp({
+          components: { InputNumber: window.Tweeq.InputNumber },
+          setup: function () {
+            var initial = parseFloat(String(ethInput.value || ethInput.placeholder || '0.01')) || 0.01;
+            var amount = ref(initial);
+
+            // Keep Tweeq control in sync if user types in the native input
+            ethInput.addEventListener('input', function () {
+              var v = parseFloat(String(ethInput.value).replace(/,/g, '.'));
+              if (isFinite(v)) amount.value = v;
+            });
+
+            // Reflect Vue state back to the native input with clean formatting
+            watch(amount, function (v) {
+              var s = String(Number(v).toFixed(4).replace(/0+$/, '').replace(/\.$/, ''));
+              ethInput.value = s;
+            });
+
+            function clamp(val, min, max) {
+              return Math.max(min, Math.min(max, val));
+            }
+
+            function onConfirm() {
+              // On confirm, coerce formatting once more
+              var s = String(Number(amount.value).toFixed(4).replace(/0+$/, '').replace(/\.$/, ''));
+              ethInput.value = s;
+            }
+
+            return { amount: amount, clamp: clamp, onConfirm: onConfirm };
+          },
+          template: '\n            <div class="TqInputNumberWrap">\n              <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">\n                <label style="font-weight:700;opacity:0.85;">Amount</label>\n                <InputNumber\n                  v-model="amount"\n                  :min="0.0001"\n                  :max="10"\n                  :step="0.0001"\n                  :precision="4"\n                  prefix="Ξ "\n                  @confirm="onConfirm"\n                />\n                <span class="muted" style="margin-left:auto;">Tweeq control</span>\n              </div>\n            </div>\n          '
+        });
+        app.mount('#tweeq-amount');
+      }
+      mountWhenReady();
+    })();
   </script>
   <script>
     (function(){
