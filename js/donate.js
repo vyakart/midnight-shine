@@ -22,16 +22,27 @@
 
   // ---------- Config ----------
   var PRESETS_USD = [
-    { amount: 5,    label: 'fuel for the road' },
-    { amount: 11,   label: 'a used library book' },
-    { amount: 33,   label: 'archive & backups' },
-    { amount: 55,   label: 'community meetups + snacks' },
-    { amount: 150,  label: 'field day travel' },
-    { amount: 250,  label: 'AI tools license' },
-    { amount: 500,  label: 'mini library upgrade' },
-    { amount: 900,  label: 'one month of rent' },
-    { amount: 1100, label: 'Ricoh GR IIIx (camera fund)' },
-    { amount: 5000, label: 'down-payment for an apartment' }
+    { amount: 5,    label: 'fuel for the road',           icon: '🚗' },
+    { amount: 11,   label: 'a used library book',         icon: '📚' },
+    { amount: 33,   label: 'archive & backups',           icon: '💾' },
+    { amount: 55,   label: 'community meetups + snacks',  icon: '🥨' },
+    { amount: 150,  label: 'field day travel',            icon: '🧭' },
+    { amount: 250,  label: 'AI tools license',            icon: '🤖' },
+    { amount: 500,  label: 'mini library upgrade',        icon: '🧰' },
+    { amount: 900,  label: 'one month of rent',           icon: '🏠' },
+    { amount: 1100, label: 'Ricoh GR IIIx (camera fund)', icon: '📷' },
+    { amount: 5000, label: 'down-payment for an apartment', icon: '🏢' }
+  ];
+  // ETH presets for the modern selector
+  var PRESETS_ETH = [
+    { eth: 0.005,  label: 'fuel for the road',           icon: '🚗' },
+    { eth: 0.011,  label: 'a used library book',         icon: '📚' },
+    { eth: 0.033,  label: 'archive & backups',           icon: '💾' },
+    { eth: 0.055,  label: 'community meetups + snacks',  icon: '🥨' },
+    { eth: 0.15,   label: 'field day travel',            icon: '🧭' },
+    { eth: 0.25,   label: 'AI tools license',            icon: '🤖' },
+    { eth: 0.5,    label: 'mini library upgrade',        icon: '🧰' },
+    { eth: 1.1,    label: 'Ricoh GR IIIx (camera fund)', icon: '📷' }
   ];
   var MIN_USD = 2;
 
@@ -42,6 +53,11 @@
     EUR: { code: 'EUR', symbol: '€', rate: 0.92 }   // fallback approx
   };
   var ACTIVE_CURRENCY = 'USD';
+  // Prefer ETH mode for the updated Support UI; can be overridden via window.DONATE_MODE
+  var ETH_MODE = (function(){
+    try { if (typeof window !== 'undefined' && window.DONATE_MODE) return String(window.DONATE_MODE).toUpperCase() === 'ETH'; } catch(_){}
+    return true; // default to ETH for the redesign
+  })();
 
   // ---------- Helpers ----------
   function $(sel, root) { return (root || document).querySelector(sel); }
@@ -319,22 +335,33 @@ async function ensureCashfree(mode) {
     var next = scrollerRoot.querySelector('.scroll-btn.next');
 
     track.innerHTML = '';
-    PRESETS_USD.forEach(function (p, idx) {
+    var LIST = ETH_MODE ? PRESETS_ETH : PRESETS_USD;
+    LIST.forEach(function (p, idx) {
       var btn = document.createElement('button');
       btn.className = 'preset preset-card';
       btn.setAttribute('role', 'listitem');
       btn.setAttribute('aria-pressed', 'false');
-      btn.setAttribute('data-amount-usd', String(p.amount));
+      if (ETH_MODE) btn.setAttribute('data-amount-eth', String(p.eth));
+      else btn.setAttribute('data-amount-usd', String(p.amount));
       btn.setAttribute('data-index', String(idx));
+
+      var icon = document.createElement('span');
+      icon.className = 'icon';
+      icon.textContent = p.icon || '✨';
 
       var price = document.createElement('div');
       price.className = 'preset-price';
-      price.textContent = formatCurrencyFromUSD(p.amount, ACTIVE_CURRENCY);
+      if (ETH_MODE) {
+        price.textContent = 'Ξ ' + (p.eth || 0).toFixed(3).replace(/\.0+$/,'');
+      } else {
+        price.textContent = formatCurrencyFromUSD(p.amount, ACTIVE_CURRENCY);
+      }
 
       var sub = document.createElement('div');
       sub.className = 'preset-sub';
       sub.textContent = p.label;
 
+      btn.appendChild(icon);
       btn.appendChild(price);
       btn.appendChild(sub);
       track.appendChild(btn);
@@ -356,18 +383,25 @@ async function ensureCashfree(mode) {
       });
     }
 
-    function setPressedAmount(amountUSD) {
+    function setPressedAmount(amount) {
       $all('.preset', track).forEach(function (b) {
-        var a = parseFloat(b.getAttribute('data-amount-usd') || '0');
-        b.setAttribute('aria-pressed', String(a === amountUSD));
+        var attr = ETH_MODE ? 'data-amount-eth' : 'data-amount-usd';
+        var a = parseFloat(b.getAttribute(attr) || '0');
+        b.setAttribute('aria-pressed', String(a === amount));
       });
     }
 
     function updateCurrency() {
-      $all('.preset', track).forEach(function (b) {
-        var a = parseFloat(b.getAttribute('data-amount-usd') || '0');
+      $all('.preset', track).forEach(function (b, idx) {
         var priceEl = b.querySelector('.preset-price');
-        if (priceEl) priceEl.textContent = formatCurrencyFromUSD(a, ACTIVE_CURRENCY);
+        if (!priceEl) return;
+        if (ETH_MODE) {
+          var eth = parseFloat(b.getAttribute('data-amount-eth') || String((PRESETS_ETH[idx] && PRESETS_ETH[idx].eth) || 0));
+          priceEl.textContent = 'Ξ ' + (eth || 0).toFixed(3).replace(/\.0+$/,'');
+        } else {
+          var usd = parseFloat(b.getAttribute('data-amount-usd') || '0');
+          priceEl.textContent = formatCurrencyFromUSD(usd, ACTIVE_CURRENCY);
+        }
       });
     }
 
@@ -397,7 +431,7 @@ async function ensureCashfree(mode) {
   var emailMonthly = $('#email-monthly');
 
   function updateCurrencyUI() {
-    var sym = (CURRENCIES[ACTIVE_CURRENCY] && CURRENCIES[ACTIVE_CURRENCY].symbol) || '$';
+    var sym = ETH_MODE ? 'Ξ' : ((CURRENCIES[ACTIVE_CURRENCY] && CURRENCIES[ACTIVE_CURRENCY].symbol) || '$');
     if (symbolOnce) symbolOnce.textContent = sym;
     if (symbolMonthly) symbolMonthly.textContent = sym;
 
@@ -428,11 +462,17 @@ async function ensureCashfree(mode) {
       var target = e.target;
       while (target && target !== slider.track && !target.classList.contains('preset')) target = target.parentElement;
       if (!target || target === slider.track) return;
-      var amountUSD = parseFloat(target.getAttribute('data-amount-usd') || '0');
-      slider.setPressed(amountUSD);
-      // Set input in localized currency value (number only)
-      var localized = convertFromUSD(amountUSD, ACTIVE_CURRENCY);
-      inputEl.value = ACTIVE_CURRENCY === 'INR' ? String(Math.round(localized)) : String(localized.toFixed(2));
+      if (ETH_MODE) {
+        var amtETH = parseFloat(target.getAttribute('data-amount-eth') || '0');
+        slider.setPressed(amtETH);
+        inputEl.value = String((amtETH || 0).toFixed(4).replace(/0+$/,'').replace(/\.$/,''));
+      } else {
+        var amountUSD = parseFloat(target.getAttribute('data-amount-usd') || '0');
+        slider.setPressed(amountUSD);
+        // Set input in localized currency value (number only)
+        var localized = convertFromUSD(amountUSD, ACTIVE_CURRENCY);
+        inputEl.value = ACTIVE_CURRENCY === 'INR' ? String(Math.round(localized)) : String(localized.toFixed(2));
+      }
       inputEl.focus();
     });
   }
@@ -460,6 +500,13 @@ async function ensureCashfree(mode) {
   btnOnce.addEventListener('click', async function () {
     var val = parseNumberLocal(inputOnce.value);
     if (!(val > 0)) { inputOnce.focus(); inputOnce.select && inputOnce.select(); return; }
+    if (ETH_MODE) {
+      // For ETH mode, copy a summary and return (fiat gateway disabled)
+      var summaryOnce = 'One-time Ξ ' + String(val);
+      copyToClipboard(summaryOnce);
+      try { console.log('ETH summary copied:', summaryOnce); } catch(_) {}
+      return;
+    }
 
     // Convert active currency to INR (Cashfree expects INR rupees)
     var inrAmount = toInrAmountFromActiveCurrency(val);
@@ -488,6 +535,12 @@ async function ensureCashfree(mode) {
     btnMonthly.addEventListener('click', async function () {
       var val = parseNumberLocal(inputMonthly.value);
       if (!(val > 0)) { inputMonthly.focus(); inputMonthly.select && inputMonthly.select(); return; }
+      if (ETH_MODE) {
+        var summaryMonthly = 'Monthly Ξ ' + String(val);
+        copyToClipboard(summaryMonthly);
+        try { console.log('ETH monthly summary copied:', summaryMonthly); } catch(_) {}
+        return;
+      }
 
       // Convert active currency to INR (Cashfree expects INR rupees)
       var inrAmount = toInrAmountFromActiveCurrency(val);
