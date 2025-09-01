@@ -64,8 +64,6 @@
     <link rel="stylesheet" href="/dist/css/donate-FTP4N2W4.css">
   </noscript>
 
-  <!-- Tweeq (Vue widget styles) -->
-  <link rel="stylesheet" href="/assets/vendor/tweeq/style.css">
 
   <!-- Inline styles for the new Support selector (kept small, theme-aware) -->
   <style>
@@ -315,6 +313,17 @@
           <p id="eth-progress-text" class="muted" style="margin-top:6px;">0 / 9 ETH received — 0%</p>
         </div>
 
+        <!-- Adjustable goal (no external libraries) -->
+        <div class="goal-controls" style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:8px 0 12px 0;">
+          <label for="goal-input" class="visually-hidden">Goal (ETH)</label>
+          <div class="input-wrap" style="flex:0 1 240px;">
+            <span class="currency">Ξ</span>
+            <input id="goal-input" inputmode="decimal" placeholder="9" aria-describedby="goal-help">
+            <button id="goal-set" class="button" type="button" aria-label="Set goal">Set</button>
+          </div>
+          <span id="goal-help" class="muted">Adjust goal for progress.</span>
+        </div>
+
         <div class="eth-controls" style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
           <label for="eth-amount" class="visually-hidden">Amount (ETH)</label>
           <div class="input-wrap" style="flex:0 1 240px;">
@@ -331,10 +340,7 @@
           </div>
         </div>
 
-        <!-- Tweeq-powered amount control (Vue island) -->
-        <div id="tweeq-amount" class="donate-panel" style="margin-top:10px;padding:10px;">
-          <!-- Vue mounts here -->
-        </div>
+        <!-- Goal control removed (Tweeq dependency removed) -->
 
         <p id="eth-help" class="muted" style="margin:8px 2px 0;">Enter amount in ETH and connect your wallet to donate.</p>
         <div id="eth-status" class="sr-only" aria-live="polite"></div>
@@ -409,59 +415,39 @@
       deploymentBlock: 9102328
     };
   </script>
-  <!-- Vue 3 global + Tweeq UMD (vendored) -->
-  <script src="/assets/vendor/vue/vue.global.prod.js" defer></script>
-  <script src="/assets/vendor/tweeq/index.umd.js" defer></script>
   <script>
-    // Mount a tiny Vue island using Tweeq's InputNumber to control ETH amount
-    (function () {
-      function mountWhenReady() {
-        if (!window.Vue || !window.Tweeq) {
-          return setTimeout(mountWhenReady, 20);
-        }
-        var target = document.getElementById('tweeq-amount');
-        var ethInput = document.getElementById('eth-amount');
-        if (!target || !ethInput) return;
+    // Goal control wiring (no TweeQ) — uses DONATE_API when available
+    (function(){
+      var input = document.getElementById('goal-input');
+      var setBtn = document.getElementById('goal-set');
+      if (!input || !setBtn) return;
 
-        var createApp = window.Vue.createApp;
-        var ref = window.Vue.ref;
-        var watch = window.Vue.watch;
-
-        var app = createApp({
-          components: { InputNumber: window.Tweeq.InputNumber },
-          setup: function () {
-            var initial = parseFloat(String(ethInput.value || ethInput.placeholder || '0.01')) || 0.01;
-            var amount = ref(initial);
-
-            // Keep Tweeq control in sync if user types in the native input
-            ethInput.addEventListener('input', function () {
-              var v = parseFloat(String(ethInput.value).replace(/,/g, '.'));
-              if (isFinite(v)) amount.value = v;
-            });
-
-            // Reflect Vue state back to the native input with clean formatting
-            watch(amount, function (v) {
-              var s = String(Number(v).toFixed(4).replace(/0+$/, '').replace(/\.$/, ''));
-              ethInput.value = s;
-            });
-
-            function clamp(val, min, max) {
-              return Math.max(min, Math.min(max, val));
-            }
-
-            function onConfirm() {
-              // On confirm, coerce formatting once more
-              var s = String(Number(amount.value).toFixed(4).replace(/0+$/, '').replace(/\.$/, ''));
-              ethInput.value = s;
-            }
-
-            return { amount: amount, clamp: clamp, onConfirm: onConfirm };
-          },
-          template: '\n            <div class="TqInputNumberWrap">\n              <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">\n                <label style="font-weight:700;opacity:0.85;">Amount</label>\n                <InputNumber\n                  v-model="amount"\n                  :min="0.0001"\n                  :max="10"\n                  :step="0.0001"\n                  :precision="4"\n                  prefix="Ξ "\n                  @confirm="onConfirm"\n                />\n                <span class="muted" style="margin-left:auto;">Tweeq control</span>\n              </div>\n            </div>\n          '
-        });
-        app.mount('#tweeq-amount');
+      function currentDefault() {
+        try { var v = localStorage.getItem('donate-goal'); if (v) return parseFloat(v); } catch(_){}
+        if (window.DONATE_CFG && window.DONATE_CFG.goalEth) return window.DONATE_CFG.goalEth;
+        return 9;
       }
-      mountWhenReady();
+
+      function fmt(n){ return String(Number(n).toFixed(4).replace(/0+$/,'').replace(/\.$/,'')); }
+
+      function ensureApi(cb){
+        if (window.DONATE_API && typeof window.DONATE_API.setGoal === 'function') { try{ cb(window.DONATE_API); }catch(_){}; return; }
+        setTimeout(function(){ ensureApi(cb); }, 40);
+      }
+
+      // Initialize input with current goal
+      var d = currentDefault();
+      if (isFinite(d)) input.value = fmt(d);
+
+      function setGoal(){
+        var g = parseFloat(String(input.value).replace(/,/g,'.'));
+        if (!isFinite(g) || g <= 0) return;
+        try { localStorage.setItem('donate-goal', String(g)); } catch(_){}
+        ensureApi(function(api){ api.setGoal(g); });
+      }
+
+      setBtn.addEventListener('click', setGoal);
+      input.addEventListener('keydown', function(e){ if (e.key === 'Enter') { e.preventDefault(); setGoal(); }});
     })();
   </script>
   <script>
@@ -514,12 +500,20 @@
             var rect = ethInput.getBoundingClientRect();
             window.scrollTo({ top: rect.top + window.scrollY - 120, behavior: 'smooth' });
           } catch(_){}
-          // Attempt to open wallet connect if available; fallback to focus
+          // Attempt to connect wallet via public API, then donate; fallback to buttons
           setTimeout(function(){
-            if (ethConnect && !ethConnect.disabled) {
-              try { ethConnect.click(); return; } catch(_) {}
+            if (window.DONATE_API && typeof window.DONATE_API.connect === 'function') {
+              try {
+                window.DONATE_API.connect()
+                  .then(function(){ if (window.DONATE_API && typeof window.DONATE_API.donate === 'function') return window.DONATE_API.donate(); })
+                  .finally(function(){ (ethDonate || ethInput).focus(); });
+                return;
+              } catch(_) {}
             }
-            (ethConnect || ethDonate || ethInput).focus();
+            if (ethConnect && !ethConnect.disabled) { try { ethConnect.click(); return; } catch(_) {}
+            }
+            // As last resort, focus Donate so user can confirm manually
+            (ethDonate || ethInput).focus();
           }, 260);
         }
       });

@@ -8,7 +8,14 @@ import { mainnet, sepolia } from 'viem/chains';
   const cfg = window.DONATE_CFG || {};
   const chain = cfg.chain || 'sepolia';
   const contractAddress = cfg.contract || '';
-  const goalEth = cfg.goalEth || 9;
+  // Initialize goal from localStorage override if present
+  let goalEth = (function(){
+    try {
+      const v = localStorage.getItem('donate-goal');
+      if (v && isFinite(parseFloat(v))) return parseFloat(v);
+    } catch (_) {}
+    return cfg.goalEth || 9;
+  })();
   const deploymentBlock = cfg.deploymentBlock || 0;
 
   // Elements
@@ -87,8 +94,10 @@ import { mainnet, sepolia } from 'viem/chains';
       ethConnectBtn.textContent = `${account.slice(0, 6)}...${account.slice(-4)}`;
       ethConnectBtn.disabled = true;
       updateChain();
+      return account;
     } else {
       alert('MetaMask not found. Please install MetaMask.');
+      return null;
     }
   }
 
@@ -102,8 +111,11 @@ import { mainnet, sepolia } from 'viem/chains';
   // Donate
   async function donate() {
     if (!walletClient || !account) {
-      alert('Please connect your wallet first.');
-      return;
+      try { await connectWallet(); } catch (_) {}
+      if (!walletClient || !account) {
+        alert('Please connect your wallet first.');
+        return;
+      }
     }
     const amount = ethAmountEl.value.trim();
     if (!amount || isNaN(amount) || parseFloat(amount) <= 0) {
@@ -269,4 +281,26 @@ import { mainnet, sepolia } from 'viem/chains';
   updateChain();
   updateProgress();
   fetchDonations();
+
+  // Public API so UI controls can use the same source of truth
+  function setDonateGoal(newGoal) {
+    const g = parseFloat(newGoal);
+    if (!isFinite(g) || g <= 0) return false;
+    goalEth = g;
+    try { localStorage.setItem('donate-goal', String(goalEth)); } catch(_){}
+    updateProgress();
+    return true;
+  }
+
+  try {
+    window.DONATE_API = Object.freeze({
+      get chain() { return chain; },
+      get contract() { return contractAddress; },
+      get goal() { return goalEth; },
+      setGoal: setDonateGoal,
+      connect: connectWallet,
+      donate: donate,
+      updateProgress: updateProgress,
+    });
+  } catch (_) {}
 })();
