@@ -167,6 +167,10 @@
           <div class="theme-switcher" aria-label="Theme switcher">
             <div role="group" aria-label="Select color theme" class="theme-switcher-group" style="display:flex;gap:14px;align-items:center;"></div>
           </div>
+          <!-- Connect Wallet (header, quick access) -->
+          <button id="header-connect" class="button outline" type="button" aria-label="Connect Wallet" title="Connect Wallet">
+            Connect Wallet
+          </button>
           <!-- Streams -->
           <a href="/pages/microblog.html" class="cv-link-header" aria-label="Open Streams (microblog)" title="Streams">
             <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="#pencil"></use></svg>
@@ -521,5 +525,47 @@
     })();
   </script>
   <script src="/dist/js/eth-donate.js" defer></script>
+  <script>
+    // Header "Connect Wallet" bridge — calls the same connect used by ETH donate
+    (function(){
+      var btn = document.getElementById('header-connect');
+      if (!btn) return;
+      function short(a){ return a ? (a.slice(0,6) + '...' + a.slice(-4)) : ''; }
+      function reset(){ btn.textContent = 'Connect Wallet'; btn.disabled = false; }
+      btn.addEventListener('click', function(){
+        try {
+          btn.disabled = true; btn.textContent = 'Connecting...';
+          // Prefer public DONATE_API (provided by eth-donate.js)
+          if (window.DONATE_API && typeof window.DONATE_API.connect === 'function') {
+            window.DONATE_API.connect().then(function(acct){
+              if (acct) { btn.textContent = short(acct); btn.disabled = true; }
+              else reset();
+            }).catch(reset);
+            return;
+          }
+          // Fallback: direct MetaMask request
+          if (window.ethereum && window.ethereum.request) {
+            window.ethereum.request({ method: 'eth_requestAccounts' }).then(function(arr){
+              var a = arr && arr[0];
+              if (a) { btn.textContent = short(a); btn.disabled = true; }
+              else reset();
+            }).catch(reset);
+            return;
+          }
+          btn.textContent = 'Install MetaMask'; btn.disabled = false;
+        } catch (_) { reset(); }
+      });
+
+      // Passive sync: if in-page ETH button gets connected first, mirror its label
+      var ethBtn = document.getElementById('eth-connect');
+      if (ethBtn) {
+        var mo = new MutationObserver(function(){
+          var t = ethBtn.textContent || '';
+          if (/^0x[a-fA-F0-9]{4}/.test(t)) { btn.textContent = t; btn.disabled = true; }
+        });
+        mo.observe(ethBtn, { characterData: true, childList: true, subtree: true });
+      }
+    })();
+  </script>
 </body>
 </html>
