@@ -506,8 +506,8 @@ html.dark .wallet code.addr {
 .eth-progress-fill {
   height: 100%;
   width: 0%;
-  background: var(--link, #0057ff);
-  transition: width 0.3s ease;
+  background: var(--progress-color, var(--link, #0057ff));
+  transition: width 0.3s ease, background 0.3s ease, background-color 0.3s ease;
 }
 
 .leaderboard table {
@@ -532,4 +532,12 @@ html.dark .wallet code.addr {
 
 .leaderboard td:nth-child(3) {
   text-align: right;
+}
+
+/* Spacing adjustments for hero progress vs. selection UI */
+.donate-page .section.section-hero { padding-bottom: 20px; }
+.donate-page .section.section-tight { padding-top: 0; }
+@media (max-width: 720px) {
+  .donate-page .section.section-hero { padding-bottom: 16px; }
+  .donate-page .section.section-tight { padding-top: 0; }
 }

@@ -51,6 +51,17 @@ import { mainnet, sepolia } from 'viem/chains';
   let walletClient = null;
   let account = null;
 
+  // Compute a smooth red→amber→green color for progress.
+  // Returns a CSS color string. We keep it simple & widely-supported (HSL).
+  function progressColor(percent) {
+    const p = Math.max(0, Math.min(100, Number(percent) || 0));
+    // Hue 0 (red) -> 120 (green)
+    const hue = 120 * (p / 100);
+    const sat = 85;   // vivid
+    const light = 44; // balanced contrast on light/dark
+    return `hsl(${hue.toFixed(1)}, ${sat}%, ${light}%)`;
+  }
+
   // Contract ABI
   const abi = [
     { inputs: [{ internalType: "address", name: "_beneficiary", type: "address" }, { internalType: "uint256", name: "_hardCap", type: "uint256" }], stateMutability: "nonpayable", type: "constructor" },
@@ -166,6 +177,8 @@ import { mainnet, sepolia } from 'viem/chains';
       const received = parseFloat(formatEther(total));
       const percent = Math.min((received / goalEth) * 100, 100);
       ethProgressFill.style.width = `${percent}%`;
+      // Color shift as we approach goal (red→green)
+      ethProgressFill.style.background = progressColor(percent);
       ethProgressText.textContent = `${received.toFixed(4)} / ${goalEth} ETH received — ${percent.toFixed(1)}%`;
     } catch (error) {
       logError('Error updating progress (read.totalReceived)', error);
@@ -179,6 +192,7 @@ import { mainnet, sepolia } from 'viem/chains';
           const received = parseFloat(formatEther(total));
           const percent = Math.min((received / goalEth) * 100, 100);
           ethProgressFill.style.width = `${percent}%`;
+          ethProgressFill.style.background = progressColor(percent);
           ethProgressText.textContent = `${received.toFixed(4)} / ${goalEth} ETH received — ${percent.toFixed(1)}%`;
           return;
         } catch (error2) {
@@ -191,6 +205,7 @@ import { mainnet, sepolia } from 'viem/chains';
         const received = await sumFromLogs();
         const percent = Math.min((received / goalEth) * 100, 100);
         ethProgressFill.style.width = `${percent}%`;
+        ethProgressFill.style.background = progressColor(percent);
         ethProgressText.textContent = `${received.toFixed(4)} / ${goalEth} ETH received — ${percent.toFixed(1)}%`;
       } catch (error3) {
         logError('Log-based progress fallback failed', error3);
