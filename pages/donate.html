@@ -277,13 +277,32 @@
           </div>
         </div>
 
-        <!-- Custom amount input -->
-        <div class="support-custom" aria-label="Custom amount">
-          <div class="input">
-            <input id="support-custom" type="text" inputmode="decimal" placeholder="custom amount" aria-label="Enter custom amount">
-            <button id="support-go" class="primary" type="button" aria-label="Proceed">→</button>
+        <!-- Integrated ETH controls (merged into donate block) -->
+        <div class="eth-controls" style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:14px;">
+          <label for="eth-amount" class="visually-hidden">Amount (ETH)</label>
+          <div class="input-wrap" style="flex:0 1 240px;">
+            <span class="currency">Ξ</span>
+            <input id="eth-amount" inputmode="decimal" placeholder="0.01" aria-describedby="eth-help">
+          </div>
+          <button id="eth-donate" class="button primary" type="button" aria-label="Donate">Donate</button>
+          <button id="eth-connect" class="button outline" type="button" aria-label="Connect Wallet">Connect Wallet</button>
+          <div class="muted" style="margin-left:auto;">
+            Network: <span id="eth-chain">Ethereum</span> • Contract:
+            <a id="eth-contract-link" href="#" rel="noopener noreferrer" target="_blank">—</a>
           </div>
         </div>
+
+        <p id="eth-help" class="muted" style="margin:8px 2px 0;">Enter amount in ETH and connect your wallet to donate.</p>
+
+        <!-- Donation progress -->
+        <div class="eth-progress-wrap" style="margin:14px 0 8px 0;">
+          <div class="eth-progress" style="height:16px;border:1px solid var(--color-border,#e5e7eb);border-radius:10px;overflow:hidden;background:var(--color-surface,#fff);">
+            <div id="eth-progress-fill" style="height:100%;width:0%;background:var(--link,#0057ff);"></div>
+          </div>
+          <p id="eth-progress-text" class="muted" style="margin-top:6px;">0 / 9 ETH received — 0%</p>
+        </div>
+        <div id="eth-status" class="sr-only" aria-live="polite"></div>
+        <p id="tx-link" class="muted" style="margin:6px 2px 0;"></p>
       </div>
     </section>
 
@@ -312,50 +331,7 @@
       </div>
     </section>
 
-    <!-- ETH Donate (ETH-only) -->
-    <section class="section" aria-labelledby="eth-donate-title">
-      <div class="container">
-        <h2 id="eth-donate-title" class="visually-hidden">Donate ETH</h2>
-
-        <!-- Progress bar moved to hero section -->
-
-        <!-- Removed goal controls per request -->
-
-        <div class="eth-controls" style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
-          <label for="eth-amount" class="visually-hidden">Amount (ETH)</label>
-          <div class="input-wrap" style="flex:0 1 240px;">
-            <span class="currency">Ξ</span>
-            <input id="eth-amount" inputmode="decimal" placeholder="0.01" aria-describedby="eth-help">
-            <button id="eth-donate" class="button primary" type="button" aria-label="Donate">Donate</button>
-          </div>
-
-          <button id="eth-connect" class="button outline" type="button" aria-label="Connect Wallet">Connect Wallet</button>
-
-          <div class="muted" style="margin-left:auto;">
-            Network: <span id="eth-chain">Ethereum</span> • Contract:
-            <a id="eth-contract-link" href="#" rel="noopener noreferrer" target="_blank">—</a>
-          </div>
-        </div>
-
-        <!-- Goal control removed (Tweeq dependency removed) -->
-
-        <p id="eth-help" class="muted" style="margin:8px 2px 0;">Enter amount in ETH and connect your wallet to donate.</p>
-
-        <!-- Donation progress (moved below ETH controls) -->
-        <div class="eth-progress-wrap" style="margin:14px 0 8px 0;">
-          <div class="eth-progress" style="height:16px;border:1px solid var(--color-border,#e5e7eb);border-radius:10px;overflow:hidden;background:var(--color-surface,#fff);">
-            <div id="eth-progress-fill" style="height:100%;width:0%;background:var(--link,#0057ff);"></div>
-          </div>
-          <p id="eth-progress-text" class="muted" style="margin-top:6px;">0 / 9 ETH received — 0%</p>
-        </div>
-        <div id="eth-status" class="sr-only" aria-live="polite"></div>
-        <p id="tx-link" class="muted" style="margin:6px 2px 0;"></p>
-
-        
-
-        <!-- Top donors section removed per request -->
-      </div>
-    </section>
+    <!-- ETH Donate section removed; controls integrated above -->
   </main>
 
   <!-- Footer (match main site) -->
@@ -412,11 +388,10 @@
       var once = document.getElementById('supt-once');
       var recur = document.getElementById('supt-recur');
       var track = document.getElementById('support-track');
-      var input = document.getElementById('support-custom');
-      var go = document.getElementById('support-go');
       var ethInput = document.getElementById('eth-amount');
       var ethDonate = document.getElementById('eth-donate');
       var ethConnect = document.getElementById('eth-connect');
+      var input = ethInput; // use integrated ETH input for custom amounts
       var state = { mode: 'once', amount: 0 };
 
       function setMode(m) {
@@ -448,32 +423,7 @@
         state.amount = v;
         Array.prototype.forEach.call(track.querySelectorAll('.support-card'), function(btn){ btn.setAttribute('aria-pressed','false'); });
       });
-      go && go.addEventListener('click', function(){
-        if (state.amount && ethInput) {
-          var v = String(Number(state.amount).toFixed(4).replace(/0+$/,'').replace(/\.$/,''));
-          ethInput.value = v;
-          // Smooth scroll to ETH donate controls
-          try {
-            var rect = ethInput.getBoundingClientRect();
-            window.scrollTo({ top: rect.top + window.scrollY - 120, behavior: 'smooth' });
-          } catch(_){}
-          // Attempt to connect wallet via public API, then donate; fallback to buttons
-          setTimeout(function(){
-            if (window.DONATE_API && typeof window.DONATE_API.connect === 'function') {
-              try {
-                window.DONATE_API.connect()
-                  .then(function(){ if (window.DONATE_API && typeof window.DONATE_API.donate === 'function') return window.DONATE_API.donate(); })
-                  .finally(function(){ (ethDonate || ethInput).focus(); });
-                return;
-              } catch(_) {}
-            }
-            if (ethConnect && !ethConnect.disabled) { try { ethConnect.click(); return; } catch(_) {}
-            }
-            // As last resort, focus Donate so user can confirm manually
-            (ethDonate || ethInput).focus();
-          }, 260);
-        }
-      });
+      // Donate now uses the integrated eth-donate button handled by eth-donate.js
       setMode('once');
     })();
   </script>
