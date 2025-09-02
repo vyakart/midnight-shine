@@ -57,83 +57,15 @@
   <link rel="stylesheet" href="/dist/css/styles-HUUNELUM.css">
   <link rel="preload" href="/dist/css/themes-TMRW55YK.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
   <link rel="preload" href="/dist/css/utilities-Q46L33KO.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
-  <link rel="preload" href="/dist/css/donate-FTP4N2W4.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
   <noscript>
     <link rel="stylesheet" href="/dist/css/themes-TMRW55YK.css">
     <link rel="stylesheet" href="/dist/css/utilities-Q46L33KO.css">
-    <link rel="stylesheet" href="/dist/css/donate-FTP4N2W4.css">
   </noscript>
+  <link rel="stylesheet" href="/css/donate-brutal.css">
 
+  <!-- Tailwind removed: using custom brutalist CSS -->
 
-  <!-- Inline styles for the new Support selector (kept small, theme-aware) -->
-  <style>
-    .support-ui { margin-top: 6px; }
-    .support-toggle {
-      display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 10px 0 14px;
-    }
-    .support-toggle .toggle-btn {
-      appearance: none; border: 1px solid var(--color-border,#2b2f3a);
-      border-radius: 14px; padding: 14px 16px; cursor: pointer; text-align: center;
-      font: 700 0.98rem/1.1 var(--font-sans, system-ui);
-      color: var(--color-text-primary,#eaeaf0);
-      background: linear-gradient(180deg, color-mix(in srgb, var(--color-surface,#0b0d12) 92%, transparent), color-mix(in srgb, var(--color-surface,#0b0d12) 84%, transparent));
-      box-shadow: 6px 6px 16px rgba(0,0,0,.35), -6px -6px 14px color-mix(in srgb, var(--color-surface,#0b0d12) 70%, white 3%);
-      transition: transform .16s ease, border-color .16s ease, box-shadow .2s ease, background .16s ease;
-    }
-    .support-toggle .toggle-btn:hover { transform: translateY(-1px); }
-    .support-toggle .toggle-btn[aria-pressed="true"] {
-      border-color: var(--link,#6ea8ff);
-      box-shadow: 0 0 0 2px color-mix(in srgb, var(--link,#6ea8ff) 32%, transparent) inset,
-                  0 8px 24px color-mix(in srgb, var(--link,#6ea8ff) 18%, transparent);
-      background: color-mix(in srgb, var(--color-surface,#0b0d12) 78%, var(--link,#6ea8ff) 10%);
-    }
-
-    .support-rail { position: relative; }
-    .support-viewport { overflow-x: auto; -webkit-overflow-scrolling: touch; padding: 4px; }
-    .support-track { display: inline-flex; gap: 12px; padding: 6px 2px 8px; }
-    .support-card {
-      min-width: clamp(200px, 42vw, 280px);
-      border: 1px solid var(--color-border,#2b2f3a);
-      border-radius: 16px;
-      background: linear-gradient(180deg, color-mix(in srgb, var(--color-surface,#0b0d12) 92%, transparent), color-mix(in srgb, var(--color-surface,#0b0d12) 86%, transparent));
-      color: var(--color-text-primary,#eaeaf0);
-      padding: 14px 14px 12px; text-align: left; cursor: pointer; position: relative;
-      box-shadow: 8px 8px 18px rgba(0,0,0,.35), -6px -6px 14px color-mix(in srgb, var(--color-surface,#0b0d12) 70%, white 3%);
-      transition: transform .16s ease, border-color .16s ease, box-shadow .2s ease, background .16s ease;
-    }
-    .support-card:hover { transform: translateY(-1px); }
-    .support-card[aria-pressed="true"] {
-      border-color: var(--link,#6ea8ff);
-      box-shadow: 0 0 0 2px var(--link,#6ea8ff) inset, 0 10px 28px color-mix(in srgb, var(--link,#6ea8ff) 22%, transparent);
-      background: color-mix(in srgb, var(--color-surface,#0b0d12) 76%, var(--link,#6ea8ff) 12%);
-    }
-    .support-card .icon { font-size: 20px; opacity: .95; display: inline-block; margin-bottom: 8px; }
-    .support-card .amount { display: block; font: 800 1.08rem/1.25 var(--font-sans, system-ui); }
-    .support-card .label { display: block; font: 600 .9rem/1.2 var(--font-sans, system-ui); opacity: .85; margin-top: 4px; }
-    .support-card .hint { position: absolute; right: 10px; bottom: 10px; opacity: 0; transform: translateY(2px) rotate(-2deg); transition: opacity .2s ease, transform .2s ease; color: currentColor; }
-    .support-card .hint svg { width: 18px; height: 18px; display: block; }
-    .support-card:hover .hint { opacity: .6; transform: translateY(0) rotate(0); }
-
-    .support-custom { margin-top: 12px; }
-    .support-custom .input {
-      display: grid; grid-template-columns: 1fr auto; gap: 8px; align-items: center;
-      border: 1px solid var(--color-border,#2b2f3a); border-radius: 14px; padding: 10px 12px; background: var(--color-surface,#0b0d12);
-      box-shadow: inset 2px 2px 8px rgba(0,0,0,.28), inset -2px -2px 8px color-mix(in srgb, var(--color-surface,#0b0d12) 70%, white 3%);
-    }
-    .support-custom input[type="text"] {
-      appearance: none; background: transparent; border: none; outline: none; color: var(--color-text-primary,#fff);
-      font: 700 1rem/1 var(--font-sans, system-ui); padding: 8px 2px;
-    }
-    .support-custom input::placeholder { color: var(--color-text-muted,#9aa1b2); }
-    .support-custom button {
-      min-width: 44px; min-height: 44px; border-radius: 12px; border: 1px solid var(--color-border,#2b2f3a);
-      background: linear-gradient(180deg, color-mix(in srgb, var(--color-surface,#0b0d12) 88%, transparent), color-mix(in srgb, var(--color-surface,#0b0d12) 80%, transparent));
-      color: var(--color-text-primary,#eaeaf0); cursor: pointer; transition: transform .16s ease, background .16s ease, box-shadow .2s ease;
-      box-shadow: 6px 6px 14px rgba(0,0,0,.32), -6px -6px 12px color-mix(in srgb, var(--color-surface,#0b0d12) 70%, white 3%);
-    }
-    .support-custom button:hover { transform: translateY(-1px); }
-    .support-custom button.primary { border-color: var(--link,#6ea8ff); }
-  </style>
+  <!-- Inline support styles removed (replaced by css/donate-brutal.css) -->
 
   <!-- Open Graph -->
   <meta property="og:title" content="Support">
@@ -210,99 +142,139 @@
       </div>
     </section>
 
-    <!-- Modern Selection UI -->
-    <section class="section" aria-labelledby="support-ui-title">
-      <div class="container support-ui">
-        <h2 id="support-ui-title" class="visually-hidden">Select donation</h2>
+    <!-- Donation Modules (Brutalist, Tailwind-free) -->
+    <section class="section" aria-labelledby="donation-modules-title">
+      <div class="container">
+        <p id="donation-modules-title" class="donation-intro">Choose how you’d like to support</p>
+        <div class="donation-grid">
+          <!-- ETHEREUM -->
+          <div id="eth-module" class="donation-module eth" aria-labelledby="eth-title">
+            <h3 id="eth-title" class="eyebrow">Ethereum</h3>
+            <p class="sub">Pay with ETH</p>
+            <div class="tabs" role="tablist" aria-label="ETH donation type">
+              <button id="eth-tab-once" class="tab is-active" role="tab" aria-selected="true" aria-controls="eth-panel-once" type="button">One-time donation</button>
+              <button id="eth-tab-recur" class="tab" role="tab" aria-selected="false" aria-controls="eth-panel-recur" type="button">Recurring donation</button>
+            </div>
+            <div id="eth-panel-once" class="panel" role="tabpanel" aria-labelledby="eth-tab-once">
+              <div class="amount-grid" data-group="eth">
+                <button class="amount-card c-red" data-amount="0.005" type="button" aria-pressed="false">
+                  <div class="inner">
+                    <span class="icon" aria-hidden="true">⛽</span>
+                    <strong class="amt">Ξ 0.005</strong>
+                    <span class="desc">Fuel for the road</span>
+                  </div>
+                </button>
+                <button class="amount-card c-blue" data-amount="0.011" type="button" aria-pressed="false">
+                  <div class="inner">
+                    <span class="icon" aria-hidden="true">📘</span>
+                    <strong class="amt">Ξ 0.011</strong>
+                    <span class="desc">A used library book</span>
+                  </div>
+                </button>
+                <button class="amount-card c-green" data-amount="0.033" type="button" aria-pressed="false">
+                  <div class="inner">
+                    <span class="icon" aria-hidden="true">💾</span>
+                    <strong class="amt">Ξ 0.033</strong>
+                    <span class="desc">Archive &amp; backups</span>
+                  </div>
+                </button>
+                <button class="amount-card c-purple" data-amount="0.055" type="button" aria-pressed="false">
+                  <div class="inner">
+                    <span class="icon" aria-hidden="true">🫶</span>
+                    <strong class="amt">Ξ 0.055</strong>
+                    <span class="desc">Community meetups + snack</span>
+                  </div>
+                </button>
+              </div>
+              <div class="custom-amount">
+                <label for="eth-amount" class="sr-only">Amount (ETH)</label>
+                <div class="currency-input">
+                  <span class="prefix">Ξ</span>
+                  <input id="eth-amount" inputmode="decimal" placeholder="0.01" autocomplete="off">
+                </div>
+                <p class="tiny">Enter amount in ETH and connect your wallet to donate.</p>
+              </div>
+              <div class="btn-row">
+                <button id="eth-donate" class="btn primary eth" type="button">Donate</button>
+                <button id="eth-connect" class="btn" type="button">Connect Wallet</button>
+                <span class="tiny" style="margin-left:auto;">Network: <span id="eth-chain">Ethereum</span> • Contract: <a id="eth-contract-link" href="#" target="_blank" rel="noopener noreferrer">—</a></span>
+              </div>
+              <div class="progress-wrap">
+                <div class="progress"><div id="eth-progress-fill" class="fill"></div></div>
+                <p id="eth-progress-text" class="tiny">0 / 9 ETH received — 0%</p>
+                <div id="eth-status" class="sr-only" aria-live="polite"></div>
+                <p id="tx-link" class="tiny"></p>
+              </div>
+            </div>
+            <div id="eth-panel-recur" class="panel" role="tabpanel" aria-labelledby="eth-tab-recur" hidden>
+              <p class="tiny">Recurring donations coming soon.</p>
+            </div>
+          </div>
 
-        <!-- Toggle: One-time | Recurring -->
-        <div class="support-toggle" role="group" aria-label="Donation frequency">
-          <button id="supt-once" class="toggle-btn" type="button" aria-pressed="true">One-time donation</button>
-          <button id="supt-recur" class="toggle-btn" type="button" aria-pressed="false">Recurring donation</button>
-        </div>
-
-        <!-- Preset amount cards (horizontal) -->
-        <div class="support-rail" aria-labelledby="support-ui-title">
-          <div class="support-viewport" tabindex="0" aria-label="Preset amounts">
-            <div class="support-track" id="support-track" role="list">
-              <button class="support-card" role="listitem" aria-pressed="false" data-amount="0.005">
-                <span class="icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M5 17a2 2 0 1 0 4 0a2 2 0 1 0-4 0m10 0a2 2 0 1 0 4 0a2 2 0 1 0-4 0"/><path d="M5 17H3v-6l2-5h9l4 5h1a2 2 0 0 1 2 2v4h-2m-4 0H9m-6-6h15m-6 0V6"/></g></svg></span>
-                <strong class="amount">Ξ 0.005</strong>
-                <span class="label">fuel for the road</span>
-                <span class="hint" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M8 13V4.5a1.5 1.5 0 0 1 3 0V12m0-.5v-2a1.5 1.5 0 0 1 3 0V12m0-1.5a1.5 1.5 0 0 1 3 0V12"/><path d="M17 11.5a1.5 1.5 0 0 1 3 0V16a6 6 0 0 1-6 6h-2h.208a6 6 0 0 1-5.012-2.7L7 19q-.468-.718-3.286-5.728a1.5 1.5 0 0 1 .536-2.022a1.87 1.87 0 0 1 2.28.28L8 13M5 3L4 2m0 5H3m11-4l1-1m0 4h1"/></g></svg></span>
-              </button>
-              <button class="support-card" role="listitem" aria-pressed="false" data-amount="0.011">
-                <span class="icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M19 4v16H7a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z"/><path d="M19 16H7a2 2 0 0 0-2 2M9 8h6"/></g></svg></span>
-                <strong class="amount">Ξ 0.011</strong>
-                <span class="label">a used library book</span>
-                <span class="hint" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M8 13V4.5a1.5 1.5 0 0 1 3 0V12m0-.5v-2a1.5 1.5 0 0 1 3 0V12m0-1.5a1.5 1.5 0 0 1 3 0V12"/><path d="M17 11.5a1.5 1.5 0 0 1 3 0V16a6 6 0 0 1-6 6h-2h.208a6 6 0 0 1-5.012-2.7L7 19q-.468-.718-3.286-5.728a1.5 1.5 0 0 1 .536-2.022a1.87 1.87 0 0 1 2.28.28L8 13M5 3L4 2m0 5H3m11-4l1-1m0 4h1"/></g></svg></span>
-              </button>
-              <button class="support-card" role="listitem" aria-pressed="false" data-amount="0.033">
-                <span class="icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M6 4h10l4 4v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2"/><path d="M10 14a2 2 0 1 0 4 0a2 2 0 1 0-4 0m4-10v4H8V4"/></g></svg></span>
-                <strong class="amount">Ξ 0.033</strong>
-                <span class="label">archive &amp; backups</span>
-                <span class="hint" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M8 13V4.5a1.5 1.5 0 0 1 3 0V12m0-.5v-2a1.5 1.5 0 0 1 3 0V12m0-1.5a1.5 1.5 0 0 1 3 0V12"/><path d="M17 11.5a1.5 1.5 0 0 1 3 0V16a6 6 0 0 1-6 6h-2h.208a6 6 0 0 1-5.012-2.7L7 19q-.468-.718-3.286-5.728a1.5 1.5 0 0 1 .536-2.022a1.87 1.87 0 0 1 2.28.28L8 13M5 3L4 2m0 5H3m11-4l1-1m0 4h1"/></g></svg></span>
-              </button>
-              <button class="support-card" role="listitem" aria-pressed="false" data-amount="0.055">
-                <span class="icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M10 13a2 2 0 1 0 4 0a2 2 0 0 0-4 0m-2 8v-1a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v1M15 5a2 2 0 1 0 4 0a2 2 0 0 0-4 0m2 5h2a2 2 0 0 1 2 2v1M5 5a2 2 0 1 0 4 0a2 2 0 0 0-4 0m-2 8v-1a2 2 0 0 1 2-2h2"/></g></svg></span>
-                <strong class="amount">Ξ 0.055</strong>
-                <span class="label">community meetups + snacks</span>
-                <span class="hint" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M8 13V4.5a1.5 1.5 0 0 1 3 0V12m0-.5v-2a1.5 1.5 0 0 1 3 0V12m0-1.5a1.5 1.5 0 0 1 3 0V12"/><path d="M17 11.5a1.5 1.5 0 0 1 3 0V16a6 6 0 0 1-6 6h-2h.208a6 6 0 0 1-5.012-2.7L7 19q-.468-.718-3.286-5.728a1.5 1.5 0 0 1 .536-2.022a1.87 1.87 0 0 1 2.28.28L8 13M5 3L4 2m0 5H3m11-4l1-1m0 4h1"/></g></svg></span>
-              </button>
-              <button class="support-card" role="listitem" aria-pressed="false" data-amount="0.15">
-                <span class="icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 10h4a2 2 0 0 1 0 4h-4l-4 7H9l2-7H7l-2 2H2l2-4l-2-4h3l2 2h4L9 3h3z"/></svg></span>
-                <strong class="amount">Ξ 0.150</strong>
-                <span class="label">field day travel</span>
-                <span class="hint" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M8 13V4.5a1.5 1.5 0 0 1 3 0V12m0-.5v-2a1.5 1.5 0 0 1 3 0V12m0-1.5a1.5 1.5 0 0 1 3 0V12"/><path d="M17 11.5a1.5 1.5 0 0 1 3 0V16a6 6 0 0 1-6 6h-2h.208a6 6 0 0 1-5.012-2.7L7 19q-.468-.718-3.286-5.728a1.5 1.5 0 0 1 .536-2.022a1.87 1.87 0 0 1 2.28.28L8 13M5 3L4 2m0 5H3m11-4l1-1m0 4h1"/></g></svg></span>
-              </button>
-              <button class="support-card" role="listitem" aria-pressed="false" data-amount="0.25">
-                <span class="icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 6a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2zm6-4v2m-3 8v9m6-9v9M5 16l4-2m6 0l4 2M9 18h6M10 8v.01M14 8v.01"/></svg></span>
-                <strong class="amount">Ξ 0.250</strong>
-                <span class="label">AI tools license</span>
-                <span class="hint" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M8 13V4.5a1.5 1.5 0 0 1 3 0V12m0-.5v-2a1.5 1.5 0 0 1 3 0V12m0-1.5a1.5 1.5 0 0 1 3 0V12"/><path d="M17 11.5a1.5 1.5 0 0 1 3 0V16a6 6 0 0 1-6 6h-2h.208a6 6 0 0 1-5.012-2.7L7 19q-.468-.718-3.286-5.728a1.5 1.5 0 0 1 .536-2.022a1.87 1.87 0 0 1 2.28.28L8 13M5 3L4 2m0 5H3m11-4l1-1m0 4h1"/></g></svg></span>
-              </button>
-              <button class="support-card" role="listitem" aria-pressed="false" data-amount="0.5">
-                <span class="icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M3 21h4L20 8a1.5 1.5 0 0 0-4-4L3 17zM14.5 5.5l4 4"/><path d="M12 8L7 3L3 7l5 5M7 8L5.5 9.5M16 12l5 5l-4 4l-5-5m4 1l-1.5 1.5"/></g></svg></span>
-                <strong class="amount">Ξ 0.500</strong>
-                <span class="label">mini library upgrade</span>
-                <span class="hint" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M8 13V4.5a1.5 1.5 0 0 1 3 0V12m0-.5v-2a1.5 1.5 0 0 1 3 0V12m0-1.5a1.5 1.5 0 0 1 3 0V12"/><path d="M17 11.5a1.5 1.5 0 0 1 3 0V16a6 6 0 0 1-6 6h-2h.208a6 6 0 0 1-5.012-2.7L7 19q-.468-.718-3.286-5.728a1.5 1.5 0 0 1 .536-2.022a1.87 1.87 0 0 1 2.28.28L8 13M5 3L4 2m0 5H3m11-4l1-1m0 4h1"/></g></svg></span>
-              </button>
-              <button class="support-card" role="listitem" aria-pressed="false" data-amount="1.1">
-                <span class="icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M5 7h1a2 2 0 0 0 2-2a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1a2 2 0 0 0 2 2h1a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2"/><path d="M9 13a3 3 0 1 0 6 0a3 3 0 0 0-6 0"/></g></svg></span>
-                <strong class="amount">Ξ 1.100</strong>
-                <span class="label">Ricoh GR IIIx (camera fund)</span>
-                <span class="hint" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M8 13V4.5a1.5 1.5 0 0 1 3 0V12m0-.5v-2a1.5 1.5 0 0 1 3 0V12m0-1.5a1.5 1.5 0 0 1 3 0V12"/><path d="M17 11.5a1.5 1.5 0 0 1 3 0V16a6 6 0 0 1-6 6h-2h.208a6 6 0 0 1-5.012-2.7L7 19q-.468-.718-3.286-5.728a1.5 1.5 0 0 1 .536-2.022a1.87 1.87 0 0 1 2.28.28L8 13M5 3L4 2m0 5H3m11-4l1-1m0 4h1"/></g></svg></span>
-              </button>
+          <!-- BITCOIN -->
+          <div id="btc-module" class="donation-module btc" aria-labelledby="btc-title">
+            <h3 id="btc-title" class="eyebrow">Bitcoin</h3>
+            <p class="sub">Pay with BTC</p>
+            <div class="tabs" role="tablist" aria-label="BTC donation type">
+              <button id="btc-tab-once" class="tab is-active" role="tab" aria-selected="true" aria-controls="btc-panel-once" type="button">One-time donation</button>
+              <button id="btc-tab-recur" class="tab" role="tab" aria-selected="false" aria-controls="btc-panel-recur" type="button">Recurring donation</button>
+            </div>
+            <div id="btc-panel-once" class="panel" role="tabpanel" aria-labelledby="btc-tab-once">
+              <div class="amount-grid" data-group="btc">
+                <button class="amount-card c-orange" data-amount="0.0001" type="button" aria-pressed="false">
+                  <div class="inner">
+                    <span class="icon" aria-hidden="true">☕</span>
+                    <strong class="amt">₿ 0.0001</strong>
+                    <span class="desc">Cup of coffee</span>
+                  </div>
+                </button>
+                <button class="amount-card c-red" data-amount="0.0003" type="button" aria-pressed="false">
+                  <div class="inner">
+                    <span class="icon" aria-hidden="true">🍕</span>
+                    <strong class="amt">₿ 0.0003</strong>
+                    <span class="desc">Full size pizza</span>
+                  </div>
+                </button>
+                <button class="amount-card c-green" data-amount="0.0005" type="button" aria-pressed="false">
+                  <div class="inner">
+                    <span class="icon" aria-hidden="true">🥗</span>
+                    <strong class="amt">₿ 0.0005</strong>
+                    <span class="desc">Full lunch</span>
+                  </div>
+                </button>
+                <button class="amount-card c-blue" data-amount="0.001" type="button" aria-pressed="false">
+                  <div class="inner">
+                    <span class="icon" aria-hidden="true">👥</span>
+                    <strong class="amt">₿ 0.0010</strong>
+                    <span class="desc">Lunch for two</span>
+                  </div>
+                </button>
+              </div>
+              <div class="custom-amount">
+                <label for="btc-amount" class="sr-only">Amount (BTC)</label>
+                <div class="currency-input">
+                  <span class="prefix">₿</span>
+                  <input id="btc-amount" inputmode="decimal" placeholder="0.0001" autocomplete="off">
+                </div>
+                <p class="tiny">Enter amount in BTC and connect your wallet to donate.</p>
+              </div>
+              <div class="btn-row">
+                <button class="btn primary btc" type="button" aria-disabled="true">Donate</button>
+                <button class="btn" type="button" aria-disabled="true">Connect Wallet</button>
+              </div>
+              <div class="qr" aria-label="QR payment placeholder">
+                <div class="chip" aria-hidden="true"><span style="font-weight:900;font-size:22px;">₿</span></div>
+                <div class="text">
+                  <strong>Scan QR Code</strong>
+                  <small>bitcoin.tools</small>
+                </div>
+              </div>
+            </div>
+            <div id="btc-panel-recur" class="panel" role="tabpanel" aria-labelledby="btc-tab-recur" hidden>
+              <p class="tiny">Recurring donations coming soon.</p>
             </div>
           </div>
         </div>
-
-        <!-- Integrated ETH controls (merged into donate block) -->
-        <div class="eth-controls" style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:14px;">
-          <label for="eth-amount" class="visually-hidden">Amount (ETH)</label>
-          <div class="input-wrap" style="flex:0 1 240px;">
-            <span class="currency">Ξ</span>
-            <input id="eth-amount" inputmode="decimal" placeholder="0.01" aria-describedby="eth-help">
-          </div>
-          <button id="eth-donate" class="button primary" type="button" aria-label="Donate">Donate</button>
-          <button id="eth-connect" class="button outline" type="button" aria-label="Connect Wallet">Connect Wallet</button>
-          <div class="muted" style="margin-left:auto;">
-            Network: <span id="eth-chain">Ethereum</span> • Contract:
-            <a id="eth-contract-link" href="#" rel="noopener noreferrer" target="_blank">—</a>
-          </div>
-        </div>
-
-        <p id="eth-help" class="muted" style="margin:8px 2px 0;">Enter amount in ETH and connect your wallet to donate.</p>
-
-        <!-- Donation progress -->
-        <div class="eth-progress-wrap" style="margin:14px 0 8px 0;">
-          <div class="eth-progress" style="height:16px;border:1px solid var(--color-border,#e5e7eb);border-radius:10px;overflow:hidden;background:var(--color-surface,#fff);">
-            <div id="eth-progress-fill" style="height:100%;width:0%;background:var(--link,#0057ff);"></div>
-          </div>
-          <p id="eth-progress-text" class="muted" style="margin-top:6px;">0 / 9 ETH received — 0%</p>
-        </div>
-        <div id="eth-status" class="sr-only" aria-live="polite"></div>
-        <p id="tx-link" class="muted" style="margin:6px 2px 0;"></p>
       </div>
     </section>
 
@@ -383,51 +355,9 @@
     };
   </script>
   <!-- Goal control JS removed -->
-  <script>
-    (function(){
-      var once = document.getElementById('supt-once');
-      var recur = document.getElementById('supt-recur');
-      var track = document.getElementById('support-track');
-      var ethInput = document.getElementById('eth-amount');
-      var ethDonate = document.getElementById('eth-donate');
-      var ethConnect = document.getElementById('eth-connect');
-      var input = ethInput; // use integrated ETH input for custom amounts
-      var state = { mode: 'once', amount: 0 };
-
-      function setMode(m) {
-        state.mode = m;
-        once.setAttribute('aria-pressed', String(m === 'once'));
-        recur.setAttribute('aria-pressed', String(m === 'recur'));
-      }
-      function setAmount(a) {
-        state.amount = a;
-        Array.prototype.forEach.call(track.querySelectorAll('.support-card'), function(btn){
-          btn.setAttribute('aria-pressed', String(Number(btn.getAttribute('data-amount')) === a));
-        });
-        var v = a ? String(Number(a).toFixed(4).replace(/0+$/,'').replace(/\.$/,'')) : '';
-        input.value = v;
-        if (ethInput) ethInput.value = v;
-      }
-      once && once.addEventListener('click', function(){ setMode('once'); });
-      recur && recur.addEventListener('click', function(){ setMode('recur'); });
-      track && track.addEventListener('click', function(e){
-        var t = e.target;
-        while (t && t !== track && !t.classList.contains('support-card')) t = t.parentElement;
-        if (!t || t === track) return;
-        var amt = Number(t.getAttribute('data-amount')||'0');
-        if (amt>0) setAmount(amt);
-      });
-      input && input.addEventListener('input', function(){
-        var v = parseFloat(String(input.value).replace(/,/g,'.'));
-        if (!isFinite(v) || v <= 0) { state.amount = 0; Array.prototype.forEach.call(track.querySelectorAll('.support-card'), function(btn){btn.setAttribute('aria-pressed','false');}); return; }
-        state.amount = v;
-        Array.prototype.forEach.call(track.querySelectorAll('.support-card'), function(btn){ btn.setAttribute('aria-pressed','false'); });
-      });
-      // Donate now uses the integrated eth-donate button handled by eth-donate.js
-      setMode('once');
-    })();
-  </script>
+  
   <script src="/dist/js/eth-donate.js" defer></script>
+  <script src="/js/donate-brutal.js" defer></script>
   <script>
     // Header "Connect Wallet" bridge — calls the same connect used by ETH donate
     (function(){
