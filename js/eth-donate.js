@@ -276,16 +276,8 @@ import { mainnet, sepolia } from 'viem/chains';
 
   // Render leaderboard
   function renderLeaderboard(donations) {
+    if (!leaderboardBody) return; // leaderboard removed
     leaderboardBody.innerHTML = '';
-    donations.slice(0, 10).forEach((donation, index) => {
-      const row = document.createElement('tr');
-      row.innerHTML = `
-        <td>${index + 1}</td>
-        <td>${donation.address.slice(0, 6)}...${donation.address.slice(-4)}</td>
-        <td>${donation.amount.toFixed(4)}</td>
-      `;
-      leaderboardBody.appendChild(row);
-    });
   }
 
   // Event listeners
@@ -295,7 +287,7 @@ import { mainnet, sepolia } from 'viem/chains';
   // Init
   updateChain();
   updateProgress();
-  fetchDonations();
+  fetchDonations().catch(() => {});
 
   // Public API so UI controls can use the same source of truth
   function setDonateGoal(newGoal) {
