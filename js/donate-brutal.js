@@ -116,6 +116,123 @@
     });
   }
 
+  // Carousel (horizontal) for preset tiers
+  function initCarousel(group) {
+    const wrap = document.querySelector(`.amount-carousel[data-group="${group}"]`);
+    if (!wrap) return;
+    const grid = wrap.querySelector('.amount-grid');
+    if (!grid) return;
+
+    grid.style.scrollBehavior = 'smooth';
+    const slides = Array.from(grid.querySelectorAll('.amount-card'));
+    const prev = wrap.querySelector('.carousel-btn.prev');
+    const next = wrap.querySelector('.carousel-btn.next');
+    const dotsWrap = wrap.querySelector('.carousel-dots');
+
+    // Build dots if empty
+    let dots = [];
+    if (dotsWrap) {
+      if (dotsWrap.children.length === 0) {
+        slides.forEach((_, i) => {
+          const b = document.createElement('button');
+          b.type = 'button';
+          b.className = 'carousel-dot';
+          b.setAttribute('aria-label', `Go to tier ${i + 1}`);
+          dotsWrap.appendChild(b);
+        });
+      }
+      dots = Array.from(dotsWrap.querySelectorAll('.carousel-dot'));
+    }
+
+    let index = 0;
+    const clamp = (i) => Math.max(0, Math.min(i, slides.length - 1));
+
+    function update() {
+      if (prev) prev.disabled = index === 0;
+      if (next) next.disabled = index === slides.length - 1;
+      dots.forEach((d, i) => d.classList.toggle('is-active', i === index));
+    }
+
+    function scrollToIndex(i) {
+      index = clamp(i);
+      const target = slides[index];
+      if (target) grid.scrollTo({ left: target.offsetLeft, behavior: 'smooth' });
+      update();
+    }
+
+    if (prev) prev.addEventListener('click', () => scrollToIndex(index - 1));
+    if (next) next.addEventListener('click', () => scrollToIndex(index + 1));
+    dots.forEach((d, i) => d.addEventListener('click', () => scrollToIndex(i)));
+
+    // Sync active dot on scroll (snap)
+    let ticking = false;
+    grid.addEventListener('scroll', () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        const left = grid.scrollLeft;
+        let closest = 0;
+        let min = Infinity;
+        slides.forEach((el, i) => {
+          const delta = Math.abs(el.offsetLeft - left);
+          if (delta < min) { min = delta; closest = i; }
+        });
+        index = closest;
+        update();
+        ticking = false;
+      });
+    });
+
+    update();
+  }
+  // Slider (range input) for compact preset selection
+  function initSlider(group, tiers, decimals, inputId) {
+    const wrap = document.querySelector(`.preset-slider[data-group="${group}"]`);
+    if (!wrap) return;
+    const slider = wrap.querySelector('input[type="range"]');
+    const readAmt = wrap.querySelector('.slider-readout .amt');
+    const readDesc = wrap.querySelector('.slider-readout .desc');
+    const dotsWrap = wrap.querySelector('.slider-dots');
+    const amountInput = document.getElementById(inputId);
+
+    const presets = Array.isArray(tiers) ? tiers : [];
+    if (!slider || !readAmt || !readDesc || !amountInput || presets.length === 0) return;
+
+    function setIndex(i) {
+      const idx = Math.max(0, Math.min(i, presets.length - 1));
+      slider.value = String(idx);
+      const p = presets[idx];
+      // Update readout
+      readAmt.textContent = p.label;
+      readDesc.textContent = p.desc;
+      // Update underlying amount input (numeric)
+      amountInput.value = formatAmount(p.value, decimals);
+      amountInput.dispatchEvent(new Event("input", { bubbles: true }));
+      // Update dots
+      if (dotsWrap) {
+        Array.from(dotsWrap.children).forEach((d, j) => {
+          d.classList.toggle('is-active', j === idx);
+        });
+      }
+    }
+
+    slider.addEventListener('input', () => {
+      const i = Number(slider.value || 0);
+      setIndex(i);
+    });
+
+    // Clickable dots (if provided)
+    if (dotsWrap) {
+      Array.from(dotsWrap.children).forEach((d, i) => {
+        d.addEventListener('click', () => setIndex(i));
+      });
+    }
+
+    // Initialize at current value (or 0)
+    const start = Number(slider.value || 0);
+    setIndex(start);
+  }
+
   // Public wrappers (requested names)
   function ethTabSwitch() {
     initTabs("eth");
@@ -137,6 +254,18 @@
   btcTabSwitch();
   ethAmountSelect();
   btcAmountSelect();
+  (function(){
+    const wrap = document.querySelector('.preset-slider[data-group="eth"]');
+    if (wrap) {
+      const tiers = [
+        { value: 0.005, label: "Ξ 0.005", desc: "Fuel for the road" },
+        { value: 0.011, label: "Ξ 0.011", desc: "A used library book" },
+        { value: 0.033, label: "Ξ 0.033", desc: "Archive & backups" },
+        { value: 0.055, label: "Ξ 0.055", desc: "Community meetups + snack" }
+      ];
+      initSlider('eth', tiers, 4, 'eth-amount');
+    }
+  })();
 
   // Optional: reflect chain + contract link if config is present
   try {

@@ -33,7 +33,14 @@
   gap:22px;
 }
 @media (min-width: 960px){
-  .donation-grid{ grid-template-columns:1fr 1fr; gap:26px; }
+  /* With only one module (ETH), keep a single column and center the section */
+  .donation-grid{
+    grid-template-columns:1fr;
+    gap:26px;
+    max-width: 760px;
+    margin-left:auto;
+    margin-right:auto;
+  }
 }
 
 .donation-module{
@@ -87,14 +94,18 @@
   position:relative;
   border:var(--border-strong);
   border-radius: var(--radius-3xl);
-  padding:16px;
-  background:#fff;
+  /* Square shape with curved edges */
+  aspect-ratio: 1 / 1;
+  /* Leave a visible colored rim around the inner panel */
+  padding:14px;
+  overflow:hidden;
+  /* no background here — let palette classes (e.g., .eth .c-red) show through */
   box-shadow: var(--offset) var(--offset) 0 var(--ink);
   cursor:pointer;
   transition: transform .12s ease, box-shadow .12s ease, filter .12s ease;
 }
 .amount-card .icon{
-  width:28px; height:28px; border-radius:10px;
+  width:20px; height:20px; border-radius:10px;
   display:inline-flex; align-items:center; justify-content:center;
   border:var(--border-strong); margin-bottom:8px;
   background:#fff;
@@ -121,9 +132,105 @@
   background:#fff;
   border-radius: calc(var(--radius-3xl) - 10px);
   border: var(--border-strong);
-  padding:14px;
+  /* Fill the square and center content */
+  height:100%;
+  box-sizing:border-box;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:flex-start;
+  padding:12px;
 }
-.amount-card .inner .amt{ font-size:22px; }
+.amount-card .inner .amt{ font-size:18px; }
+
+/* Slider (replaces carousel) */
+.preset-slider { max-width: 280px; margin: 0 auto; }
+.preset-slider .slider-panel{
+  background:#fff;
+  border: var(--border-strong);
+  border-radius: var(--radius-3xl);
+  padding: 12px 14px;
+  box-shadow: var(--offset) var(--offset) 0 var(--ink);
+}
+.preset-slider .slider-readout .amt{ display:block; font-weight:900; font-size:18px; }
+.preset-slider .slider-readout .desc{ display:block; font-weight:800; font-size:12px; text-transform:uppercase; color:var(--muted); letter-spacing:.05em; margin-top:4px; }
+
+.preset-slider .slider{
+  -webkit-appearance: none;
+  width: 100%;
+  height: 6px;
+  background: #e9edf3;
+  border-radius: 999px;
+  outline: none;
+  margin: 10px 0 8px;
+  border: var(--border-strong);
+}
+.preset-slider .slider::-webkit-slider-thumb{
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px; height: 18px; border-radius:999px;
+  background:#fff; border: var(--border-strong);
+  box-shadow: var(--offset) var(--offset) 0 var(--ink);
+  cursor:pointer;
+}
+.preset-slider .slider::-moz-range-thumb{
+  width: 18px; height: 18px; border-radius:999px;
+  background:#fff; border: 3px solid var(--ink);
+  cursor:pointer;
+}
+
+.preset-slider .slider-dots{ display:flex; justify-content:center; gap:8px; margin-top:6px; }
+.preset-slider .slider-dots span{
+  width:8px; height:8px; border-radius:999px; background:#fff; border: 3px solid var(--ink);
+}
+.preset-slider .slider-dots .is-active{ background:#000; }
+
+/* Hide default scrollbar (non-essential enhancement) */
+.amount-carousel .amount-grid::-webkit-scrollbar{ height:8px; }
+.amount-carousel .amount-grid::-webkit-scrollbar-track{ background: transparent; }
+.amount-carousel .amount-grid::-webkit-scrollbar-thumb{ background: rgba(0,0,0,.25); border-radius: 999px; }
+
+/* Controls */
+.carousel-controls{
+  position:absolute;
+  top:6px;
+  right:8px;
+  display:flex;
+  gap:10px;
+  pointer-events:none; /* container ignores clicks */
+}
+.carousel-controls .carousel-btn{
+  pointer-events:auto; /* buttons remain clickable */
+  width:28px; height:28px;
+  border: var(--border-strong);
+  border-radius: 999px;
+  background:#fff;
+  display:inline-flex; align-items:center; justify-content:center;
+  font-weight:900;
+  box-shadow: var(--offset) var(--offset) 0 var(--ink);
+  cursor:pointer;
+  transition: transform .12s ease, box-shadow .12s ease, background .12s ease, opacity .12s ease;
+}
+.carousel-controls .carousel-btn:disabled{ opacity:.5; cursor:not-allowed; }
+.carousel-controls .carousel-btn:hover{ transform: translate(-1px,-1px); box-shadow: calc(var(--offset)+2px) calc(var(--offset)+2px) 0 var(--ink); }
+.carousel-controls .carousel-btn:focus{ outline:3px solid var(--ink); outline-offset:2px; }
+
+/* Dots */
+.carousel-dots{
+  display:flex; align-items:center; justify-content:center;
+  gap:8px; margin-top:10px;
+}
+.carousel-dot{
+  appearance:none;
+  width:10px; height:10px; border-radius:999px;
+  background:#fff;
+  border: 3px solid var(--ink);
+  padding:0;
+  line-height:0;
+  box-shadow: none;
+  cursor:pointer;
+}
+.carousel-dot.is-active{ background:#000; }
 
 /* Custom amount input */
 .custom-amount{ margin-top:16px; }

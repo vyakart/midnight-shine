@@ -156,36 +156,18 @@
               <button id="eth-tab-recur" class="tab" role="tab" aria-selected="false" aria-controls="eth-panel-recur" type="button">Recurring donation</button>
             </div>
             <div id="eth-panel-once" class="panel" role="tabpanel" aria-labelledby="eth-tab-once">
-              <div class="amount-grid" data-group="eth">
-                <button class="amount-card c-red" data-amount="0.005" type="button" aria-pressed="false">
-                  <div class="inner">
-                    <span class="icon" aria-hidden="true">⛽</span>
-                    <strong class="amt">Ξ 0.005</strong>
-                    <span class="desc">Fuel for the road</span>
-                  </div>
-                </button>
-                <button class="amount-card c-blue" data-amount="0.011" type="button" aria-pressed="false">
-                  <div class="inner">
-                    <span class="icon" aria-hidden="true">📘</span>
-                    <strong class="amt">Ξ 0.011</strong>
-                    <span class="desc">A used library book</span>
-                  </div>
-                </button>
-                <button class="amount-card c-green" data-amount="0.033" type="button" aria-pressed="false">
-                  <div class="inner">
-                    <span class="icon" aria-hidden="true">💾</span>
-                    <strong class="amt">Ξ 0.033</strong>
-                    <span class="desc">Archive &amp; backups</span>
-                  </div>
-                </button>
-                <button class="amount-card c-purple" data-amount="0.055" type="button" aria-pressed="false">
-                  <div class="inner">
-                    <span class="icon" aria-hidden="true">🫶</span>
-                    <strong class="amt">Ξ 0.055</strong>
-                    <span class="desc">Community meetups + snack</span>
-                  </div>
-                </button>
-              </div>
+              <div class="preset-slider" data-group="eth">
+  <div class="slider-panel">
+    <div class="slider-readout">
+      <strong id="eth-read-amt" class="amt">Ξ 0.005</strong>
+      <span id="eth-read-desc" class="desc">Fuel for the road</span>
+    </div>
+    <input id="eth-tier" class="slider" type="range" min="0" max="3" step="1" value="0" aria-label="Select donation tier">
+    <div class="slider-dots" aria-hidden="true">
+      <span></span><span></span><span></span><span></span>
+    </div>
+  </div>
+</div>
               <div class="custom-amount">
                 <label for="eth-amount" class="sr-only">Amount (ETH)</label>
                 <div class="currency-input">
@@ -211,69 +193,6 @@
             </div>
           </div>
 
-          <!-- BITCOIN -->
-          <div id="btc-module" class="donation-module btc" aria-labelledby="btc-title">
-            <h3 id="btc-title" class="eyebrow">Bitcoin</h3>
-            <p class="sub">Pay with BTC</p>
-            <div class="tabs" role="tablist" aria-label="BTC donation type">
-              <button id="btc-tab-once" class="tab is-active" role="tab" aria-selected="true" aria-controls="btc-panel-once" type="button">One-time donation</button>
-              <button id="btc-tab-recur" class="tab" role="tab" aria-selected="false" aria-controls="btc-panel-recur" type="button">Recurring donation</button>
-            </div>
-            <div id="btc-panel-once" class="panel" role="tabpanel" aria-labelledby="btc-tab-once">
-              <div class="amount-grid" data-group="btc">
-                <button class="amount-card c-orange" data-amount="0.0001" type="button" aria-pressed="false">
-                  <div class="inner">
-                    <span class="icon" aria-hidden="true">☕</span>
-                    <strong class="amt">₿ 0.0001</strong>
-                    <span class="desc">Cup of coffee</span>
-                  </div>
-                </button>
-                <button class="amount-card c-red" data-amount="0.0003" type="button" aria-pressed="false">
-                  <div class="inner">
-                    <span class="icon" aria-hidden="true">🍕</span>
-                    <strong class="amt">₿ 0.0003</strong>
-                    <span class="desc">Full size pizza</span>
-                  </div>
-                </button>
-                <button class="amount-card c-green" data-amount="0.0005" type="button" aria-pressed="false">
-                  <div class="inner">
-                    <span class="icon" aria-hidden="true">🥗</span>
-                    <strong class="amt">₿ 0.0005</strong>
-                    <span class="desc">Full lunch</span>
-                  </div>
-                </button>
-                <button class="amount-card c-blue" data-amount="0.001" type="button" aria-pressed="false">
-                  <div class="inner">
-                    <span class="icon" aria-hidden="true">👥</span>
-                    <strong class="amt">₿ 0.0010</strong>
-                    <span class="desc">Lunch for two</span>
-                  </div>
-                </button>
-              </div>
-              <div class="custom-amount">
-                <label for="btc-amount" class="sr-only">Amount (BTC)</label>
-                <div class="currency-input">
-                  <span class="prefix">₿</span>
-                  <input id="btc-amount" inputmode="decimal" placeholder="0.0001" autocomplete="off">
-                </div>
-                <p class="tiny">Enter amount in BTC and connect your wallet to donate.</p>
-              </div>
-              <div class="btn-row">
-                <button class="btn primary btc" type="button" aria-disabled="true">Donate</button>
-                <button class="btn" type="button" aria-disabled="true">Connect Wallet</button>
-              </div>
-              <div class="qr" aria-label="QR payment placeholder">
-                <div class="chip" aria-hidden="true"><span style="font-weight:900;font-size:22px;">₿</span></div>
-                <div class="text">
-                  <strong>Scan QR Code</strong>
-                  <small>bitcoin.tools</small>
-                </div>
-              </div>
-            </div>
-            <div id="btc-panel-recur" class="panel" role="tabpanel" aria-labelledby="btc-tab-recur" hidden>
-              <p class="tiny">Recurring donations coming soon.</p>
-            </div>
-          </div>
         </div>
       </div>
     </section>
