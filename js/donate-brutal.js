@@ -295,4 +295,5 @@
   window.btcTabSwitch = btcTabSwitch;
   window.ethAmountSelect = ethAmountSelect;
   window.btcAmountSelect = btcAmountSelect;
+
 })();
