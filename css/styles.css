@@ -1415,7 +1415,7 @@ html.dark .ruler-lines .tick.center {
   display: inline-flex;
   flex-wrap: nowrap;
   align-items: center;
-  gap: 160px; /* increased to keep more space between active and neighbors */
+  gap: clamp(600px, 80vw, 1200px); /* further increased to fully hide adjacent cards across all items */
   will-change: transform;
   transform: translate3d(0,0,0);
   transition: transform 420ms cubic-bezier(0.22, 1, 0.36, 1);
@@ -1515,7 +1515,7 @@ html.dark .ruler-controls .ruler-next:hover {
 }
 
 @media (max-width: 640px) {
-  .ruler-track { gap: 80px; }
+  .ruler-track { gap: 300px; }
   .rc-item { font-weight: 800; }
 }
 /* Targeted spacing tweak for long title "Mario in the StacyVerse" */
