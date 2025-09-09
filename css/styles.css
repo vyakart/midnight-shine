@@ -5,43 +5,8 @@
   - Indentation: 2 spaces
  */
 
-/* Theme tooltip styles */
-.theme-tooltip {
-  position: absolute;
-  bottom: 100%;
-  left: 50%;
-  transform: translateX(-50%);
-  margin-bottom: 8px;
-  padding: 6px 10px;
-  background: var(--color-surface, #fff);
-  color: var(--color-text-primary, #111);
-  border: 1px solid var(--color-border, #e5e7eb);
-  border-radius: 6px;
-  font-size: 12px;
-  font-weight: 500;
-  white-space: nowrap;
-  opacity: 0;
-  visibility: hidden;
-  pointer-events: none;
-  z-index: 10;
-  transition: opacity 150ms ease, visibility 150ms ease;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
 
-.theme-toggle-btn:hover .theme-tooltip,
-.theme-toggle-btn:focus .theme-tooltip {
-  opacity: 1;
-  visibility: visible;
-}
 
-/* Dark mode adaptations for tooltip */
-html[data-theme="midnightAurora"] .theme-tooltip,
-html[data-theme="cosmicDust"] .theme-tooltip {
-  background: var(--color-surface, #1a1a2e);
-  color: var(--color-text-primary, #fff);
-  border-color: var(--color-border, #333);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-}
 
 /* Ensure tooltip doesn't overlap other elements */
 .theme-toggle-btn {
