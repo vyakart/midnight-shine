@@ -256,6 +256,51 @@
     }
 
     /**
+     * Localize theme name with fallback to English and finally "Default"
+     */
+    getLocalizedThemeName(themeKey) {
+      try {
+        const en = THEMES[themeKey]?.name;
+        const i18n = window.I18N || window.i18n || window.__i18n || null;
+        if (i18n) {
+          const tryKeys = [
+            `themes.${themeKey}`,
+            `theme.${themeKey}`,
+            `ui.theme.${themeKey}`,
+            themeKey
+          ];
+          for (let k of tryKeys) {
+            let v = null;
+            if (typeof i18n.t === 'function') v = i18n.t(k);
+            else if (typeof i18n.get === 'function') v = i18n.get(k);
+            else if (typeof i18n === 'object') v = i18n[k];
+            if (typeof v === 'string' && v.trim() && v !== k) return v;
+          }
+        }
+        return en || 'Default';
+      } catch (_) {
+        return THEMES[themeKey]?.name || 'Default';
+      }
+    }
+
+    /**
+     * Compose accessible tooltip label text: "Theme: <Name>"
+     */
+    getThemeLabelText(themeKey) {
+      const name = this.getLocalizedThemeName(themeKey);
+      const i18n = window.I18N || window.i18n || window.__i18n || null;
+      let prefix = 'Theme';
+      try {
+        if (i18n && typeof i18n.t === 'function') {
+          const p = i18n.t('labels.theme') || i18n.t('ui.themeLabel');
+          if (typeof p === 'string' && p.trim()) prefix = p;
+        }
+      } catch (_) {}
+      const display = (name && name !== 'Default') ? name : 'Default';
+      return `${prefix}: ${display}`;
+    }
+
+    /**
      * Subscribe to theme changes
      */
     subscribe(callback) {
@@ -326,6 +371,9 @@
       button.setAttribute('role', 'switch');
       button.setAttribute('aria-label', 'Toggle theme');
       button.setAttribute('aria-checked', (THEMES[this.currentTheme]?.scheme === 'dark'));
+      button.title = THEMES[this.currentTheme]?.name || 'Toggle theme';
+  
+      // Tooltip removed: no body-appended tooltip or aria-describedby association
 
       // Color box (outer) + inner swatch that reflects current theme
       const box = document.createElement('span');
@@ -372,11 +420,14 @@
       button.addEventListener('click', () => {
         this.toggleTheme();
       });
+  
+      // Tooltip removed: no hover/focus/long-press logic or viewport tracking
 
-      // Update aria-checked (true when current scheme is dark)
+      // Update aria-checked and title on theme changes
       this.subscribe((theme) => {
         const isDark = !!(THEMES[theme] && THEMES[theme].scheme === 'dark');
         button.setAttribute('aria-checked', String(isDark));
+        button.title = THEMES[theme]?.name || 'Toggle theme';
       });
 
       return button;
