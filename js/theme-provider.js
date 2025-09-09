@@ -371,7 +371,8 @@
       button.setAttribute('role', 'switch');
       button.setAttribute('aria-label', 'Toggle theme');
       button.setAttribute('aria-checked', (THEMES[this.currentTheme]?.scheme === 'dark'));
-      button.title = THEMES[this.currentTheme]?.name || 'Toggle theme';
+      // Remove native title to avoid browser tooltip; rely on aria-label for accessibility
+      button.removeAttribute('title');
   
       // Tooltip removed: no body-appended tooltip or aria-describedby association
 
@@ -423,11 +424,11 @@
   
       // Tooltip removed: no hover/focus/long-press logic or viewport tracking
 
-      // Update aria-checked and title on theme changes
+      // Update aria-checked on theme changes; ensure no native title tooltip
       this.subscribe((theme) => {
         const isDark = !!(THEMES[theme] && THEMES[theme].scheme === 'dark');
         button.setAttribute('aria-checked', String(isDark));
-        button.title = THEMES[theme]?.name || 'Toggle theme';
+        button.removeAttribute('title');
       });
 
       return button;
