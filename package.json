@@ -9,6 +9,7 @@
     "build:css": "esbuild css/styles.css css/themes.css css/preview-card.css css/utilities.css css/donate.css css/microblog.css --bundle --minify --outdir=dist/css --entry-names=[name]-[hash] --loader:.woff2=file",
     "build:eth": "esbuild js/eth-donate.js --bundle --minify --format=iife --sourcemap --outfile=dist/js/eth-donate.js",
     "build": "npm run clean && npm run build:js && npm run build:css && npm run build:eth",
+    "postbuild": "node scripts/inject-hashes.js",
     "contracts:compile": "HARDHAT_CONFIG=contracts/hardhat.config.js npx hardhat compile",
     "contracts:deploy:sepolia": "HARDHAT_CONFIG=contracts/hardhat.config.js npx hardhat run contracts/scripts/deploy-sepolia.js --network sepolia",
     "contracts:deploy:mainnet": "HARDHAT_CONFIG=contracts/hardhat.config.js npx hardhat run contracts/scripts/deploy-mainnet.js --network mainnet",
