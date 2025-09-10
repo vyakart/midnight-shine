@@ -13,7 +13,11 @@
   'use strict';
 
   function removeTitle(el) {
-    try { el.removeAttribute('title'); } catch (_) {}
+    try {
+      // Respect explicit opt-out from stripping the native title
+      if (el && typeof el.getAttribute === 'function' && el.getAttribute('data-keep-title') === '1') return;
+      el.removeAttribute('title');
+    } catch (_) {}
   }
 
   function stripTooltipDescribedBy(el) {
@@ -34,6 +38,31 @@
     try {
       var nodes = document.querySelectorAll('.theme-tooltip');
       nodes.forEach(function (n) { n.parentNode && n.parentNode.removeChild(n); });
+    } catch (_) {}
+  }
+
+  // Inject minimal CSS so the theme name appears on hover/focus of the toggle.
+  // This avoids depending on a rebuilt dist stylesheet.
+  function ensureTooltipStyle() {
+    try {
+      var id = 'theme-toggle-tooltip-style';
+      if (document.getElementById(id)) return;
+      var css = [
+        '.theme-toggle-btn::after{',
+          'content:attr(data-tooltip);position:absolute;left:50%;bottom:-32px;',
+          'transform:translateX(-50%) translateY(-2px);font:600 12px/1 var(--font-sans, system-ui);',
+          'color:var(--color-text-primary);background:var(--color-surface);',
+          'border:1px solid var(--color-border);border-radius:6px;padding:2px 6px;',
+          'white-space:nowrap;box-shadow:var(--shadow-sm, 0 1px 2px rgba(0,0,0,.06));',
+          'opacity:0;pointer-events:none;transition:opacity 120ms var(--ease-out, ease);',
+          'z-index:9999;',
+        '}',
+        '.theme-toggle-btn:hover::after,.theme-toggle-btn:focus-visible::after{opacity:1;}'
+      ].join('');
+      var style = document.createElement('style');
+      style.id = id;
+      style.textContent = css;
+      (document.head || document.documentElement).appendChild(style);
     } catch (_) {}
   }
 
@@ -61,7 +90,8 @@
 
   function start() {
     locateAndSanitize();
-
+    ensureTooltipStyle();
+  
     // Observe dynamic changes where the toggle might be re-rendered by other scripts
     try {
       var mo = new MutationObserver(function (mutations) {
@@ -71,6 +101,7 @@
             // If the toggle appears or tooltip nodes get added, sanitize again
             if (document.querySelector('.theme-toggle-btn') || document.querySelector('.theme-tooltip')) {
               locateAndSanitize();
+              ensureTooltipStyle();
             }
           }
         }

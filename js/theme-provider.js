@@ -371,8 +371,13 @@
       button.setAttribute('role', 'switch');
       button.setAttribute('aria-label', 'Toggle theme');
       button.setAttribute('aria-checked', (THEMES[this.currentTheme]?.scheme === 'dark'));
-      // Remove native title to avoid browser tooltip; rely on aria-label for accessibility
-      button.removeAttribute('title');
+      // Provide both native title (to match Streams/Donate/CV) and CSS tooltip fallback.
+      // Mark with data-keep-title so theme-normalize doesn't strip it.
+      button.setAttribute('data-keep-title', '1');
+      try {
+        const t = this.getThemeLabelText(this.currentTheme);
+        button.setAttribute('title', t);
+      } catch (_) {}
   
       // Tooltip removed: no body-appended tooltip or aria-describedby association
 
@@ -421,23 +426,27 @@
       button.addEventListener('click', () => {
         this.toggleTheme();
       });
-
-      // Initialize hover label with current theme name (CSS-only tooltip uses this)
+  
+      // Initialize hover label with current theme name (both native and CSS fallback)
       try {
-        button.setAttribute('data-tooltip', this.getThemeLabelText(this.currentTheme));
+        const t = this.getThemeLabelText(this.currentTheme);
+        button.setAttribute('data-tooltip', t);
+        button.setAttribute('title', t);
       } catch (_) {}
-
+  
       // Tooltip removed: no hover/focus/long-press logic or viewport tracking
-
+  
       // Update aria-checked on theme changes; ensure no native title tooltip
       this.subscribe((theme) => {
         const isDark = !!(THEMES[theme] && THEMES[theme].scheme === 'dark');
         button.setAttribute('aria-checked', String(isDark));
-        // Keep native title removed; update CSS tooltip content instead
+        // Keep both native title (for parity with header links) and CSS tooltip in sync
         try {
-          button.setAttribute('data-tooltip', this.getThemeLabelText(theme));
+          const t = this.getThemeLabelText(theme);
+          button.setAttribute('data-tooltip', t);
+          button.setAttribute('title', t);
+          button.setAttribute('data-keep-title', '1');
         } catch (_) {}
-        button.removeAttribute('title');
       });
 
       return button;
