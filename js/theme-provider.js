@@ -371,7 +371,7 @@
       button.setAttribute('role', 'switch');
       button.setAttribute('aria-label', 'Toggle theme');
       button.setAttribute('aria-checked', (THEMES[this.currentTheme]?.scheme === 'dark'));
-      // Provide both native title (to match Streams/Donate/CV) and CSS tooltip fallback.
+      // Provide native title (to match Streams/Donate/CV).
       // Mark with data-keep-title so theme-normalize doesn't strip it.
       button.setAttribute('data-keep-title', '1');
       try {
@@ -427,11 +427,11 @@
         this.toggleTheme();
       });
   
-      // Initialize hover label with current theme name (both native and CSS fallback)
+      // Initialize native tooltip with current theme name
       try {
         const t = this.getThemeLabelText(this.currentTheme);
-        button.setAttribute('data-tooltip', t);
         button.setAttribute('title', t);
+        button.setAttribute('data-keep-title', '1');
       } catch (_) {}
   
       // Tooltip removed: no hover/focus/long-press logic or viewport tracking
@@ -440,10 +440,9 @@
       this.subscribe((theme) => {
         const isDark = !!(THEMES[theme] && THEMES[theme].scheme === 'dark');
         button.setAttribute('aria-checked', String(isDark));
-        // Keep both native title (for parity with header links) and CSS tooltip in sync
+        // Keep native title (for parity with header links) in sync
         try {
           const t = this.getThemeLabelText(theme);
-          button.setAttribute('data-tooltip', t);
           button.setAttribute('title', t);
           button.setAttribute('data-keep-title', '1');
         } catch (_) {}
