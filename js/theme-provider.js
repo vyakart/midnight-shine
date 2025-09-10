@@ -421,13 +421,22 @@
       button.addEventListener('click', () => {
         this.toggleTheme();
       });
-  
+
+      // Initialize hover label with current theme name (CSS-only tooltip uses this)
+      try {
+        button.setAttribute('data-tooltip', this.getThemeLabelText(this.currentTheme));
+      } catch (_) {}
+
       // Tooltip removed: no hover/focus/long-press logic or viewport tracking
 
       // Update aria-checked on theme changes; ensure no native title tooltip
       this.subscribe((theme) => {
         const isDark = !!(THEMES[theme] && THEMES[theme].scheme === 'dark');
         button.setAttribute('aria-checked', String(isDark));
+        // Keep native title removed; update CSS tooltip content instead
+        try {
+          button.setAttribute('data-tooltip', this.getThemeLabelText(theme));
+        } catch (_) {}
         button.removeAttribute('title');
       });
 
