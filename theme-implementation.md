@@ -1,9 +1,12 @@
 # Theme Implementation Guide
-> v1 Integration Note — Gradient Themes
+> Theme overview — Gradient Themes
 >
-> Scope narrowed to two canonical themes for first release:
-> - saffronSunrise (light)
-> - indigoMidnight (dark)
+> Canonical themes supported by the runtime ThemeProvider:
+> - sunsetGlow (light)
+> - midnightAurora (dark)
+> - forestMist (light)
+> - cosmicDust (dark)
+> - oceanBreeze (light)
 >
 > Implemented:
 > - Gradient tokens added to [config/theme-tokens.json](config/theme-tokens.json:1) under each theme:
@@ -585,23 +588,8 @@ Add gradient background element to index.html and other pages:
 Update theme toggle buttons:
 
 ```html
-<div class="theme-switcher-group">
-  <button class="theme-btn" data-theme="sunsetGlow" title="Sunset Glow">
-    <svg><!-- Sun icon --></svg>
-  </button>
-  <button class="theme-btn" data-theme="midnightAurora" title="Midnight Aurora">
-    <svg><!-- Moon icon --></svg>
-  </button>
-  <button class="theme-btn" data-theme="forestMist" title="Forest Mist">
-    <svg><!-- Leaf icon --></svg>
-  </button>
-  <button class="theme-btn" data-theme="cosmicDust" title="Cosmic Dust">
-    <svg><!-- Star icon --></svg>
-  </button>
-  <button class="theme-btn" data-theme="oceanBreeze" title="Ocean Breeze">
-    <svg><!-- Wave icon --></svg>
-  </button>
-</div>
+<!-- Header target; ThemeProvider renders a single toggle button here -->
+<div class="theme-switcher" aria-label="Theme switcher"></div>
 ```
 
 ## 5. Example Usage

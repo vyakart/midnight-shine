@@ -1,12 +1,9 @@
 /**
  * theme-normalize.js
- * Ensure consistent UI between localhost and production by removing any native browser tooltips
- * and legacy tooltip remnants on the theme toggle produced by older bundles.
+ * Keep the theme toggle clean and consistent between localhost and production.
  *
  * Behavior:
- * - Finds .theme-toggle-btn and removes its title attribute (prevents native hover tooltip).
- * - Cleans aria-describedby of any theme-tooltip-* references.
- * - Removes any .theme-tooltip elements left in DOM.
+ * - Finds .theme-toggle-btn and removes its native title unless data-keep-title="1" is present.
  * - Re-applies the above on ThemeProvider updates and DOM mutations.
  */
 (function () {
@@ -20,33 +17,13 @@
     } catch (_) {}
   }
 
-  function stripTooltipDescribedBy(el) {
-    try {
-      var val = el.getAttribute('aria-describedby');
-      if (!val) return;
-      var ids = val.split(/\s+/).filter(Boolean);
-      var filtered = ids.filter(function (id) { return !/^theme-tooltip-/.test(id); });
-      if (filtered.length) {
-        el.setAttribute('aria-describedby', filtered.join(' '));
-      } else {
-        el.removeAttribute('aria-describedby');
-      }
-    } catch (_) {}
-  }
 
-  function removeTooltipNodes() {
-    try {
-      var nodes = document.querySelectorAll('.theme-tooltip');
-      nodes.forEach(function (n) { n.parentNode && n.parentNode.removeChild(n); });
-    } catch (_) {}
-  }
 
 
   function sanitizeButton(btn) {
     if (!btn) return;
+    // Preserve title when data-keep-title="1"; otherwise remove stray legacy titles
     removeTitle(btn);
-    stripTooltipDescribedBy(btn);
-    removeTooltipNodes();
   }
 
   function locateAndSanitize() {
@@ -73,8 +50,8 @@
         for (var i = 0; i < mutations.length; i++) {
           var m = mutations[i];
           if (m.type === 'childList') {
-            // If the toggle appears or tooltip nodes get added, sanitize again
-            if (document.querySelector('.theme-toggle-btn') || document.querySelector('.theme-tooltip')) {
+            // If the toggle appears, sanitize again
+            if (document.querySelector('.theme-toggle-btn')) {
               locateAndSanitize();
             }
           }
