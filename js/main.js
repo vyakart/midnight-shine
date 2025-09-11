@@ -266,25 +266,20 @@
   // NETFLIX-STYLE INFINITE ROW (square cards, hover overlay, continuous autoscroll)
   var carouselRoot = document.getElementById('showcase-carousel');
   if (carouselRoot) {
-    var order = ['meditation','bjj','astro','art&design','ea'];
+    var order = ['meditation','bjj','astro','art&design','mathematics&physics','ea'];
     var copy = {
       'meditation': { title: 'Meditation', sub: 'Awareness as Craft' },
       'bjj':        { title: 'Brazilian Jiu‑Jitsu', sub: 'Dialogue in Movement' },
       'astro':      { title: 'Photography', sub: 'The Art of Noticing' },
       'art&design': { title: 'Art & Design', sub: 'Form That Speaks' },
+      'mathematics&physics': { title: 'Mathematics & Physics', sub: 'Models, Proofs, Dynamics' },
       'ea':         { title: 'Effective Altruism', sub: 'Depth of Impact' }
     };
 
     function encodeFile(name) { return encodeURIComponent(name); }
     function moviePath(name) { return '/assets/movies/' + encodeFile(name) + '.mp4'; }
     function posterPath(name){ return '/assets/posters/' + encodeFile(name) + '.png'; }
-    // Optimized poster helper paths (AVIF/WebP variants generated under assets/posters/optimized/)
-    function optPath(name, w, ext) {
-      return '/assets/posters/optimized/' + w + '/' + encodeFile(name) + '-' + w + '.' + ext;
-    }
-    function cardSrcset(name, ext) {
-      return optPath(name, 320, ext) + ' 320w, ' + optPath(name, 640, ext) + ' 640w';
-    }
+    // Optimized variants removed; use original PNG posters only
 
     // Prepare container
     var viewport = carouselRoot.querySelector('.nf-viewport');
@@ -321,17 +316,7 @@
         // Optimized poster with AVIF/WebP + PNG fallback
         var picture = document.createElement('picture');
 
-        var sAvif = document.createElement('source');
-        sAvif.type = 'image/avif';
-        sAvif.setAttribute('srcset', cardSrcset(name, 'avif'));
-        sAvif.setAttribute('sizes', '(max-width: 480px) 120px, (max-width: 768px) 180px, 240px');
-        picture.appendChild(sAvif);
-
-        var sWebp = document.createElement('source');
-        sWebp.type = 'image/webp';
-        sWebp.setAttribute('srcset', cardSrcset(name, 'webp'));
-        sWebp.setAttribute('sizes', '(max-width: 480px) 120px, (max-width: 768px) 180px, 240px');
-        picture.appendChild(sWebp);
+        // No AVIF/WebP <source>; serving original PNG posters only
 
         var img = document.createElement('img');
         img.className = 'poster';
