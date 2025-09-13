@@ -92,6 +92,65 @@ import qrcode from 'qrcode-generator';
     return '0x' + wei.toString(16);
   }
 
+  // Fallback: read current preset amount from slider readout if input is empty
+  function readPresetAmount() {
+    try {
+      const el = document.querySelector('.preset-slider[data-group="eth"] .slider-readout .amt');
+      if (!el) return '';
+      const txt = String(el.textContent || '');
+      const m = txt.match(/([0-9]*\.?[0-9]+)/);
+      return m ? m[1] : '';
+    } catch (_) {
+      return '';
+    }
+  }
+
+  // Unified getter for current amount as a string
+  function getAmountStr() {
+    let v = (amountEl && amountEl.value || '').trim();
+    if (!isValidAmount(v)) {
+      const p = readPresetAmount();
+      if (isValidAmount(p)) v = p;
+    }
+    return v;
+  }
+
+  // Fallback: read current preset amount from slider readout if input is empty
+  function readPresetAmount() {
+    try {
+      const el = document.querySelector('.preset-slider[data-group="eth"] .slider-readout .amt');
+      if (!el) return '';
+      const txt = String(el.textContent || '');
+      const m = txt.match(/([0-9]*\.?[0-9]+)/);
+      return m ? m[1] : '';
+    } catch (_) {
+      return '';
+    }
+  }
+
+  // Unified getter for current amount as a string
+  function getAmountStr() {
+    let v = (amountEl && amountEl.value || '').trim();
+    if (!isValidAmount(v)) {
+      const p = readPresetAmount();
+      if (isValidAmount(p)) v = p;
+    }
+    return v;
+  }
+
+  // Observe the preset slider readout so we react when user moves the slider
+  function observePresetReadout() {
+    try {
+      const el = document.querySelector('.preset-slider[data-group="eth"] .slider-readout .amt');
+      if (!el) return;
+      const mo = new MutationObserver(() => {
+        updateOpenLinkHref();
+        if (donateBtn) donateBtn.disabled = !isValidAmount(getAmountStr());
+      });
+      mo.observe(el, { characterData: true, childList: true, subtree: true });
+    } catch (_) {}
+  }
+
   function buildEip681(amountEth) {
     try {
       const info = chainInfo(currentChain);
@@ -108,7 +167,7 @@ import qrcode from 'qrcode-generator';
 
   function updateOpenLinkHref() {
     if (!openLinkA) return;
-    const v = (amountEl && amountEl.value || '').trim();
+    const v = getAmountStr();
     if (!isValidAmount(v)) {
       openLinkA.href = '#';
       openLinkA.setAttribute('aria-disabled', 'true');
@@ -186,7 +245,7 @@ import qrcode from 'qrcode-generator';
     if (RECEIVER) copy(RECEIVER);
   }
   function onCopyLink() {
-    const v = (amountEl && amountEl.value || '').trim();
+    const v = getAmountStr();
     if (!isValidAmount(v)) { setStatus(`Enter at least ${MIN_ETH} ETH`); return; }
     const link = buildEip681(v);
     if (link) copy(link);
@@ -194,7 +253,7 @@ import qrcode from 'qrcode-generator';
 
   // QR modal
   function showQr() {
-    const v = (amountEl && amountEl.value || '').trim();
+    const v = getAmountStr();
     if (!isValidAmount(v)) { setStatus(`Enter at least ${MIN_ETH} ETH`); return; }
     const link = buildEip681(v);
     if (!link) return;
@@ -421,7 +480,7 @@ import qrcode from 'qrcode-generator';
   }
 
   async function sendDonation() {
-    const v = (amountEl && amountEl.value || '').trim();
+    const v = getAmountStr();
     if (!isValidAmount(v)) {
       setStatus(`Enter at least ${MIN_ETH} ETH`);
       return;
@@ -479,12 +538,22 @@ import qrcode from 'qrcode-generator';
   if (donateBtn) donateBtn.addEventListener('click', sendDonation);
   if (connectBtn) connectBtn.addEventListener('click', connectUnified);
   if (openLinkA) openLinkA.addEventListener('click', function (e) {
-    // Prevent if invalid
-    const v = (amountEl && amountEl.value || '').trim();
+    // Compute fresh link on click
+    const v = getAmountStr();
     if (!isValidAmount(v)) {
       e.preventDefault();
       setStatus(`Enter at least ${MIN_ETH} ETH`);
+      return;
     }
+    const link = buildEip681(v);
+    if (!link) {
+      e.preventDefault();
+      setStatus('Unable to build payment link');
+      return;
+    }
+    // Ensure href is up-to-date just-in-time and force navigation to the custom scheme
+    openLinkA.href = link;
+    try { window.location.href = link; } catch (_) { /* let anchor handle it */ }
   });
   if (showQrBtn) showQrBtn.addEventListener('click', showQr);
   if (copyAddrBtn) copyAddrBtn.addEventListener('click', onCopyAddress);
@@ -499,7 +568,22 @@ import qrcode from 'qrcode-generator';
   // Init
   try {
     updateUiMeta();
-    if (donateBtn && amountEl) donateBtn.disabled = !isValidAmount(amountEl.value);
+    if (donateBtn && amountEl) donateBtn.disabled = !isValidAmount(getAmountStr());
+    // Re-sync open-in-wallet link shortly after other UI (like slider) initializes
+    setTimeout(updateOpenLinkHref, 200);
+    setTimeout(updateOpenLinkHref, 600);
+    // React to preset slider readout changes (keeps Open in Wallet active)
+    (function observePresetReadout(){
+      try {
+        const el = document.querySelector('.preset-slider[data-group="eth"] .slider-readout .amt');
+        if (!el) return;
+        const mo = new MutationObserver(function(){
+          updateOpenLinkHref();
+          if (donateBtn) donateBtn.disabled = !isValidAmount(getAmountStr());
+        });
+        mo.observe(el, { characterData: true, childList: true, subtree: true });
+      } catch (_) {}
+    })();
   } catch (_) {}
 
   // Public API for header bridge and external hooks
