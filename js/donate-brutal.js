@@ -267,24 +267,22 @@
     }
   })();
 
-  // Optional: reflect chain + contract link if config is present
+  // Optional: reflect chain + receiver link if config is present (direct-send mode)
   try {
     const cfg = window.DONATE_CFG || null;
     const chainEl = document.getElementById("eth-chain");
-    const linkEl = document.getElementById("eth-contract-link");
+    const linkEl = document.getElementById("eth-receiver-link");
     if (cfg && chainEl) {
-      const chainName = (cfg.chain || "ethereum").toString();
+      const chainName = (cfg.chain || "sepolia").toString();
       chainEl.textContent = chainName.charAt(0).toUpperCase() + chainName.slice(1);
     }
-    if (cfg && linkEl && cfg.contract) {
-      const addr = String(cfg.contract);
-      const short = addr.slice(0, 5) + "..." + addr.slice(-4);
-      let href = "#";
-      if ((cfg.chain || "").toLowerCase() === "sepolia") {
-        href = `https://sepolia.etherscan.io/address/${addr}`;
-      } else {
-        href = `https://etherscan.io/address/${addr}`;
-      }
+    if (cfg && linkEl && cfg.receiver) {
+      const addr = String(cfg.receiver);
+      const short = addr.slice(0, 6) + "..." + addr.slice(-4);
+      const isSepolia = (cfg.chain || "").toLowerCase() === "sepolia";
+      const href = isSepolia
+        ? `https://sepolia.etherscan.io/address/${addr}`
+        : `https://etherscan.io/address/${addr}`;
       linkEl.href = href;
       linkEl.textContent = short;
     }

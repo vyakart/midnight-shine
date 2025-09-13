@@ -179,7 +179,12 @@
               <div class="btn-row">
                 <button id="eth-donate" class="btn primary eth" type="button">Donate</button>
                 <button id="eth-connect" class="btn" type="button">Connect Wallet</button>
-                <span class="tiny" style="margin-left:auto;">Network: <span id="eth-chain">Ethereum</span> • Contract: <a id="eth-contract-link" href="#" target="_blank" rel="noopener noreferrer">—</a></span>
+                <a id="eth-open-link" class="btn" href="#" target="_blank" rel="noopener noreferrer">Open in Wallet</a>
+                <button id="eth-show-qr" class="btn" type="button">Show QR</button>
+                <button id="eth-copy-address" class="btn" type="button">Copy Address</button>
+                <button id="eth-copy-link" class="btn" type="button">Copy Link</button>
+                <button id="eth-toggle-chain" class="btn" type="button" aria-pressed="false">Use Mainnet</button>
+                <span class="tiny" style="margin-left:auto;">Network: <span id="eth-chain">Sepolia</span> • Receiver: <a id="eth-receiver-link" href="#" target="_blank" rel="noopener noreferrer">—</a></span>
               </div>
               <div class="progress-wrap">
                 <div class="progress"><div id="eth-progress-fill" class="fill"></div></div>
@@ -267,13 +272,12 @@
   <script src="/dist/js/decrypted-text-S7F6UY7Q.js" defer></script>
   <script src="/dist/js/main-AKNWXNEA.js" defer></script>
   <script>
-    // Runtime configuration for ETH donations (updated for Sepolia staging)
+    // Runtime configuration for direct-send ETH donations (no contract)
     window.DONATE_CFG = {
-      chain: 'sepolia',
-      infuraKey: '921f1a6395234e7288ba49e40d38a828',
-      contract: '0xeFbFcA910b7897b019E7c1a4E6f61BfF1EcBD763',
-      goalEth: 9,
-      deploymentBlock: 9102328
+      chain: 'sepolia', // default staging network (toggleable to mainnet in UI)
+      receiver: '0x934c86f8eef94887FddF079A71743920e74201AF', // Safe receiving address
+      wcProjectId: '030060ec5e4a7ec81c9b778651cc971f', // WalletConnect project id
+      minEth: 0.001 // minimum allowed amount in ETH
     };
   </script>
   <!-- Goal control JS removed -->

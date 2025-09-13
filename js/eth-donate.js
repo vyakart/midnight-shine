@@ -1,313 +1,520 @@
-import { createPublicClient, http, createWalletClient, custom, parseEther, formatEther, getContract } from 'viem';
-import { mainnet, sepolia } from 'viem/chains';
+import EthereumProvider from '@walletconnect/ethereum-provider';
+import { WalletConnectModal } from '@walletconnect/modal';
+import { parseEther } from 'viem';
+import qrcode from 'qrcode-generator';
 
 (function () {
   'use strict';
 
-  // Config from window.DONATE_CFG
-  const cfg = window.DONATE_CFG || {};
-  const chain = cfg.chain || 'sepolia';
-  const contractAddress = cfg.contract || '';
-  // Initialize goal from localStorage override if present
-  let goalEth = (function(){
-    try {
-      const v = localStorage.getItem('donate-goal');
-      if (v && isFinite(parseFloat(v))) return parseFloat(v);
-    } catch (_) {}
-    return cfg.goalEth || 9;
-  })();
-  const deploymentBlock = cfg.deploymentBlock || 0;
+  // Configuration (provided from pages/donate.html)
+  const cfg = (window.DONATE_CFG || {});
+  let currentChain = String(cfg.chain || 'sepolia').toLowerCase(); // 'sepolia' | 'mainnet'
+  const RECEIVER = String(cfg.receiver || '').trim();
+  const WC_PROJECT_ID = String(cfg.wcProjectId || '').trim();
+  const MIN_ETH = Number.isFinite(cfg.minEth) ? Number(cfg.minEth) : 0.001;
 
-  // Elements
-  const ethAmountEl = document.getElementById('eth-amount');
-  const ethDonateBtn = document.getElementById('eth-donate');
-  const ethConnectBtn = document.getElementById('eth-connect');
-  const ethChainEl = document.getElementById('eth-chain');
-  const ethContractLink = document.getElementById('eth-contract-link');
-  const ethProgressFill = document.getElementById('eth-progress-fill');
-  const ethProgressText = document.getElementById('eth-progress-text');
-  const leaderboardBody = document.getElementById('leaderboard-body');
-  const ethStatus = document.getElementById('eth-status');
+  // DOM elements
+  const amountEl = document.getElementById('eth-amount');
+  const donateBtn = document.getElementById('eth-donate');
+  const connectBtn = document.getElementById('eth-connect');
+  const openLinkA = document.getElementById('eth-open-link');
+  const showQrBtn = document.getElementById('eth-show-qr');
+  const copyAddrBtn = document.getElementById('eth-copy-address');
+  const copyLinkBtn = document.getElementById('eth-copy-link');
+  const toggleChainBtn = document.getElementById('eth-toggle-chain');
+
+  const chainEl = document.getElementById('eth-chain');
+  const receiverLinkEl = document.getElementById('eth-receiver-link');
+  const statusEl = document.getElementById('eth-status');
   const txLink = document.getElementById('tx-link');
 
-  // Viem setup
+  // State
+  let providerInjected = null; // window.ethereum (EIP-1193)
+  let providerWC = null;       // WalletConnect Universal Provider
+  let currentProvider = null;  // whichever is connected last
+  let currentAccount = null;
 
-  const chainObj = chain === 'mainnet' ? mainnet : sepolia;
-  let publicClient;
-  let contract;
-  let usedFallback = false;
+  // Utilities
+  function short(addr) {
+    if (!addr) return '';
+    const s = String(addr);
+    return s.length > 12 ? s.slice(0, 6) + '...' + s.slice(-4) : s;
+  }
 
-  function logError(prefix, err) {
+  function chainInfo(name) {
+    if ((name || '').toLowerCase() === 'mainnet') {
+      return {
+        key: 'mainnet',
+        id: 1,
+        name: 'Ethereum',
+        hexId: '0x1',
+        explorer: 'https://etherscan.io',
+        addParams: {
+          chainId: '0x1',
+          chainName: 'Ethereum Mainnet',
+          nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
+          rpcUrls: ['https://cloudflare-eth.com'],
+          blockExplorerUrls: ['https://etherscan.io']
+        }
+      };
+    }
+    // Default to Sepolia
+    return {
+      key: 'sepolia',
+      id: 11155111,
+      name: 'Sepolia',
+      hexId: '0xaa36a7',
+      explorer: 'https://sepolia.etherscan.io',
+      addParams: {
+        chainId: '0xaa36a7',
+        chainName: 'Sepolia',
+        nativeCurrency: { name: 'Sepolia Ether', symbol: 'ETH', decimals: 18 },
+        rpcUrls: ['https://rpc.sepolia.org'],
+        blockExplorerUrls: ['https://sepolia.etherscan.io']
+      }
+    };
+  }
+
+  function getExplorerUrl() {
+    return chainInfo(currentChain).explorer;
+  }
+
+  function isValidAmount(v) {
+    const n = Number(v);
+    if (!Number.isFinite(n)) return false;
+    if (n <= 0) return false;
+    if (n < MIN_ETH) return false;
+    return true;
+  }
+
+  function toHexWeiFromEthStr(ethStr) {
+    const wei = parseEther(String(ethStr)); // BigInt
+    return '0x' + wei.toString(16);
+  }
+
+  function buildEip681(amountEth) {
     try {
-      const msg = err && (err.message || err.toString());
-      const stack = err && err.stack ? `\n${err.stack}` : '';
-      console.error(prefix + (msg ? `: ${msg}` : ''), err);
-      if (stack) console.error(stack);
+      const info = chainInfo(currentChain);
+      const wei = parseEther(String(amountEth)).toString(); // decimal string in wei
+      const receiver = RECEIVER;
+      if (!/^0x[a-fA-F0-9]{40}$/.test(receiver)) {
+        // ENS or invalid address - leave as-is; many wallets resolve ENS.
+      }
+      return `ethereum:${receiver}@${info.id}/transfer?value=${wei}`;
     } catch (_) {
-      // no-op
+      return '';
     }
   }
 
-  let walletClient = null;
-  let account = null;
-
-  // Compute a smooth red→amber→green color for progress.
-  // Returns a CSS color string. We keep it simple & widely-supported (HSL).
-  function progressColor(percent) {
-    const p = Math.max(0, Math.min(100, Number(percent) || 0));
-    // Hue 0 (red) -> 120 (green)
-    const hue = 120 * (p / 100);
-    const sat = 85;   // vivid
-    const light = 44; // balanced contrast on light/dark
-    return `hsl(${hue.toFixed(1)}, ${sat}%, ${light}%)`;
-  }
-
-  // Contract ABI
-  const abi = [
-    { inputs: [{ internalType: "address", name: "_beneficiary", type: "address" }, { internalType: "uint256", name: "_hardCap", type: "uint256" }], stateMutability: "nonpayable", type: "constructor" },
-    { inputs: [], name: "beneficiary", outputs: [{ internalType: "address", name: "", type: "address" }], stateMutability: "view", type: "function" },
-    { inputs: [], name: "hardCap", outputs: [{ internalType: "uint256", name: "", type: "uint256" }], stateMutability: "view", type: "function" },
-    { inputs: [], name: "totalReceived", outputs: [{ internalType: "uint256", name: "", type: "uint256" }], stateMutability: "view", type: "function" },
-    { inputs: [], name: "donate", outputs: [], stateMutability: "payable", type: "function" },
-    { inputs: [], name: "withdraw", outputs: [], stateMutability: "nonpayable", type: "function" },
-    { anonymous: false, inputs: [{ indexed: true, internalType: "address", name: "donor", type: "address" }, { indexed: false, internalType: "uint256", name: "amount", type: "uint256" }], name: "Donation", type: "event" },
-    { stateMutability: "payable", type: "receive" }
-  ];
-
-  function initClients(useFallback = false) {
-    const url = useFallback
-      ? (chain === 'mainnet' ? 'https://cloudflare-eth.com' : 'https://rpc.sepolia.org')
-      : `https://${chain}.infura.io/v3/${cfg.infuraKey}`;
-    publicClient = createPublicClient({
-      chain: chainObj,
-      transport: http(url),
-    });
-    contract = getContract({
-      address: contractAddress,
-      abi,
-      client: { public: publicClient },
-    });
-  }
-  initClients(false);
-
-  // Pre-resolve the Donation event from ABI for log filtering
-  const donationEvent = abi.find((x) => x.type === 'event' && x.name === 'Donation');
-
-  // Connect wallet
-  async function connectWallet() {
-    if (typeof window.ethereum !== 'undefined') {
-      walletClient = createWalletClient({
-        chain: chain === 'mainnet' ? mainnet : sepolia,
-        transport: custom(window.ethereum),
-      });
-      const accounts = await walletClient.requestAddresses();
-      account = accounts[0];
-      ethConnectBtn.textContent = `${account.slice(0, 6)}...${account.slice(-4)}`;
-      ethConnectBtn.disabled = true;
-      updateChain();
-      return account;
+  function updateOpenLinkHref() {
+    if (!openLinkA) return;
+    const v = (amountEl && amountEl.value || '').trim();
+    if (!isValidAmount(v)) {
+      openLinkA.href = '#';
+      openLinkA.setAttribute('aria-disabled', 'true');
+      openLinkA.classList.add('is-disabled');
+      return;
+    }
+    const link = buildEip681(v);
+    if (link) {
+      openLinkA.href = link;
+      openLinkA.removeAttribute('aria-disabled');
+      openLinkA.classList.remove('is-disabled');
     } else {
-      alert('MetaMask not found. Please install MetaMask.');
+      openLinkA.href = '#';
+      openLinkA.setAttribute('aria-disabled', 'true');
+      openLinkA.classList.add('is-disabled');
+    }
+  }
+
+  function setStatus(text) {
+    try {
+      if (statusEl) {
+        statusEl.textContent = text || '';
+      }
+    } catch (_) {}
+  }
+
+  function setTxLink(hash) {
+    if (!txLink) return;
+    if (!hash) {
+      txLink.innerHTML = '';
+      return;
+    }
+    const base = getExplorerUrl();
+    txLink.innerHTML = `<a href="${base}/tx/${hash}" target="_blank" rel="noopener noreferrer">View transaction</a>`;
+  }
+
+  function updateUiMeta() {
+    const info = chainInfo(currentChain);
+
+    // Chain label
+    if (chainEl) {
+      chainEl.textContent = info.name;
+    }
+
+    // Receiver explorer link
+    if (receiverLinkEl && RECEIVER) {
+      const shortAddr = short(RECEIVER);
+      receiverLinkEl.href = `${info.explorer}/address/${RECEIVER}`;
+      receiverLinkEl.textContent = shortAddr || RECEIVER;
+    }
+
+    // Toggle button label
+    if (toggleChainBtn) {
+      const to = info.key === 'sepolia' ? 'Mainnet' : 'Sepolia';
+      toggleChainBtn.textContent = `Use ${to}`;
+      toggleChainBtn.setAttribute('aria-pressed', info.key === 'mainnet' ? 'true' : 'false');
+    }
+
+    // Open link
+    updateOpenLinkHref();
+  }
+
+  // Copy helpers
+  async function copy(text) {
+    try {
+      await navigator.clipboard.writeText(text);
+      setStatus('Copied to clipboard.');
+      setTimeout(() => setStatus(''), 1200);
+    } catch (e) {
+      setStatus('Copy failed');
+    }
+  }
+
+  function onCopyAddress() {
+    if (RECEIVER) copy(RECEIVER);
+  }
+  function onCopyLink() {
+    const v = (amountEl && amountEl.value || '').trim();
+    if (!isValidAmount(v)) { setStatus(`Enter at least ${MIN_ETH} ETH`); return; }
+    const link = buildEip681(v);
+    if (link) copy(link);
+  }
+
+  // QR modal
+  function showQr() {
+    const v = (amountEl && amountEl.value || '').trim();
+    if (!isValidAmount(v)) { setStatus(`Enter at least ${MIN_ETH} ETH`); return; }
+    const link = buildEip681(v);
+    if (!link) return;
+
+    // Build modal
+    const overlay = document.createElement('div');
+    overlay.style.cssText = [
+      'position:fixed','inset:0','background:rgba(0,0,0,.5)','display:flex',
+      'align-items:center','justify-content:center','z-index:9999','padding:16px'
+    ].join(';');
+    overlay.setAttribute('role', 'dialog');
+    overlay.setAttribute('aria-modal', 'true');
+    overlay.setAttribute('aria-label', 'Scan QR to donate');
+
+    const panel = document.createElement('div');
+    panel.style.cssText = [
+      'background:#fff','color:#000','border:4px solid #000','border-radius:16px',
+      'padding:16px','max-width:360px','width:100%','box-shadow:6px 6px 0 #000',
+      'text-align:center'
+    ].join(';');
+
+    const title = document.createElement('div');
+    title.style.cssText = 'font-weight:900; text-transform:uppercase; margin-bottom:8px;';
+    title.textContent = 'Scan to Donate';
+
+    const qrWrap = document.createElement('div');
+    qrWrap.id = 'qr-wrap';
+    qrWrap.style.cssText = 'display:flex;align-items:center;justify-content:center;margin:8px 0;';
+
+    // Generate QR SVG
+    const q = qrcode(0, 'M');
+    q.addData(link);
+    q.make();
+    qrWrap.innerHTML = q.createSvgTag({ scalable: true });
+
+    const linkP = document.createElement('p');
+    linkP.style.cssText = 'font-size:12px;word-break:break-all;margin:6px 0;color:#333;';
+    linkP.textContent = link;
+
+    const btnRow = document.createElement('div');
+    btnRow.style.cssText = 'display:flex;gap:10px;justify-content:center;margin-top:10px;';
+
+    const closeBtn = document.createElement('button');
+    closeBtn.type = 'button';
+    closeBtn.textContent = 'Close';
+    Object.assign(closeBtn.style, {
+      border: '4px solid #000',
+      borderRadius: '12px',
+      background: '#fff',
+      padding: '10px 14px',
+      fontWeight: '900',
+      textTransform: 'uppercase',
+      cursor: 'pointer',
+      boxShadow: '6px 6px 0 #000'
+    });
+    closeBtn.addEventListener('click', () => {
+      try { document.body.removeChild(overlay); } catch(_) {}
+    });
+
+    const copyBtn = document.createElement('button');
+    copyBtn.type = 'button';
+    copyBtn.textContent = 'Copy Link';
+    Object.assign(copyBtn.style, closeBtn.style);
+    copyBtn.addEventListener('click', () => copy(link));
+
+    btnRow.appendChild(copyBtn);
+    btnRow.appendChild(closeBtn);
+
+    panel.appendChild(title);
+    panel.appendChild(qrWrap);
+    panel.appendChild(linkP);
+    panel.appendChild(btnRow);
+
+    overlay.appendChild(panel);
+    document.body.appendChild(overlay);
+  }
+
+  // Provider connections
+  async function connectInjected() {
+    if (!window.ethereum || !window.ethereum.request) return null;
+    try {
+      providerInjected = window.ethereum;
+      const accounts = await providerInjected.request({ method: 'eth_requestAccounts' });
+      currentProvider = providerInjected;
+      currentAccount = accounts && accounts[0] || null;
+      if (connectBtn && currentAccount) {
+        connectBtn.textContent = short(currentAccount);
+        connectBtn.disabled = true;
+      }
+      bindProviderEvents(providerInjected);
+      return currentAccount;
+    } catch (err) {
+      setStatus('Connection rejected');
       return null;
     }
   }
 
-  // Update chain display
-  function updateChain() {
-    ethChainEl.textContent = chain === 'mainnet' ? 'Ethereum' : 'Sepolia';
-    ethContractLink.href = `https://${chain === 'mainnet' ? '' : 'sepolia.'}etherscan.io/address/${contractAddress}`;
-    ethContractLink.textContent = `${contractAddress.slice(0, 6)}...${contractAddress.slice(-4)}`;
+  async function connectWalletConnect() {
+    if (!WC_PROJECT_ID) {
+      setStatus('WalletConnect Project ID missing');
+      return null;
+    }
+    try {
+      const info = chainInfo(currentChain);
+      if (!providerWC) {
+        providerWC = await EthereumProvider.init({
+          projectId: WC_PROJECT_ID,
+          chains: [info.id],
+          showQrModal: true,
+          methods: [
+            'eth_sendTransaction',
+            'eth_requestAccounts',
+            'wallet_switchEthereumChain',
+            'wallet_addEthereumChain',
+            'personal_sign',
+            'eth_sign',
+            'eth_signTypedData',
+            'eth_signTypedData_v4'
+          ],
+          events: ['chainChanged','accountsChanged','disconnect'],
+          qrModalOptions: { themeMode: 'light' }
+        });
+        bindProviderEvents(providerWC);
+      }
+      const accounts = await providerWC.enable();
+      currentProvider = providerWC;
+      currentAccount = accounts && accounts[0] || null;
+      if (connectBtn && currentAccount) {
+        connectBtn.textContent = short(currentAccount);
+        connectBtn.disabled = true;
+      }
+      // Optional: set default chain for WC if available
+      if (providerWC.setDefaultChain) {
+        try { await providerWC.setDefaultChain(info.id); } catch(_) {}
+      }
+      return currentAccount;
+    } catch (err) {
+      setStatus('WalletConnect canceled');
+      return null;
+    }
   }
 
-  // Donate
-  async function donate() {
-    if (!walletClient || !account) {
-      try { await connectWallet(); } catch (_) {}
-      if (!walletClient || !account) {
-        alert('Please connect your wallet first.');
-        return;
+  function bindProviderEvents(p) {
+    if (!p || !p.on) return;
+    try {
+      p.on('accountsChanged', (accs) => {
+        const a = accs && accs[0] || null;
+        currentAccount = a;
+        if (connectBtn && a) {
+          connectBtn.textContent = short(a);
+          connectBtn.disabled = true;
+        } else if (connectBtn) {
+          connectBtn.textContent = 'Connect Wallet';
+          connectBtn.disabled = false;
+        }
+      });
+    } catch (_) {}
+    try {
+      p.on('chainChanged', (cid) => {
+        // cid can be hex string like '0x1' or number
+        const normalized = typeof cid === 'string' ? cid.toLowerCase() : cid;
+        if (normalized === '0x1' || normalized === 1) currentChain = 'mainnet';
+        if (normalized === '0xaa36a7' || normalized === 11155111) currentChain = 'sepolia';
+        updateUiMeta();
+      });
+    } catch (_) {}
+    try {
+      p.on('disconnect', () => {
+        currentProvider = null;
+        currentAccount = null;
+        if (connectBtn) { connectBtn.textContent = 'Connect Wallet'; connectBtn.disabled = false; }
+      });
+    } catch (_) {}
+  }
+
+  async function ensureChain(provider) {
+    if (!provider) return false;
+    const info = chainInfo(currentChain);
+    try {
+      await provider.request({
+        method: 'wallet_switchEthereumChain',
+        params: [{ chainId: info.hexId }]
+      });
+      return true;
+    } catch (err) {
+      // Add chain if not found (4902)
+      const code = (err && (err.code || err.data)) || 0;
+      if (code === 4902) {
+        try {
+          await provider.request({
+            method: 'wallet_addEthereumChain',
+            params: [info.addParams]
+          });
+          return true;
+        } catch (err2) {
+          setStatus('Unable to add chain');
+          return false;
+        }
+      }
+      setStatus('Wrong chain');
+      return false;
+    }
+  }
+
+  async function switchChain(toKey) {
+    currentChain = (toKey || '').toLowerCase() === 'mainnet' ? 'mainnet' : 'sepolia';
+    updateUiMeta();
+    // Try to switch connected provider (non-blocking UX)
+    if (currentProvider) {
+      try { await ensureChain(currentProvider); } catch(_) {}
+      if (providerWC && providerWC.setDefaultChain) {
+        try { await providerWC.setDefaultChain(chainInfo(currentChain).id); } catch(_) {}
       }
     }
-    const amount = ethAmountEl.value.trim();
-    if (!amount || isNaN(amount) || parseFloat(amount) <= 0) {
-      alert('Please enter a valid amount.');
+    return chainInfo(currentChain).id;
+  }
+
+  async function connectUnified() {
+    // Prefer injected
+    const a = await connectInjected();
+    if (a) return a;
+    // Fallback to WalletConnect
+    return await connectWalletConnect();
+  }
+
+  async function sendDonation() {
+    const v = (amountEl && amountEl.value || '').trim();
+    if (!isValidAmount(v)) {
+      setStatus(`Enter at least ${MIN_ETH} ETH`);
       return;
     }
-    try {
-      ethStatus.textContent = 'Sending transaction...';
-      const hash = await walletClient.sendTransaction({
-        account,
-        to: contractAddress,
-        value: parseEther(amount),
-      });
-      ethStatus.textContent = 'Transaction sent. Waiting for confirmation...';
-      const receipt = await publicClient.waitForTransactionReceipt({ hash });
-      if (receipt.status === 'success') {
-        ethStatus.textContent = 'Donation successful!';
-        txLink.innerHTML = `<a href="https://${chain === 'mainnet' ? '' : 'sepolia.'}etherscan.io/tx/${hash}" target="_blank">View transaction</a>`;
-        updateProgress();
-        fetchDonations();
-      } else {
-        ethStatus.textContent = 'Transaction failed.';
-      }
-    } catch (error) {
-      console.error(error);
-      ethStatus.textContent = 'Error: ' + error.message;
-    }
-  }
 
-  // Update progress bar
-  async function sumFromLogs() {
-    const logs = await publicClient.getLogs({
-      address: contractAddress,
-      event: donationEvent,
-      fromBlock: BigInt(deploymentBlock),
-      toBlock: 'latest',
-    });
-    let totalEth = 0;
-    logs.forEach(log => {
-      totalEth += parseFloat(formatEther(log.args.amount));
-    });
-    return totalEth;
-  }
-
-  async function updateProgress() {
-    try {
-      const total = await contract.read.totalReceived();
-      const received = parseFloat(formatEther(total));
-      const percent = Math.min((received / goalEth) * 100, 100);
-      ethProgressFill.style.width = `${percent}%`;
-      // Color shift as we approach goal (red→green)
-      ethProgressFill.style.background = progressColor(percent);
-      ethProgressText.textContent = `${received.toFixed(4)} / ${goalEth} ETH received — ${percent.toFixed(1)}%`;
-    } catch (error) {
-      logError('Error updating progress (read.totalReceived)', error);
-
-      // Try fallback RPC once
-      if (!usedFallback) {
-        usedFallback = true;
-        try {
-          initClients(true);
-          const total = await contract.read.totalReceived();
-          const received = parseFloat(formatEther(total));
-          const percent = Math.min((received / goalEth) * 100, 100);
-          ethProgressFill.style.width = `${percent}%`;
-          ethProgressFill.style.background = progressColor(percent);
-          ethProgressText.textContent = `${received.toFixed(4)} / ${goalEth} ETH received — ${percent.toFixed(1)}%`;
-          return;
-        } catch (error2) {
-          logError('Fallback RPC failed (read.totalReceived)', error2);
-        }
-      }
-
-      // Final fallback: derive from Donation logs
-      try {
-        const received = await sumFromLogs();
-        const percent = Math.min((received / goalEth) * 100, 100);
-        ethProgressFill.style.width = `${percent}%`;
-        ethProgressFill.style.background = progressColor(percent);
-        ethProgressText.textContent = `${received.toFixed(4)} / ${goalEth} ETH received — ${percent.toFixed(1)}%`;
-      } catch (error3) {
-        logError('Log-based progress fallback failed', error3);
-      }
-    }
-  }
-
-  // Fetch donations with cache
-  async function fetchDonations() {
-    const cacheKey = `donations-${chain}-${contractAddress}`;
-    const cached = localStorage.getItem(cacheKey);
-    if (cached) {
-      const { data, timestamp } = JSON.parse(cached);
-      if (Date.now() - timestamp < 5 * 60 * 1000) { // 5 min cache
-        renderLeaderboard(data);
+    // Ensure connected
+    if (!currentProvider || !currentAccount) {
+      setStatus('Connecting wallet...');
+      const acct = await connectUnified();
+      if (!acct) {
+        setStatus('Please connect your wallet');
         return;
       }
     }
 
+    // Ensure on correct chain
+    setStatus('Checking network...');
+    const ok = await ensureChain(currentProvider);
+    if (!ok) return;
+
+    // Build transaction
+    const valueHex = toHexWeiFromEthStr(v);
+    const tx = {
+      from: currentAccount,
+      to: RECEIVER,
+      value: valueHex
+    };
+
     try {
-      const logs = await publicClient.getLogs({
-        address: contractAddress,
-        event: donationEvent,
-        fromBlock: BigInt(deploymentBlock),
-        toBlock: 'latest',
+      setStatus('Sending transaction...');
+      const hash = await currentProvider.request({
+        method: 'eth_sendTransaction',
+        params: [tx]
       });
-
-      const donations = {};
-      logs.forEach(log => {
-        const donor = log.args.donor;
-        const amount = parseFloat(formatEther(log.args.amount));
-        donations[donor] = (donations[donor] || 0) + amount;
-      });
-
-      const data = Object.entries(donations).map(([address, amount]) => ({ address, amount })).sort((a, b) => b.amount - a.amount);
-      localStorage.setItem(cacheKey, JSON.stringify({ data, timestamp: Date.now() }));
-      renderLeaderboard(data);
-    } catch (error) {
-      logError('Error fetching donations', error);
-      if (!usedFallback) {
-        usedFallback = true;
-        try {
-          initClients(true);
-          const logs = await publicClient.getLogs({
-            address: contractAddress,
-            event: donationEvent,
-            fromBlock: BigInt(deploymentBlock),
-            toBlock: 'latest',
-          });
-
-          const donations = {};
-          logs.forEach(log => {
-            const donor = log.args.donor;
-            const amount = parseFloat(formatEther(log.args.amount));
-            donations[donor] = (donations[donor] || 0) + amount;
-          });
-
-          const data = Object.entries(donations).map(([address, amount]) => ({ address, amount })).sort((a, b) => b.amount - a.amount);
-          const cacheKey = `donations-${chain}-${contractAddress}`;
-          localStorage.setItem(cacheKey, JSON.stringify({ data, timestamp: Date.now() }));
-          renderLeaderboard(data);
-        } catch (error2) {
-          logError('Fallback RPC also failed (fetchDonations)', error2);
-        }
-      }
+      setStatus('Transaction sent. Waiting for confirmation...');
+      setTxLink(hash);
+      // We will not poll for receipt here to keep it simple; explorer link provided.
+      setStatus('Donation submitted! Open explorer to track status.');
+    } catch (err) {
+      const msg = (err && (err.message || String(err))) || 'Transaction failed';
+      setStatus(msg);
     }
   }
 
-  // Render leaderboard
-  function renderLeaderboard(donations) {
-    if (!leaderboardBody) return; // leaderboard removed
-    leaderboardBody.innerHTML = '';
+  // Events
+  if (amountEl) {
+    amountEl.addEventListener('input', function () {
+      // Sanitize to a decimal string
+      const s = this.value.replace(/[^0-9.]/g, '');
+      if (s !== this.value) this.value = s;
+      updateOpenLinkHref();
+      if (donateBtn) donateBtn.disabled = !isValidAmount(this.value);
+    });
   }
-
-  // Event listeners
-  ethConnectBtn.addEventListener('click', connectWallet);
-  ethDonateBtn.addEventListener('click', donate);
+  if (donateBtn) donateBtn.addEventListener('click', sendDonation);
+  if (connectBtn) connectBtn.addEventListener('click', connectUnified);
+  if (openLinkA) openLinkA.addEventListener('click', function (e) {
+    // Prevent if invalid
+    const v = (amountEl && amountEl.value || '').trim();
+    if (!isValidAmount(v)) {
+      e.preventDefault();
+      setStatus(`Enter at least ${MIN_ETH} ETH`);
+    }
+  });
+  if (showQrBtn) showQrBtn.addEventListener('click', showQr);
+  if (copyAddrBtn) copyAddrBtn.addEventListener('click', onCopyAddress);
+  if (copyLinkBtn) copyLinkBtn.addEventListener('click', onCopyLink);
+  if (toggleChainBtn) {
+    toggleChainBtn.addEventListener('click', async function () {
+      const next = currentChain === 'sepolia' ? 'mainnet' : 'sepolia';
+      await switchChain(next);
+    });
+  }
 
   // Init
-  updateChain();
-  updateProgress();
-  fetchDonations().catch(() => {});
+  try {
+    updateUiMeta();
+    if (donateBtn && amountEl) donateBtn.disabled = !isValidAmount(amountEl.value);
+  } catch (_) {}
 
-  // Public API so UI controls can use the same source of truth
-  function setDonateGoal(newGoal) {
-    const g = parseFloat(newGoal);
-    if (!isFinite(g) || g <= 0) return false;
-    goalEth = g;
-    try { localStorage.setItem('donate-goal', String(goalEth)); } catch(_){}
-    updateProgress();
-    return true;
-  }
-
+  // Public API for header bridge and external hooks
   try {
     window.DONATE_API = Object.freeze({
-      get chain() { return chain; },
-      get contract() { return contractAddress; },
-      get goal() { return goalEth; },
-      setGoal: setDonateGoal,
-      connect: connectWallet,
-      donate: donate,
-      updateProgress: updateProgress,
+      get receiver() { return RECEIVER; },
+      get chain() { return currentChain; },
+      get minEth() { return MIN_ETH; },
+      connect: connectUnified,
+      connectInjected,
+      connectWalletConnect,
+      ensureChain,
+      sendDonation,
+      buildEip681: (amt) => buildEip681(amt),
+      getExplorerUrl
     });
   } catch (_) {}
 })();

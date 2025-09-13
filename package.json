@@ -36,6 +36,9 @@
     "dotenv": "^16.4.5"
   },
   "dependencies": {
-    "viem": "^2.21.16"
+    "viem": "^2.21.16",
+    "@walletconnect/ethereum-provider": "^2.0.0",
+    "@walletconnect/modal": "^2.0.0",
+    "qrcode-generator": "^1.4.4"
   }
 }
