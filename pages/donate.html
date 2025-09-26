@@ -100,7 +100,7 @@
           <!-- Theme switcher (ThemeProvider renders single toggle here) -->
           <div class="theme-switcher" aria-label="Theme switcher"></div>
           <!-- Wallet icon button (icon-only) -->
-          <button id="header-connect" class="button outline" type="button" aria-label="Connect Wallet" title="Connect Wallet" style="display:inline-flex;align-items:center;gap:8px;">
+          <button id="header-connect" class="button outline" type="button" aria-label="Connect Porto" title="Connect Porto" style="display:inline-flex;align-items:center;gap:8px;">
             <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
               <g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M20 7H5a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h15a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2Z"/>
@@ -131,73 +131,70 @@
   </header>
 
   <main id="main" class="site-main donate-page">
-    <!-- Hero -->
-    <section class="section" aria-labelledby="donate-title">
-      <div class="container">
-        <h1 id="donate-title">Support</h1>
-        <p class="subheadline">My work is to be a quiet bridge — helping the right people meet, share, care and build together. If our connection has helped/benefitted you in some way, I'd appreciate your support.</p>
-        <p class="subheadline">I've setup a number that covers my essential living expenses. This allows me to dedicate time fully to connecting people, exploring ideas and building communities. The number is adjusted annually, but I don’t expect it to rise beyond this amount for at least the next two years.</p>
-
-        
-      </div>
-    </section>
-
-    <!-- Donation Modules (Brutalist, Tailwind-free) -->
+    <!-- Porto-powered support module -->
     <section class="section" aria-labelledby="donation-modules-title">
-      <div class="container">
-        <p id="donation-modules-title" class="donation-intro">Choose how you’d like to support</p>
-        <div class="donation-grid">
-          <!-- ETHEREUM -->
-          <div id="eth-module" class="donation-module eth" aria-labelledby="eth-title">
-            <h3 id="eth-title" class="eyebrow">Ethereum</h3>
-            <p class="sub">Pay with ETH</p>
-            <div class="tabs" role="tablist" aria-label="ETH donation type">
-              <button id="eth-tab-once" class="tab is-active" role="tab" aria-selected="true" aria-controls="eth-panel-once" type="button">One-time donation</button>
-              <button id="eth-tab-recur" class="tab" role="tab" aria-selected="false" aria-controls="eth-panel-recur" type="button">Recurring donation</button>
+      <div class="container donate-layout">
+        <div class="donate-intro">
+          <h1 id="donate-title">Support</h1>
+          <p class="subheadline">My work is to be a quiet bridge — helping the right people meet, share, care and build together. Porto lets you support that commitment with a secure smart account.</p>
+          <p class="subheadline">Sign in with Porto once, choose an amount, and approve the transfer in a few taps. No browser extensions or seed phrases required.</p>
+        </div>
+
+        <div class="porto-grid" aria-labelledby="donation-modules-title">
+          <div class="porto-card" aria-labelledby="porto-card-title">
+            <h2 id="porto-card-title">Send support with Porto</h2>
+            <p class="porto-card-sub">Porto handles the wallet, gas, and signatures. You review every transaction before it’s sent.</p>
+
+            <div class="porto-account" id="porto-account" data-state="disconnected">
+              <div class="porto-account-label" aria-live="polite">Not connected</div>
+              <button class="btn primary" type="button" id="porto-connect">Connect Porto</button>
             </div>
-            <div id="eth-panel-once" class="panel" role="tabpanel" aria-labelledby="eth-tab-once">
-              <div class="preset-slider" data-group="eth">
-  <div class="slider-panel">
-    <div class="slider-readout">
-      <strong id="eth-read-amt" class="amt">Ξ 0.005</strong>
-      <span id="eth-read-desc" class="desc">Fuel for the road</span>
-    </div>
-    <input id="eth-tier" class="slider" type="range" min="0" max="3" step="1" value="0" aria-label="Select donation tier">
-    <div class="slider-dots" aria-hidden="true">
-      <span></span><span></span><span></span><span></span>
-    </div>
-  </div>
-</div>
-              <div class="custom-amount">
-                <label for="eth-amount" class="sr-only">Amount (ETH)</label>
-                <div class="currency-input">
-                  <span class="prefix">Ξ</span>
-                  <input id="eth-amount" inputmode="decimal" placeholder="0.01" autocomplete="off">
+
+            <div class="porto-controls">
+              <label class="field" for="porto-amount">
+                <span class="field-label">Amount</span>
+                <div class="field-row">
+                  <span class="field-prefix">ETH</span>
+                  <input id="porto-amount" type="number" min="0" step="0.0001" inputmode="decimal" placeholder="0.05" autocomplete="off">
                 </div>
-                <p class="tiny">Enter amount in ETH and connect your wallet to donate.</p>
-              </div>
-              <div class="btn-row">
-                <button id="eth-donate" class="btn primary eth" type="button">Donate</button>
-                <button id="eth-connect" class="btn" type="button">Connect Wallet</button>
-                <a id="eth-open-link" class="btn" href="#" target="_blank" rel="noopener noreferrer">Open in Wallet</a>
-                <button id="eth-show-qr" class="btn" type="button">Show QR</button>
-                <button id="eth-copy-address" class="btn" type="button">Copy Address</button>
-                <button id="eth-copy-link" class="btn" type="button">Copy Link</button>
-                <button id="eth-toggle-chain" class="btn" type="button" aria-pressed="false">Use Mainnet</button>
-                <span class="tiny" style="margin-left:auto;">Network: <span id="eth-chain">Sepolia</span> • Receiver: <a id="eth-receiver-link" href="#" target="_blank" rel="noopener noreferrer">—</a></span>
-              </div>
-              <div class="progress-wrap">
-                <div class="progress"><div id="eth-progress-fill" class="fill"></div></div>
-                <p id="eth-progress-text" class="tiny">0 / 9 ETH received — 0%</p>
-                <p id="eth-status" class="tiny" aria-live="polite" role="status"></p>
-                <p id="tx-link" class="tiny"></p>
-              </div>
+              </label>
+
+              <fieldset class="field">
+                <legend class="field-label">Network</legend>
+                <div class="network-options" role="radiogroup" aria-label="Select network">
+                  <label class="network-option">
+                    <input type="radio" name="porto-network" value="mainnet" checked>
+                    <span>Ethereum</span>
+                  </label>
+                  <label class="network-option">
+                    <input type="radio" name="porto-network" value="sepolia">
+                    <span>Sepolia (test)</span>
+                  </label>
+                </div>
+              </fieldset>
+              <p class="network-active" id="porto-network-label">Active network: Ethereum</p>
             </div>
-            <div id="eth-panel-recur" class="panel" role="tabpanel" aria-labelledby="eth-tab-recur" hidden>
-              <p class="tiny">Recurring donations coming soon.</p>
+
+            <button class="btn primary wide" type="button" id="porto-send" disabled>Send support</button>
+            <p class="porto-helper">You’ll approve the transfer in a Porto dialog. Gas and execution are handled for you.</p>
+
+            <div class="porto-status" id="porto-status" role="status" aria-live="polite"></div>
+            <div class="porto-receipt" id="porto-receipt" hidden>
+              <span class="receipt-text">Contribution sent.</span>
+              <a id="porto-tx-link" class="receipt-link" href="#" target="_blank" rel="noopener noreferrer">View on explorer</a>
             </div>
           </div>
 
+          <aside class="porto-aside">
+            <h2 class="aside-title">How it works</h2>
+            <ol class="porto-steps">
+              <li>Connect (or create) your Porto account.</li>
+              <li>Pick an amount. Try Sepolia first if you want a dry run.</li>
+              <li>Approve the review screen in the Porto dialog.</li>
+            </ol>
+            <p>Porto provides smart accounts with passkey login, sponsored gas, and human-readable approvals. You can always reject a request or disconnect.</p>
+            <p class="aside-note">Prefer another route? I still keep a <a href="https://buymeacoffee.com/vyakart" target="_blank" rel="noopener noreferrer">Buy&nbsp;Me&nbsp;a&nbsp;Coffee</a> page, or just <a href="mailto:imayreply@vyakart.com">send me an email</a>.</p>
+          </aside>
         </div>
       </div>
     </section>
@@ -216,13 +213,14 @@
             <li>Work travel – 15% (meeting collaborators, field visits)</li>
             <li>Savings & buffer – 10% (unexpected costs, reinvestment)</li>
           </ul>
+          <h3>Why Porto?</h3>
+          <p>Porto gives us smart accounts with passkey login, human-readable reviews, and sponsored gas when available. You never install a browser extension or expose a seed phrase — just approve the request that shows up in the dialog.</p>
           <h3>If support goes beyond my annual goal</h3>
           <p>Any excess amount will not be kept for myself. Instead, it will be directed into a pool of charities I personally recommend and to individuals whose work I trust and endorse. In this way, your support ripples outward.</p>
-          <h3>Why not fiat payments?</h3>
-          <p>I registered a payment gateway but found that it required policies that infringed on privacy. Until I find a better way to safeguard identities, I’m currently using a <a href="https://buymeacoffee.com/vyakart" target="_blank" rel="noopener noreferrer">Buy Me a Coffee page</a> for contributions.</p>
-          <p>If that doesn’t work for you, simply <a href="mailto:imayreply@vyakart.com">send me an email</a> — we’ll figure out a way that works for both of us.</p>
-          <div style="margin-top:12px;display:flex;gap:10px;flex-wrap:wrap;">
-            <a class="button primary" href="https://buymeacoffee.com/vyakart" target="_blank" rel="noopener noreferrer" aria-label="Open Buy Me a Coffee in a new tab">Buy Me a Coffee</a>
+          <h3>Other routes</h3>
+          <p>Need to pay in fiat or prefer a familiar flow? There’s a <a href="https://buymeacoffee.com/vyakart" target="_blank" rel="noopener noreferrer">Buy Me a Coffee page</a>, and I’m always reachable at <a href="mailto:imayreply@vyakart.com">imayreply@vyakart.com</a>.</p>
+          <div class="fallback-links">
+            <a class="button secondary" href="https://buymeacoffee.com/vyakart" target="_blank" rel="noopener noreferrer" aria-label="Open Buy Me a Coffee in a new tab">Buy Me a Coffee</a>
           </div>
         </div>
       </div>
@@ -272,61 +270,12 @@
   <script src="/dist/js/decrypted-text-S7F6UY7Q.js" defer></script>
   <script src="/dist/js/main-AKNWXNEA.js" defer></script>
   <script>
-    // Runtime configuration for direct-send ETH donations (no contract)
-    window.DONATE_CFG = {
-      chain: 'sepolia', // default staging network (toggleable to mainnet in UI)
-      receiver: '0x934c86f8eef94887FddF079A71743920e74201AF', // Safe receiving address
-      wcProjectId: '030060ec5e4a7ec81c9b778651cc971f', // WalletConnect project id
-      minEth: 0.001 // minimum allowed amount in ETH
+    window.PORTO_DONATE = {
+      receiver: '0x934c86f8eef94887FddF079A71743920e74201AF',
+      defaultChain: 'mainnet',
+      minEth: 0.001
     };
   </script>
-  <!-- Goal control JS removed -->
-  
-  <script src="/dist/js/eth-donate.js" defer></script>
-  <script src="/js/donate-brutal.js" defer></script>
-  <script>
-    // Header "Connect Wallet" bridge — calls the same connect used by ETH donate
-    (function(){
-      var btn = document.getElementById('header-connect');
-      var label = btn ? btn.querySelector('.label') : null;
-      if (!btn) return;
-      function short(a){ return a ? (a.slice(0,6) + '...' + a.slice(-4)) : ''; }
-      function setLabel(text){ if(label) { label.textContent = text; } else { btn.textContent = text; } }
-      function reset(){ setLabel('Connect Wallet'); btn.disabled = false; }
-      btn.addEventListener('click', function(){
-        try {
-          btn.disabled = true; setLabel('Connecting...');
-          // Prefer public DONATE_API (provided by eth-donate.js)
-          if (window.DONATE_API && typeof window.DONATE_API.connect === 'function') {
-            window.DONATE_API.connect().then(function(acct){
-              if (acct) { setLabel(short(acct)); btn.disabled = true; }
-              else reset();
-            }).catch(reset);
-            return;
-          }
-          // Fallback: direct MetaMask request
-          if (window.ethereum && window.ethereum.request) {
-            window.ethereum.request({ method: 'eth_requestAccounts' }).then(function(arr){
-              var a = arr && arr[0];
-              if (a) { setLabel(short(a)); btn.disabled = true; }
-              else reset();
-            }).catch(reset);
-            return;
-          }
-          setLabel('Install MetaMask'); btn.disabled = false;
-        } catch (_) { reset(); }
-      });
-
-      // Passive sync: if in-page ETH button gets connected first, mirror its label
-      var ethBtn = document.getElementById('eth-connect');
-      if (ethBtn) {
-        var mo = new MutationObserver(function(){
-          var t = ethBtn.textContent || '';
-          if (/^0x[a-fA-F0-9]{4}/.test(t)) { setLabel(t); btn.disabled = true; }
-        });
-        mo.observe(ethBtn, { characterData: true, childList: true, subtree: true });
-      }
-    })();
-  </script>
+  <script src="/dist/js/porto-donate-PKPY5YCT.js" defer></script>
 </body>
 </html>
