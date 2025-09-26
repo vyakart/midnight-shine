@@ -7,8 +7,7 @@
     "clean": "rm -rf dist && mkdir -p dist/js dist/css",
     "build:js": "esbuild js/*.js --bundle --minify --format=iife --outdir=dist/js --entry-names=[name]-[hash]",
     "build:css": "esbuild css/styles.css css/themes.css css/preview-card.css css/utilities.css css/donate.css css/microblog.css --bundle --minify --outdir=dist/css --entry-names=[name]-[hash] --loader:.woff2=file",
-    "build:eth": "esbuild js/eth-donate.js --bundle --minify --format=iife --outfile=dist/js/eth-donate.js",
-    "build": "npm run clean && npm run build:js && npm run build:css && npm run build:eth",
+    "build": "npm run clean && npm run build:js && npm run build:css",
     "postbuild": "node scripts/inject-hashes.js",
     "contracts:compile": "HARDHAT_CONFIG=contracts/hardhat.config.js npx hardhat compile",
     "contracts:deploy:sepolia": "HARDHAT_CONFIG=contracts/hardhat.config.js npx hardhat run contracts/scripts/deploy-sepolia.js --network sepolia",
@@ -29,16 +28,14 @@
   },
   "homepage": "https://github.com/vyakart/midnight-shine#readme",
   "devDependencies": {
-    "esbuild": "^0.25.9",
-    "hardhat": "^2.22.10",
     "@nomicfoundation/hardhat-toolbox": "^5.0.0",
     "@types/node": "^22.7.5",
-    "dotenv": "^16.4.5"
+    "dotenv": "^16.4.5",
+    "esbuild": "^0.25.9",
+    "hardhat": "^2.22.10"
   },
   "dependencies": {
-    "viem": "^2.21.16",
-    "@walletconnect/ethereum-provider": "^2.0.0",
-    "@walletconnect/modal": "^2.0.0",
-    "qrcode-generator": "^1.4.4"
+    "porto": "^0.2.19",
+    "viem": "^2.21.16"
   }
 }
