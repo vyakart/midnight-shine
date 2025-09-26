@@ -143,19 +143,54 @@ function addInteractiveEffects() {
       dot.style.transform = 'scale(1)';
     });
   });
+  const tiltState = new WeakMap();
   document.querySelectorAll('.microblog-card').forEach(card => {
-    card.addEventListener('mousemove', (e) => {
-      const rect = card.getBoundingClientRect();
-      const x = e.clientX - rect.left;
-      const y = e.clientY - rect.top;
-      const centerX = rect.width / 2;
-      const centerY = rect.height / 2;
-      const rotateX = (y - centerY) / 20;
-      const rotateY = (centerX - x) / 20;
-      card.style.transform = `translateY(-4px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+    card.style.willChange = 'transform';
+
+    function measureRect() {
+      var rect = card.getBoundingClientRect();
+      var state = tiltState.get(card);
+      if (!state) {
+        state = { rect: rect, frame: null, lastMeasure: performance.now() };
+        tiltState.set(card, state);
+      } else {
+        state.rect = rect;
+        state.lastMeasure = performance.now();
+      }
+      return state;
+    }
+
+    card.addEventListener('pointerenter', () => {
+      measureRect();
     });
-    card.addEventListener('mouseleave', () => {
+
+    card.addEventListener('pointermove', (e) => {
+      var state = tiltState.get(card) || measureRect();
+      var now = performance.now();
+      if (now - state.lastMeasure > 250) {
+        state = measureRect();
+      }
+
+      var rect = state.rect;
+      var x = e.clientX - rect.left;
+      var y = e.clientY - rect.top;
+      var centerX = rect.width / 2;
+      var centerY = rect.height / 2;
+      var rotateX = (y - centerY) / 20;
+      var rotateY = (centerX - x) / 20;
+
+      if (state.frame) cancelAnimationFrame(state.frame);
+      state.frame = requestAnimationFrame(function () {
+        card.style.transform = `translateY(-4px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+        state.frame = null;
+      });
+    });
+
+    card.addEventListener('pointerleave', () => {
+      var state = tiltState.get(card);
+      if (state && state.frame) cancelAnimationFrame(state.frame);
       card.style.transform = 'translateY(0) rotateX(0) rotateY(0)';
+      tiltState.delete(card);
     });
   });
 }

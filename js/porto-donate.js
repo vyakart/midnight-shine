@@ -169,7 +169,7 @@ import { parseEther } from 'viem'
   function sanitizeAddress(addr) {
     if (!addr) return null
     const value = String(addr)
-    return /^0x[a-fA-F0-9]{40}$/.test(value) ? value : value
+    return /^0x[a-fA-F0-9]{40}$/.test(value) ? value : null
   }
 
   async function ensureChain(chainKey) {

@@ -67,13 +67,39 @@
         try {
           var html = document.documentElement;
           var tokensUrl = '/config/theme-tokens.json';
+          var tokensPromise = null;
+          var tokensCache = null;
+          var spriteCache = Object.create(null);
+
+          function fetchTokensOnce() {
+            if (tokensCache) return Promise.resolve(tokensCache);
+            if (tokensPromise) return tokensPromise;
+            tokensPromise = fetch(tokensUrl, { cache: 'no-cache' })
+              .then(function (r) { return r.ok ? r.json() : null; })
+              .then(function (json) {
+                tokensPromise = null;
+                if (json) tokensCache = json;
+                return json;
+              })
+              .catch(function (err) {
+                tokensPromise = null;
+                throw err;
+              });
+            return tokensPromise;
+          }
 
           // Inject/replace the inline SVG sprite for the active theme (static compiled subset)
           function ensureIconSprite(url) {
-            if (!url) return;
+            if (!url) return Promise.resolve();
+            if (spriteCache[url]) return spriteCache[url];
+
             var current = html.getAttribute('data-icon-sprite');
-            if (current === url) return;
-            fetch(url, { cache: 'no-cache' })
+            if (current === url) {
+              spriteCache[url] = Promise.resolve();
+              return spriteCache[url];
+            }
+
+            spriteCache[url] = fetch(url, { cache: 'no-cache' })
               .then(function (r) { return r.ok ? r.text() : ''; })
               .then(function (svg) {
                 if (!svg) return;
@@ -92,7 +118,10 @@
                 holder.innerHTML = svg;
                 html.setAttribute('data-icon-sprite', url);
               })
-              .catch(function () { /* ignore sprite errors */ });
+              .catch(function () {
+                spriteCache[url] = null;
+              });
+            return spriteCache[url] || Promise.resolve();
           }
 
           function applyTokenVars(themeKey, tokens) {
@@ -140,12 +169,11 @@
           }
 
           function fetchAndApply(themeKey) {
-            fetch(tokensUrl, { cache: 'no-cache' })
-              .then(function (r) { return r.ok ? r.json() : null; })
+            fetchTokensOnce()
               .then(function (json) {
-                if (!json) return;
+                if (!json) return null;
                 var iconsConf = applyTokenVars(themeKey, json);
-                if (iconsConf && iconsConf.sprite) ensureIconSprite(iconsConf.sprite);
+                return iconsConf && iconsConf.sprite ? ensureIconSprite(iconsConf.sprite) : null;
               })
               .catch(function () { /* silent fail to avoid blocking paint */ });
           }
