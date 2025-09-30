@@ -134,6 +134,35 @@ import { parseEther } from 'viem'
     networkLabelEl.textContent = `Active network: ${meta ? meta.label : currentChainKey}`
   }
 
+  function selectNetworkRadio(chainKey) {
+    networkRadios.forEach((radio) => {
+      const value = String(radio.value || '').toLowerCase()
+      radio.checked = value === chainKey
+    })
+  }
+
+  function matchChainKey(chainIdLike) {
+    if (!chainIdLike) return null
+    const normalized = String(chainIdLike).trim().toLowerCase()
+    return supportedChainKeys.find((key) => {
+      const meta = CHAIN_META[key]
+      return meta && (meta.hexId.toLowerCase() === normalized || String(meta.id) === normalized)
+    }) || null
+  }
+
+  function orderedChainHexIds(preferredKey) {
+    const keys = supportedChainKeys.slice()
+    const idx = keys.indexOf(preferredKey)
+    if (idx > 0) {
+      keys.splice(idx, 1)
+      keys.unshift(preferredKey)
+    }
+    return keys
+      .map((key) => CHAIN_META[key])
+      .filter(Boolean)
+      .map((meta) => meta.hexId)
+  }
+
   function amountFromInput() {
     const raw = String(amountInput.value || '').trim()
     const value = raw ? Number.parseFloat(raw) : 0
@@ -202,14 +231,34 @@ import { parseEther } from 'viem'
     markConnecting(true)
     setStatus('Opening Porto…', 'info')
     try {
-      const accounts = await provider.request({ method: 'eth_requestAccounts' })
-      const primary = Array.isArray(accounts) && accounts.length ? sanitizeAddress(accounts[0]) : null
+      const response = await provider.request({
+        method: 'wallet_connect',
+        params: [
+          {
+            chainIds: orderedChainHexIds(currentChainKey),
+          }
+        ]
+      })
+      const accounts = Array.isArray(response?.accounts) ? response.accounts : []
+      const primaryAccount = accounts.length ? accounts[0] : null
+      const primary = primaryAccount
+        ? sanitizeAddress(typeof primaryAccount === 'string' ? primaryAccount : primaryAccount.address)
+        : null
       if (!primary) {
         setStatus('Porto connection cancelled.', 'warn')
         return
       }
       currentAccount = primary
+      const connectedChainHex = Array.isArray(response?.chainIds) && response.chainIds.length
+        ? String(response.chainIds[0])
+        : null
+      const matchedChain = matchChainKey(connectedChainHex)
+      if (matchedChain) {
+        currentChainKey = matchedChain
+        selectNetworkRadio(currentChainKey)
+      }
       await ensureChain(currentChainKey)
+      updateNetworkLabel()
       setStatus('Connected. Choose an amount to continue.', 'success')
       showReceipt(null)
     } catch (err) {
@@ -302,6 +351,7 @@ import { parseEther } from 'viem'
     const match = supportedChainKeys.find((key) => CHAIN_META[key].hexId.toLowerCase() === normalized)
     if (match) {
       currentChainKey = match
+      selectNetworkRadio(match)
       updateNetworkLabel()
       if (!sending) setStatus(`Now on ${CHAIN_META[match].label}.`, 'info')
     }
@@ -322,6 +372,7 @@ import { parseEther } from 'viem'
       const value = String(event.target.value || '').toLowerCase()
       if (!CHAIN_META[value]) return
       currentChainKey = value
+      selectNetworkRadio(currentChainKey)
       updateNetworkLabel()
       if (currentAccount) {
         setStatus(`Switching to ${CHAIN_META[value].label}…`, 'info')
@@ -349,6 +400,7 @@ import { parseEther } from 'viem'
     provider.on('chainChanged', handleChainChanged)
   }
 
+  selectNetworkRadio(currentChainKey)
   updateAccountUI()
   updateNetworkLabel()
   updateSendAvailability()
