@@ -150,7 +150,7 @@ import { parseEther } from 'viem'
     }) || null
   }
 
-  function orderedChainHexIds(preferredKey) {
+  function orderedChainIds(preferredKey) {
     const keys = supportedChainKeys.slice()
     const idx = keys.indexOf(preferredKey)
     if (idx > 0) {
@@ -160,7 +160,7 @@ import { parseEther } from 'viem'
     return keys
       .map((key) => CHAIN_META[key])
       .filter(Boolean)
-      .map((meta) => meta.hexId)
+      .map((meta) => meta.id)
   }
 
   function amountFromInput() {
@@ -235,7 +235,7 @@ import { parseEther } from 'viem'
         method: 'wallet_connect',
         params: [
           {
-            chainIds: orderedChainHexIds(currentChainKey),
+            chainIds: orderedChainIds(currentChainKey),
           }
         ]
       })
