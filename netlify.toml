@@ -56,13 +56,18 @@ for = "/assets/video/*"
 # Pretty URL rewrites for donate page
 [[redirects]]
 from = "/pages/donate"
-to = "/pages/donate.html"
-status = 200
+to = "/"
+status = 301
 
 [[redirects]]
 from = "/pages/donate/"
-to = "/pages/donate.html"
-status = 200
+to = "/"
+status = 301
+
+[[redirects]]
+from = "/pages/donate.html"
+to = "/"
+status = 301
 
 # Temporarily hide the microblog by redirecting requests to home
 [[redirects]]
