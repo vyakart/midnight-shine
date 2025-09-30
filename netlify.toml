@@ -63,3 +63,29 @@ status = 200
 from = "/pages/donate/"
 to = "/pages/donate.html"
 status = 200
+
+# Temporarily hide the microblog by redirecting requests to home
+[[redirects]]
+from = "/pages/microblog"
+to = "/"
+status = 301
+
+[[redirects]]
+from = "/pages/microblog/"
+to = "/"
+status = 301
+
+[[redirects]]
+from = "/pages/microblog.html"
+to = "/"
+status = 301
+
+[[redirects]]
+from = "/pages/microblog-detail"
+to = "/"
+status = 301
+
+[[redirects]]
+from = "/pages/microblog-detail.html"
+to = "/"
+status = 301
