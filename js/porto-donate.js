@@ -85,6 +85,14 @@ import { parseEther } from 'viem'
     statusEl.dataset.tone = message ? tone : ''
   }
 
+  function describeError(err) {
+    if (!err || typeof err !== 'object') return null
+    const maybeString = err.message || err.shortMessage || err.details
+    if (typeof maybeString === 'string' && maybeString.trim()) return maybeString.trim()
+    if (typeof err.code !== 'undefined') return `Code ${err.code}`
+    return null
+  }
+
   function showReceipt(hash, chainKey) {
     if (!receiptEl) return
     if (hash) {
@@ -93,10 +101,14 @@ import { parseEther } from 'viem'
       if (txLinkEl) {
         txLinkEl.href = `${meta.explorerTx}${hash}`
         txLinkEl.textContent = 'View on explorer'
+        txLinkEl.setAttribute('aria-disabled', 'false')
       }
     } else {
       receiptEl.hidden = true
-      if (txLinkEl) txLinkEl.removeAttribute('href')
+      if (txLinkEl) {
+        txLinkEl.removeAttribute('href')
+        txLinkEl.setAttribute('aria-disabled', 'true')
+      }
     }
   }
 
@@ -236,6 +248,9 @@ import { parseEther } from 'viem'
         params: [
           {
             chainIds: orderedChainIds(currentChainKey),
+            capabilities: {
+              selectAccount: true
+            }
           }
         ]
       })
@@ -263,8 +278,10 @@ import { parseEther } from 'viem'
       showReceipt(null)
     } catch (err) {
       console.error('[porto-donate] connect error', err)
+      showReceipt(null)
       const message = err && err.code === 4001 ? 'Request rejected.' : 'Could not connect to Porto.'
-      setStatus(message, 'error')
+      const extra = describeError(err)
+      setStatus(extra ? `${message} (${extra})` : message, 'error')
     } finally {
       markConnecting(false)
       updateAccountUI()
@@ -400,10 +417,24 @@ import { parseEther } from 'viem'
     provider.on('chainChanged', handleChainChanged)
   }
 
+  if (txLinkEl) {
+    txLinkEl.setAttribute('aria-disabled', 'true')
+    txLinkEl.addEventListener('click', (event) => {
+      if (txLinkEl.getAttribute('aria-disabled') === 'true') {
+        event.preventDefault()
+        event.stopPropagation()
+      }
+    })
+  }
+
   selectNetworkRadio(currentChainKey)
   updateAccountUI()
   updateNetworkLabel()
   updateSendAvailability()
+
+  if (typeof window !== 'undefined' && !window.isSecureContext) {
+    setStatus('Porto requires HTTPS or localhost to open the passkey dialog.', 'warn')
+  }
 
   window.PORTO_API = {
     connect,
