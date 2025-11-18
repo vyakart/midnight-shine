@@ -148,10 +148,10 @@
                0 4px 6px -2px rgba(var(--shadow-color), 0.05);
   
   /* Typography */
-  --font-display: 'Hind', 'Noto Sans Devanagari', sans-serif;
-  --font-heading: 'Merriweather', serif;
-  --font-body: 'Recursive', sans-serif;
-  --font-mono: 'Recursive Mono Casual', monospace;
+  --font-display: 'Recursive Mono Semicasual';
+  --font-heading: 'Recursive Mono Semicasual';
+  --font-body: 'Recursive Mono Casual';
+  --font-mono: 'Recursive Mono Casual';
   
   /* Component tokens */
   --button-primary-bg: var(--color-primary);
@@ -235,10 +235,10 @@
                0 4px 6px -2px rgba(var(--shadow-color), 0.2);
   
   /* Typography */
-  --font-display: 'Hind', 'Noto Sans Devanagari', sans-serif;
-  --font-heading: 'Recursive', sans-serif;
-  --font-body: 'Recursive', sans-serif;
-  --font-mono: 'Recursive Mono Casual', monospace;
+  --font-display: 'Recursive Mono Linear';
+  --font-heading: 'Recursive Mono Linear';
+  --font-body: 'Recursive Mono Casual';
+  --font-mono: 'Recursive Mono Casual';
 
   /* Component tokens */
   --button-primary-bg: var(--color-primary);
@@ -315,10 +315,10 @@
   --shadow-color: 17, 153, 142;
 
   /* Typography */
-  --font-display: 'Fraunces', serif;
-  --font-heading: 'Hind', 'Noto Sans Devanagari', sans-serif;
-  --font-body: 'Recursive', sans-serif;
-  --font-mono: 'Recursive Mono Casual', monospace;
+  --font-display: 'Recursive Mono Semicasual';
+  --font-heading: 'Recursive Mono Semicasual';
+  --font-body: 'Recursive Mono Casual';
+  --font-mono: 'Recursive Mono Casual';
 
   color-scheme: light;
 }
@@ -369,10 +369,10 @@
   --shadow-color: 0, 0, 0;
 
   /* Typography */
-  --font-display: 'Merriweather', serif;
-  --font-heading: 'Recursive', sans-serif;
-  --font-body: 'Recursive', sans-serif;
-  --font-mono: 'Recursive Mono Casual', monospace;
+  --font-display: 'Recursive Mono Linear';
+  --font-heading: 'Recursive Mono Linear';
+  --font-body: 'Recursive Mono Casual';
+  --font-mono: 'Recursive Mono Casual';
 
   color-scheme: dark;
 }
@@ -423,10 +423,10 @@
   --shadow-color: 4, 93, 233;
 
   /* Typography */
-  --font-display: 'Hind', 'Noto Sans Devanagari', sans-serif;
-  --font-heading: 'Fraunces', serif;
-  --font-body: 'Hind', 'Noto Sans Devanagari', sans-serif;
-  --font-mono: 'Recursive Mono Casual', monospace;
+  --font-display: 'Recursive Mono Semicasual';
+  --font-heading: 'Recursive Mono Semicasual';
+  --font-body: 'Recursive Mono Casual';
+  --font-mono: 'Recursive Mono Casual';
 
   color-scheme: light;
 }
@@ -619,7 +619,7 @@
    Typography Application
    =========================== */
 body {
-  font-family: var(--font-body, var(--font-sans, "Recursive Mono Casual", ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", "Courier New", monospace));
+  font-family: var(--font-body, var(--font-sans, "Recursive Mono Casual"));
   font-size: var(--text-base);
   line-height: var(--leading-normal);
   letter-spacing: var(--tracking-normal);
@@ -629,7 +629,7 @@ body {
 
 /* Headings keep existing site choices if defined elsewhere */
 h1, h2, h3, h4, h5, h6 {
-  font-family: var(--font-heading, var(--font-body, "Recursive Mono Semicasual", ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", "Courier New", monospace));
+  font-family: var(--font-heading, var(--font-body, "Recursive Mono Semicasual"));
   font-weight: var(--font-bold);
   line-height: var(--leading-tight);
   letter-spacing: var(--tracking-tight);
@@ -644,7 +644,7 @@ h5 { font-size: var(--text-md); }
 h6 { font-size: var(--text-base); }
 
 .display {
-  font-family: var(--font-display, var(--font-heading, "Recursive Mono Semicasual", ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", "Courier New", monospace));
+  font-family: var(--font-display, var(--font-heading, "Recursive Mono Semicasual"));
   font-size: var(--text-4xl);
   font-weight: var(--font-bold);
   line-height: var(--leading-tight);

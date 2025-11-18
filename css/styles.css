@@ -27,7 +27,14 @@ html, body {
   padding: 0;
 }
 /* Recursive font-face: mono family only */
-/* Nishit brand: RecMonoSemicasual Bold */
+/* Brand: Semicasual (hero, footer, big type) */
+@font-face {
+  font-family: "Recursive Mono Semicasual";
+  src: url("../assets/Typography/ArrowType-Recursive-1.085/Recursive_Web/woff2_static/RecursiveMonoCslSt-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
 @font-face {
   font-family: "Recursive Mono Semicasual";
   src: url("../assets/Typography/ArrowType-Recursive-1.085/Recursive_Web/woff2_static/RecursiveMonoCslSt-Bold.woff2") format("woff2");
@@ -35,7 +42,7 @@ html, body {
   font-style: normal;
   font-display: swap;
 }
-/* Keep mono casual regular for terminal/code */
+/* Body: Casual (friendly, even grid) */
 @font-face {
   font-family: "Recursive Mono Casual";
   src: url("../assets/Typography/ArrowType-Recursive-1.085/Recursive_Web/woff2_static/RecursiveMonoCslSt-Regular.woff2") format("woff2");
@@ -43,12 +50,34 @@ html, body {
   font-style: normal;
   font-display: swap;
 }
+@font-face {
+  font-family: "Recursive Mono Casual";
+  src: url("../assets/Typography/ArrowType-Recursive-1.085/Recursive_Web/woff2_static/RecursiveMonoCslSt-Med.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+/* Night mode: Linear (stricter, more technical) */
+@font-face {
+  font-family: "Recursive Mono Linear";
+  src: url("../assets/Typography/ArrowType-Recursive-1.085/Recursive_Web/woff2_static/RecursiveMonoLnrSt-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Recursive Mono Linear";
+  src: url("../assets/Typography/ArrowType-Recursive-1.085/Recursive_Web/woff2_static/RecursiveMonoLnrSt-Bold.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
 
 /* Typographic tokens */
 :root {
-  --font-sans: "Recursive Mono Casual", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-  --font-mono: "Recursive Mono Casual", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-  --font-brand: "Recursive Mono Semicasual", "Recursive Mono Casual", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --font-sans: "Recursive Mono Casual";
+  --font-mono: "Recursive Mono Casual";
+  --font-brand: "Recursive Mono Semicasual", "Recursive Mono Casual";
 
   /* Theme tokens (light by default) — Electric Blue UI */
   --bg: #ffffff;         /* white background */
@@ -589,9 +618,9 @@ html.dark .button.outline {
 .hero-headline {
   margin: 0 0 10px;
   font-size: clamp(1.4rem, 1.05rem + 2.5vw, 2.4rem);
-  line-height: 1.2;
-  font-weight: 700;
-  letter-spacing: -0.01em;
+  line-height: 1.15;
+  font-weight: 600;
+  letter-spacing: 0.02em;
   color: inherit;
 }
 
@@ -1043,7 +1072,7 @@ html:not(.dark) .carousel-cap-sub { color: #4a4a4a; }
   border: none;
   background: transparent;
   color: var(--color-text-secondary, var(--fg));
-  font: 600 0.95rem/1 var(--font-sans, system-ui);
+  font: 600 0.95rem/1 var(--font-sans);
   padding: 10px 12px;
   border-radius: 8px 8px 0 0;
   cursor: pointer;
@@ -1164,7 +1193,7 @@ html[data-projects-modal="open"] {
   left: 50%;
   transform: translateX(-50%);
   padding: 4px 8px;
-  font: 600 12px/1 var(--font-sans, system-ui);
+  font: 600 12px/1 var(--font-sans);
   color: var(--color-text-inverse, #fff);
   background: rgba(0,0,0,0.45);
   border-radius: 6px;
@@ -1252,12 +1281,12 @@ html[data-projects-modal="open"] {
   max-width: 90%;
 }
 .tl-title {
-  font: 700 0.98rem/1.25 var(--font-sans, system-ui);
+  font: 700 0.98rem/1.25 var(--font-sans);
   color: var(--color-text-primary, var(--fg));
 }
 .tl-year {
   margin-top: 2px;
-  font: 600 0.82rem/1 var(--font-sans, system-ui);
+  font: 600 0.82rem/1 var(--font-sans);
   color: var(--color-text-muted, #666);
 }
 
@@ -1278,7 +1307,7 @@ html[data-projects-modal="open"] {
 }
 .tl-card p {
   margin: 0;
-  font: 400 0.95rem/1.45 var(--font-sans, system-ui);
+  font: 400 0.95rem/1.45 var(--font-sans);
 }
 
 /* Focus visibility */
@@ -1475,7 +1504,7 @@ html.dark .ruler-controls .ruler-next:hover {
 }
 
 .footer-social .flip-link {
-  font-family: var(--font-brand, "Recursive Mono Semicasual"), var(--font-sans, "Recursive Mono Casual"), ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-family: var(--font-brand, "Recursive Mono Semicasual"), var(--font-sans, "Recursive Mono Casual");
   font-weight: 900;
   text-transform: uppercase;
   font-size: clamp(1rem, 2.2vw, 1.4rem);

@@ -5,7 +5,7 @@
 }
 
 body {
-  font-family: var(--font-sans, "Recursive Mono Casual"), ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-family: var(--font-sans, "Recursive Mono Casual");
   font-size: 14px;
   line-height: 1.5;
   color: #1f2937;

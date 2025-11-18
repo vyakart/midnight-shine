@@ -38,10 +38,10 @@
         }
       },
       "fonts": {
-        "display": "'Recursive Mono Semicasual', monospace",
-        "heading": "'Recursive Mono Semicasual', monospace",
-        "body": "'Recursive Mono Casual', monospace",
-        "mono": "'Recursive Mono Casual', monospace"
+        "display": "'Recursive Mono Semicasual'",
+        "heading": "'Recursive Mono Semicasual'",
+        "body": "'Recursive Mono Casual'",
+        "mono": "'Recursive Mono Casual'"
       },
       "icons": {
         "sprite": "/assets/icons/compiled/sunsetGlow.svg",
@@ -86,10 +86,10 @@
         }
       },
       "fonts": {
-        "display": "'Recursive Mono Semicasual', monospace",
-        "heading": "'Recursive Mono Semicasual', monospace",
-        "body": "'Recursive Mono Casual', monospace",
-        "mono": "'Recursive Mono Casual', monospace"
+        "display": "'Recursive Mono Linear'",
+        "heading": "'Recursive Mono Linear'",
+        "body": "'Recursive Mono Casual'",
+        "mono": "'Recursive Mono Casual'"
       },
       "icons": {
         "sprite": "/assets/icons/compiled/midnightAurora.svg",
@@ -134,10 +134,10 @@
         }
       },
       "fonts": {
-        "display": "'Recursive Mono Semicasual', monospace",
-        "heading": "'Recursive Mono Semicasual', monospace",
-        "body": "'Recursive Mono Casual', monospace",
-        "mono": "'Recursive Mono Casual', monospace"
+        "display": "'Recursive Mono Semicasual'",
+        "heading": "'Recursive Mono Semicasual'",
+        "body": "'Recursive Mono Casual'",
+        "mono": "'Recursive Mono Casual'"
       },
       "icons": {
         "sprite": "/assets/icons/compiled/forestMist.svg",
@@ -182,10 +182,10 @@
         }
       },
       "fonts": {
-        "display": "'Recursive Mono Semicasual', monospace",
-        "heading": "'Recursive Mono Semicasual', monospace",
-        "body": "'Recursive Mono Casual', monospace",
-        "mono": "'Recursive Mono Casual', monospace"
+        "display": "'Recursive Mono Linear'",
+        "heading": "'Recursive Mono Linear'",
+        "body": "'Recursive Mono Casual'",
+        "mono": "'Recursive Mono Casual'"
       },
       "icons": {
         "sprite": "/assets/icons/compiled/cosmicDust.svg",
@@ -230,10 +230,10 @@
         }
       },
       "fonts": {
-        "display": "'Recursive Mono Semicasual', monospace",
-        "heading": "'Recursive Mono Semicasual', monospace",
-        "body": "'Recursive Mono Casual', monospace",
-        "mono": "'Recursive Mono Casual', monospace"
+        "display": "'Recursive Mono Semicasual'",
+        "heading": "'Recursive Mono Semicasual'",
+        "body": "'Recursive Mono Casual'",
+        "mono": "'Recursive Mono Casual'"
       },
       "icons": {
         "sprite": "/assets/icons/compiled/oceanBreeze.svg",
