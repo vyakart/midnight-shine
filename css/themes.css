@@ -619,7 +619,7 @@
    Typography Application
    =========================== */
 body {
-  font-family: var(--font-body, var(--font-sans, system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial, sans-serif));
+  font-family: var(--font-body, var(--font-sans, "Recursive Mono Casual", ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", "Courier New", monospace));
   font-size: var(--text-base);
   line-height: var(--leading-normal);
   letter-spacing: var(--tracking-normal);
@@ -629,7 +629,7 @@ body {
 
 /* Headings keep existing site choices if defined elsewhere */
 h1, h2, h3, h4, h5, h6 {
-  font-family: var(--font-heading, inherit);
+  font-family: var(--font-heading, var(--font-body, "Recursive Mono Semicasual", ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", "Courier New", monospace));
   font-weight: var(--font-bold);
   line-height: var(--leading-tight);
   letter-spacing: var(--tracking-tight);
@@ -644,7 +644,7 @@ h5 { font-size: var(--text-md); }
 h6 { font-size: var(--text-base); }
 
 .display {
-  font-family: var(--font-display, inherit);
+  font-family: var(--font-display, var(--font-heading, "Recursive Mono Semicasual", ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", "Courier New", monospace));
   font-size: var(--text-4xl);
   font-weight: var(--font-bold);
   line-height: var(--leading-tight);

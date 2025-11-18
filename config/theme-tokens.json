@@ -38,9 +38,9 @@
         }
       },
       "fonts": {
-        "display": "'Hind', 'Noto Sans Devanagari', sans-serif",
-        "heading": "'Merriweather', serif",
-        "body": "'Recursive', sans-serif",
+        "display": "'Recursive Mono Semicasual', monospace",
+        "heading": "'Recursive Mono Semicasual', monospace",
+        "body": "'Recursive Mono Casual', monospace",
         "mono": "'Recursive Mono Casual', monospace"
       },
       "icons": {
@@ -86,9 +86,9 @@
         }
       },
       "fonts": {
-        "display": "'Hind', 'Noto Sans Devanagari', sans-serif",
-        "heading": "'Recursive', sans-serif",
-        "body": "'Recursive', sans-serif",
+        "display": "'Recursive Mono Semicasual', monospace",
+        "heading": "'Recursive Mono Semicasual', monospace",
+        "body": "'Recursive Mono Casual', monospace",
         "mono": "'Recursive Mono Casual', monospace"
       },
       "icons": {
@@ -134,9 +134,9 @@
         }
       },
       "fonts": {
-        "display": "'Fraunces', serif",
-        "heading": "'Hind', 'Noto Sans Devanagari', sans-serif",
-        "body": "'Recursive', sans-serif",
+        "display": "'Recursive Mono Semicasual', monospace",
+        "heading": "'Recursive Mono Semicasual', monospace",
+        "body": "'Recursive Mono Casual', monospace",
         "mono": "'Recursive Mono Casual', monospace"
       },
       "icons": {
@@ -182,9 +182,9 @@
         }
       },
       "fonts": {
-        "display": "'Merriweather', serif",
-        "heading": "'Recursive', sans-serif",
-        "body": "'Recursive', sans-serif",
+        "display": "'Recursive Mono Semicasual', monospace",
+        "heading": "'Recursive Mono Semicasual', monospace",
+        "body": "'Recursive Mono Casual', monospace",
         "mono": "'Recursive Mono Casual', monospace"
       },
       "icons": {
@@ -230,9 +230,9 @@
         }
       },
       "fonts": {
-        "display": "'Hind', 'Noto Sans Devanagari', sans-serif",
-        "heading": "'Fraunces', serif",
-        "body": "'Hind', 'Noto Sans Devanagari', sans-serif",
+        "display": "'Recursive Mono Semicasual', monospace",
+        "heading": "'Recursive Mono Semicasual', monospace",
+        "body": "'Recursive Mono Casual', monospace",
         "mono": "'Recursive Mono Casual', monospace"
       },
       "icons": {

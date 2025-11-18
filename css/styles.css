@@ -26,21 +26,7 @@ html, body {
   margin: 0;
   padding: 0;
 }
-/* Recursive font-face: load minimal performant woff2 set */
-@font-face {
-  font-family: "Recursive Sans Linear";
-  src: url("../assets/Typography/ArrowType-Recursive-1.085/Recursive_Web/woff2_static/RecursiveSansLnrSt-Regular.woff2") format("woff2");
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-@font-face {
-  font-family: "Recursive Sans Linear";
-  src: url("../assets/Typography/ArrowType-Recursive-1.085/Recursive_Web/woff2_static/RecursiveSansLnrSt-Bold.woff2") format("woff2");
-  font-weight: 700;
-  font-style: normal;
-  font-display: swap;
-}
+/* Recursive font-face: mono family only */
 /* Nishit brand: RecMonoSemicasual Bold */
 @font-face {
   font-family: "Recursive Mono Semicasual";
@@ -60,7 +46,7 @@ html, body {
 
 /* Typographic tokens */
 :root {
-  --font-sans: "Recursive Sans Linear", system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial, sans-serif;
+  --font-sans: "Recursive Mono Casual", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
   --font-mono: "Recursive Mono Casual", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
   --font-brand: "Recursive Mono Semicasual", "Recursive Mono Casual", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 
@@ -1489,7 +1475,7 @@ html.dark .ruler-controls .ruler-next:hover {
 }
 
 .footer-social .flip-link {
-  font-family: var(--font-brand, "Recursive Mono Semicasual"), var(--font-sans, "Recursive Sans Linear"), system-ui, -apple-system, "Segoe UI", Roboto, Inter, Arial, sans-serif;
+  font-family: var(--font-brand, "Recursive Mono Semicasual"), var(--font-sans, "Recursive Mono Casual"), ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", "Courier New", monospace;
   font-weight: 900;
   text-transform: uppercase;
   font-size: clamp(1rem, 2.2vw, 1.4rem);
