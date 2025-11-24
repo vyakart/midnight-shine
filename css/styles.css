@@ -1390,7 +1390,7 @@ html.dark .ruler-lines .tick.center {
   gap: clamp(600px, 80vw, 1200px); /* further increased to fully hide adjacent cards across all items */
   will-change: transform;
   transform: translate3d(0,0,0);
-  transition: transform 420ms cubic-bezier(0.22, 1, 0.36, 1);
+  transition: transform 250ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 .ruler-track.no-transition {
   transition: none !important;

@@ -421,7 +421,7 @@
     }
 
     var translateX = 0;
-    var speedPxPerSec = 60; // constant speed across devices
+    var speedPxPerSec = 120; // constant speed across devices
     var setW = 0;
     var running = !reduceMotion; // respect prefers-reduced-motion
     var lastTs = 0;
