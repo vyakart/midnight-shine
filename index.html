@@ -49,7 +49,7 @@
           } else {
             // Fallback to system preference
             var mql = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)');
-            stored = (mql && mql.matches) ? 'midnightAurora' : 'sunsetGlow';
+            stored = 'sunsetGlow';
           }
         }
 
@@ -114,7 +114,7 @@
   
   
   <!-- Preload LCP image -->
-  <link rel="preload" as="image" href="./assets/video/poster.png" fetchpriority="high">
+  <link rel="preload" as="image" href="./assets/video/poster.webp" fetchpriority="high">
   
   <!-- Fonts: self-hosted Recursive WOFF2 (see css/styles.css). Google Fonts removed to reduce third-party requests. -->
 </head>
@@ -150,7 +150,7 @@
         <img
           id="hero-poster"
           class="hero-poster"
-          src="./assets/video/poster.png"
+          src="./assets/video/poster.webp"
           alt=""
           width="1920"
           height="1080"
@@ -169,7 +169,7 @@
           aria-hidden="true"
           width="1920"
           height="1080"
-          poster="./assets/video/poster.png"
+          poster="./assets/video/poster.webp"
         >
           <track kind="captions" srclang="en" label="English" src="data:text/vtt;charset=utf-8,WEBVTT">
           <source src="./assets/video/hero_post.min.webm" type="video/webm">
@@ -336,7 +336,6 @@
         var workBtn = document.getElementById('projtab-work');
         if (workBtn) {
           workBtn.click();
-          workBtn.focus();
         }
       } catch (_) {}
 
