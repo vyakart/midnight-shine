@@ -262,6 +262,23 @@ p {
   justify-content: space-between;
   min-height: 68px;
 }
+.site-nav {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+.nav-links {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  gap: 16px;
+}
+.site-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 18px;
+}
 .brand {
   display: inline-flex;
   align-items: center;
@@ -331,37 +348,31 @@ p {
   height: 36px;
   border-radius: 8px;
   font-size: 18px;
+  text-decoration: none;
+  color: var(--link);
+  border: 1px solid transparent;
+  transition:
+    background var(--transition-fast) ease,
+    border-color var(--transition-fast) ease;
 }
 .site-nav a:hover {
-  background: #eaf1ff; /* light blue hover to match electric theme */
+  background: color-mix(in srgb, var(--link, #0057ff) 15%, transparent);
+  border-color: color-mix(in srgb, var(--link, #0057ff) 35%, transparent);
   text-decoration: none;
 }
-/* Remove default ul layout since theme toggle is a button */
-.site-nav ul,
-.footer-links {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  gap: 16px;
-}
-.site-nav a,
-.footer-links a {
-  text-decoration: none;
-  /* Ensure link contrast in active theme (>=4.5:1) */
-  color: var(--link);
-}
-/* removed redundant link override (handled above) */
-.site-nav a:hover,
-.footer-links a:hover {
-  text-decoration: underline;
-  text-underline-offset: 3px;
-}
-.site-nav a:focus-visible,
-.footer-links a:focus-visible {
+.site-nav a:focus-visible {
   outline: 3px solid var(--focus);
   outline-offset: 3px;
   border-radius: 6px;
+}
+.nav-icon {
+  width: 20px;
+  height: 20px;
+  fill: currentColor;
+  flex-shrink: 0;
+}
+.icon-link {
+  border-radius: 999px;
 }
 
 /* Legacy multi-button theme UI removed; single .theme-toggle-btn remains */
@@ -789,6 +800,13 @@ html.dark .button.outline {
   display: flex;
   align-items: center;
   justify-content: space-between;
+}
+.footer-note {
+  margin: 0;
+  width: 100%;
+  text-align: center;
+  font-size: 0.95rem;
+  color: var(--text-muted, #555);
 }
 @media (max-width: 640px) {
   .footer-inner {

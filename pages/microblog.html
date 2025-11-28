@@ -85,7 +85,31 @@
         </a>
       </div>
       <nav class="site-nav" aria-label="Site navigation">
-        <div class="site-actions" style="display:flex;align-items:center;gap:18px;">
+        <ul class="nav-links">
+          <li>
+            <a class="icon-link" href="https://github.com/vyakart" target="_blank" rel="noopener noreferrer" aria-label="GitHub profile">
+              <svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <path d="M12 .5C5.65.5.5 5.65.5 12c0 5.1 3.3 9.4 7.9 10.9.58.1.79-.25.79-.56 0-.28-.01-1.03-.02-2.03-3.22.7-3.9-1.55-3.9-1.55-.53-1.35-1.3-1.71-1.3-1.71-1.06-.73.08-.72.08-.72 1.18.08 1.8 1.22 1.8 1.22 1.04 1.78 2.73 1.27 3.4.97.1-.75.41-1.27.74-1.56-2.57-.29-5.27-1.29-5.27-5.77 0-1.27.45-2.31 1.2-3.13-.12-.3-.52-1.52.11-3.17 0 0 .98-.31 3.2 1.19a11 11 0 0 1 5.82 0c2.22-1.5 3.2-1.19 3.2-1.19.63 1.65.23 2.87.11 3.17.75.82 1.2 1.86 1.2 3.13 0 4.49-2.7 5.48-5.28 5.77.42.37.8 1.1.8 2.22 0 1.6-.02 2.88-.02 3.27 0 .31.21.67.8.56A10.52 10.52 0 0 0 23.5 12c0-6.35-5.15-11.5-11.5-11.5Z" />
+              </svg>
+            </a>
+          </li>
+          <li>
+            <a class="icon-link" href="https://x.com/vyakart" target="_blank" rel="noopener noreferrer" aria-label="Twitter profile">
+              <svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <path d="M22.46 6c-.77.35-1.56.58-2.4.69a4.2 4.2 0 0 0 1.84-2.32 8.27 8.27 0 0 1-2.64 1.02 4.13 4.13 0 0 0-7.15 3.77 11.73 11.73 0 0 1-8.52-4.32 4.13 4.13 0 0 0 1.28 5.52 4.1 4.1 0 0 1-1.87-.52v.05a4.14 4.14 0 0 0 3.31 4.06 4.1 4.1 0 0 1-1.86.07 4.15 4.15 0 0 0 3.87 2.88 8.3 8.3 0 0 1-5.14 1.77c-.33 0-.66-.02-.98-.06A11.72 11.72 0 0 0 8.29 21c7.55 0 11.68-6.26 11.68-11.68 0-.18 0-.35-.01-.53A8.35 8.35 0 0 0 22.46 6z" />
+              </svg>
+            </a>
+          </li>
+          <li>
+            <a class="icon-link" href="mailto:oliemannetje@tuta.com" aria-label="Contact Oliemannetje via email">
+              <svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <rect x="3" y="6" width="18" height="12" rx="2" ry="2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+                <path d="M4 8.5 12 13l8-4.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path>
+              </svg>
+            </a>
+          </li>
+        </ul>
+        <div class="site-actions">
           <!-- Theme switcher (ThemeProvider renders single toggle here) -->
           <div class="theme-switcher" aria-label="Theme switcher"></div>
           <!-- Streams icon/link (current page) -->
@@ -143,47 +167,7 @@
   <!-- Footer (match main site) -->
   <footer class="site-footer">
     <div class="container footer-inner">
-      <nav class="footer-social" aria-label="Footer links">
-        <ul class="footer-links">
-          <li>
-            <a
-              class="flip-link"
-              href="https://github.com/vyakart"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="GitHub profile"
-              data-text="GitHub"
-            >
-              <span class="flip-vis" aria-hidden="true"></span>
-              <span class="visually-hidden">GitHub</span>
-            </a>
-          </li>
-          <li>
-            <a
-              class="flip-link"
-              href="https://x.com/vyakart"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Twitter profile"
-              data-text="Twitter"
-            >
-              <span class="flip-vis" aria-hidden="true"></span>
-              <span class="visually-hidden">Twitter</span>
-            </a>
-          </li>
-          <li>
-            <a
-              class="flip-link"
-              href="mailto:imayreply@vyakart.com"
-              aria-label="Email: imayreply@vyakart.com"
-              data-text="Contact"
-            >
-              <span class="flip-vis" aria-hidden="true"></span>
-              <span class="visually-hidden">Contact</span>
-            </a>
-          </li>
-        </ul>
-      </nav>
+      <p class="footer-note">© <span id="year">2024</span> Nishit</p>
     </div>
   </footer>
 
