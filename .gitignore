@@ -10,5 +10,5 @@ build/
 # Local Netlify folder
 .netlify
 
-# Assets
-assets/
+# Assets (keep raw experiments ignored separately if needed)
+# assets/raw/
