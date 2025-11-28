@@ -87,12 +87,16 @@
       font-family:"Recursive Mono Casual",ui-monospace,SFMono-Regular,Menlo,Consolas,"Liberation Mono","Courier New",monospace;
       line-height:1.6;color:var(--fg);background:var(--bg);min-height:100%
     }
-    .container{width:min(1100px,92vw);margin-inline:auto}
+    .container{width:min(1280px,96vw);margin-inline:auto}
     .site-header{position:sticky;top:0;z-index:10;background:var(--bg);border-bottom:1px solid #e5e7eb;color:var(--fg)}
-    .header-inner{display:flex;align-items:center;justify-content:space-between;min-height:68px}
+    .header-inner{display:flex;align-items:center;justify-content:space-between;gap:32px;min-height:68px}
     .brand{display:inline-flex;align-items:center;gap:12px;font-weight:700;letter-spacing:.02em}
+    .brand-link{display:inline-flex;align-items:center;gap:12px;text-decoration:none;color:inherit}
     .brand-logo{width:28px;height:28px;display:inline-block;object-fit:contain}
     .brand-title{display:inline-flex;align-items:baseline;gap:6px;margin:0;font-size:clamp(1.25rem,1.1rem + .5vw,1.6rem);line-height:1.1}
+    .site-nav{flex:1;margin-left:auto;display:flex;align-items:center;justify-content:flex-end;gap:24px}
+    .nav-links{list-style:none;margin:0;padding:0;display:flex;align-items:center;gap:20px}
+    .site-actions{display:inline-flex;align-items:center;gap:16px}
     .site-nav a{display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:8px;font-size:18px}
     .section{padding:56px 0}
     .section.hero{padding:0}

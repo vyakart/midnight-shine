@@ -269,7 +269,7 @@ p {
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  gap: 28px;
+  gap: 24px;
 }
 .nav-links {
   list-style: none;
@@ -277,13 +277,12 @@ p {
   padding: 0;
   display: flex;
   align-items: center;
-  gap: 18px;
+  gap: 20px;
 }
 .site-actions {
   display: inline-flex;
   align-items: center;
-  gap: 18px;
-  margin-left: 12px;
+  gap: 16px;
 }
 .brand {
   display: inline-flex;
@@ -291,6 +290,13 @@ p {
   gap: 12px;
   font-weight: 700;
   letter-spacing: 0.02em;
+}
+.brand-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+  color: inherit;
 }
 .brand-logo {
   width: 28px;
