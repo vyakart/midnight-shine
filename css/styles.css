@@ -30,14 +30,14 @@ html, body {
 /* Brand: Semicasual (hero, footer, big type) */
 @font-face {
   font-family: "Recursive Mono Semicasual";
-  src: url("../assets/Typography/ArrowType-Recursive-1.085/Recursive_Web/woff2_static/RecursiveMonoCslSt-Regular.woff2") format("woff2");
+  src: url("../fonts/RecursiveMonoSemicasual-Regular.woff2") format("woff2");
   font-weight: 400;
   font-style: normal;
   font-display: swap;
 }
 @font-face {
   font-family: "Recursive Mono Semicasual";
-  src: url("../assets/Typography/ArrowType-Recursive-1.085/Recursive_Web/woff2_static/RecursiveMonoCslSt-Bold.woff2") format("woff2");
+  src: url("../fonts/RecursiveMonoSemicasual-Bold.woff2") format("woff2");
   font-weight: 700;
   font-style: normal;
   font-display: swap;
@@ -45,14 +45,14 @@ html, body {
 /* Body: Casual (friendly, even grid) */
 @font-face {
   font-family: "Recursive Mono Casual";
-  src: url("../assets/Typography/ArrowType-Recursive-1.085/Recursive_Web/woff2_static/RecursiveMonoCslSt-Regular.woff2") format("woff2");
+  src: url("../fonts/RecursiveMonoCasual-Regular.woff2") format("woff2");
   font-weight: 400;
   font-style: normal;
   font-display: swap;
 }
 @font-face {
   font-family: "Recursive Mono Casual";
-  src: url("../assets/Typography/ArrowType-Recursive-1.085/Recursive_Web/woff2_static/RecursiveMonoCslSt-Med.woff2") format("woff2");
+  src: url("../fonts/RecursiveMonoCasual-Med.woff2") format("woff2");
   font-weight: 500;
   font-style: normal;
   font-display: swap;
@@ -60,14 +60,14 @@ html, body {
 /* Night mode: Linear (stricter, more technical) */
 @font-face {
   font-family: "Recursive Mono Linear";
-  src: url("../assets/Typography/ArrowType-Recursive-1.085/Recursive_Web/woff2_static/RecursiveMonoLnrSt-Regular.woff2") format("woff2");
+  src: url("../fonts/RecursiveMonoLinear-Regular.woff2") format("woff2");
   font-weight: 400;
   font-style: normal;
   font-display: swap;
 }
 @font-face {
   font-family: "Recursive Mono Linear";
-  src: url("../assets/Typography/ArrowType-Recursive-1.085/Recursive_Web/woff2_static/RecursiveMonoLnrSt-Bold.woff2") format("woff2");
+  src: url("../fonts/RecursiveMonoLinear-Bold.woff2") format("woff2");
   font-weight: 700;
   font-style: normal;
   font-display: swap;
