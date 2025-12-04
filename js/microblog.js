@@ -201,6 +201,18 @@ function init() {
     document.addEventListener('DOMContentLoaded', init);
     return;
   }
+
+  // Wait for posts to load from JSON
+  if (!window.microblogPosts || window.microblogPosts.length === 0) {
+    window.addEventListener('microblogPostsLoaded', () => {
+      renderAndSetup();
+    });
+  } else {
+    renderAndSetup();
+  }
+}
+
+function renderAndSetup() {
   renderMicroblogCards();
   setupLoadMoreButton();
   setTimeout(() => {

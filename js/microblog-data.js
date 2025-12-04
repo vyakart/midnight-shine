@@ -1,52 +1,64 @@
-/* Microblog data (shared) */
+/* Microblog data (loaded from JSON) */
 (function(){
   'use strict';
   if (window.microblogPosts && Array.isArray(window.microblogPosts) && window.microblogPosts.length) return;
-  window.microblogPosts = [
-    {
-      id: 1,
-      slug: "innocence-beginners-mindset",
-      gradients: ["#FFD93D", "#FF6B6B", "#C73E1D"],
-      tagCode: "V-0001",
-      tagName: "Value",
-      title: "Innocence — a Beginner’s Mindset",
-      content: "Curiosity is my compass. I approach every project as if it were my first, free of bias, full of wonder and open to possibility. This innocence fuels experimentation and keeps my work fresh, inviting a sense of discovery.",
-      author: "Nishit",
-      timestamp: "now"
-    },
-    {
-      id: 2,
-      slug: "integrity-doing-the-right-thing",
-      gradients: ["#667EEA", "#764BA2", "#F093FB"],
-      tagCode: "V-0002",
-      tagName: "Value",
-      title: "Integrity: doing the right thing when no one’s watching",
-      content: "My actions align with my words, and my decisions reflect my deepest beliefs, even when it's difficult or unpopular...",
-      fullContent: "My actions align with my words, and my decisions reflect my deepest beliefs, even when it's difficult or unpopular. I take ownership of my mistakes, honor my commitments, and speak truthfully with kindness. Integrity is my compass; it guides me when the path isn't clear and keeps me grounded in who I want to be.",
-      author: "Nishit",
-      timestamp: "now"
-    },
-    {
-      id: 3,
-      slug: "care-design-with-empathy",
-      gradients: ["#11998E", "#38EF7D", "#FC5C7D"],
-      tagCode: "V-0003",
-      tagName: "Value",
-      title: "Care — design with empathy, craft with love",
-      content: "Great experiences start with listening. As someone great said, “Amongst real people there are no hierarchies.” I cater to needs, contexts, and emotions, then build thoughtfully, prioritizing inclusivity and sustainability. Every small detail is a quiet act of care.",
-      author: "Nishit",
-      timestamp: "now"
-    },
-    {
-      id: 4,
-      slug: "resilience-iterate-adapt-grow",
-      gradients: ["#1E3C72", "#7E57C2", "#F953C6"],
-      tagCode: "V-0004",
-      tagName: "Value",
-      title: "Resilience: iterate, adapt, grow",
-      content: "I've learned that resilience isn't about avoiding difficulty, but about developing the inner strength to navigate it with grace. I find ways to grow from setbacks, to maintain hope during uncertain times, and to support others facing their own struggles. Progress is a squiggly line so it makes sense to treat it as a rollercoaster ride.",
-      author: "Nishit",
-      timestamp: "now"
-    }
-  ];
+
+  // Fetch posts from JSON file
+  fetch('/data/microblog/posts.json')
+    .then(response => response.json())
+    .then(data => {
+      const gradientSets = [
+        ["#FFD93D", "#FF6B6B", "#C73E1D"],
+        ["#667EEA", "#764BA2", "#F093FB"],
+        ["#11998E", "#38EF7D", "#FC5C7D"],
+        ["#1E3C72", "#7E57C2", "#F953C6"],
+        ["#FA8BFF", "#2BD2FF", "#2BFF88"],
+        ["#FF6B9D", "#C239B3", "#1E3C72"]
+      ];
+
+      window.microblogPosts = data.posts.map((post, index) => {
+        // Extract title from HTML content
+        const titleMatch = post.content.html.match(/<h2[^>]*>(.*?)<\/h2>/);
+        const title = titleMatch ? titleMatch[1] : post.content.text.split('—')[0].trim();
+
+        // Extract first paragraph or use text content
+        const excerptMatch = post.content.html.match(/<p[^>]*>(.*?)<\/p>/);
+        const excerpt = excerptMatch ? excerptMatch[1].replace(/<[^>]*>/g, '') : post.content.text.substring(0, 200);
+
+        // Create slug from ID
+        const slug = post.id;
+
+        // Assign gradients cyclically
+        const gradients = gradientSets[index % gradientSets.length];
+
+        // Determine tag based on tags
+        const tags = post.metadata.tags || [];
+        const tagName = tags.length > 0 ? tags[0].charAt(0).toUpperCase() + tags[0].slice(1) : "Post";
+        const tagCode = `P-${String(index + 1).padStart(4, '0')}`;
+
+        // Format timestamp
+        const date = new Date(post.timestamp);
+        const formattedDate = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+
+        return {
+          id: index + 1,
+          slug: slug,
+          gradients: gradients,
+          tagCode: tagCode,
+          tagName: tagName,
+          title: title,
+          content: excerpt.length > 160 ? excerpt.substring(0, 160) + '...' : excerpt,
+          fullContent: post.content.html,
+          author: "Nishit",
+          timestamp: formattedDate
+        };
+      });
+
+      // Trigger a custom event to notify that posts are loaded
+      window.dispatchEvent(new CustomEvent('microblogPostsLoaded'));
+    })
+    .catch(error => {
+      console.error('Error loading microblog posts:', error);
+      window.microblogPosts = [];
+    });
 })();
