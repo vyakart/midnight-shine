@@ -1,9 +1,6 @@
 /* Microblog page scripts */
 'use strict';
 
-// Data source (shared via window from js/microblog-data.js)
-const microblogPosts = (window.microblogPosts && Array.isArray(window.microblogPosts)) ? window.microblogPosts : [];
-
 // Create a microblog card
 function createMicroblogCard(post, index) {
   var text = (post && typeof post.content === 'string') ? post.content.trim() : '';
@@ -57,7 +54,15 @@ function createMicroblogCard(post, index) {
 // Render all cards
 function renderMicroblogCards() {
   const grid = document.getElementById('microblog-grid');
-  const cardsHTML = microblogPosts
+  const posts = window.microblogPosts || [];
+
+  if (posts.length === 0) {
+    console.warn('No microblog posts found');
+    grid.innerHTML = '<p style="text-align: center; padding: 2rem;">No posts available yet.</p>';
+    return;
+  }
+
+  const cardsHTML = posts
     .slice()
     .sort((a, b) => a.id - b.id)
     .map((p, i) => createMicroblogCard(p, i))
@@ -70,7 +75,7 @@ function renderMicroblogCards() {
   cards.forEach(card => {
     card.addEventListener('click', () => {
       const cardId = card.dataset.id;
-      const post = microblogPosts.find(p => p.id.toString() === cardId);
+      const post = posts.find(p => p.id.toString() === cardId);
       if (post) console.log('Card clicked:', post.title);
     });
   });
