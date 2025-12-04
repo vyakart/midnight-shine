@@ -8,15 +8,17 @@
     return m ? decodeURIComponent(m[1]) : '';
   }
 
-  var posts = (window.microblogPosts && Array.isArray(window.microblogPosts)) ? window.microblogPosts : [];
   var slug = getParam('slug');
   var post = null;
 
-  if (slug) {
-    post = posts.find(function (p) { return (p.slug === slug) || (String(p.id) === slug); }) || null;
-  }
-  if (!post && posts.length) {
-    post = posts[0]; // graceful fallback
+  function findPost() {
+    var posts = window.microblogPosts || [];
+    if (slug) {
+      post = posts.find(function (p) { return (p.slug === slug) || (String(p.id) === slug); }) || null;
+    }
+    if (!post && posts.length) {
+      post = posts[0]; // graceful fallback
+    }
   }
 
   function setHero(p) {
@@ -119,9 +121,23 @@
     setBody(post);
   }
 
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', render);
-  } else {
-    render();
+  function init() {
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', init);
+      return;
+    }
+
+    // Wait for posts to load from JSON
+    if (!window.microblogPosts || window.microblogPosts.length === 0) {
+      window.addEventListener('microblogPostsLoaded', function() {
+        findPost();
+        render();
+      });
+    } else {
+      findPost();
+      render();
+    }
   }
+
+  init();
 })();
