@@ -364,21 +364,6 @@ body {
   color: #6b7280;
 }
 
-.microblog-full-wrapper {
-  margin-bottom: 4rem;
-}
-
-.microblog-full-wrapper .section-subtitle {
-  font-size: 0.95rem;
-  text-transform: uppercase;
-  letter-spacing: 0.2em;
-  color: #6b7280;
-}
-
-.microblog-full-article {
-  margin-top: 1.5rem;
-}
-
 .legend-item {
   display: flex;
   align-items: center;
@@ -562,6 +547,12 @@ body {
   color: var(--color-text-primary, #111827);
   font-size: 1rem;
   line-height: 1.75;
+}
+.detail-body article {
+  font-family: var(--font-sans, "Recursive Mono Casual") !important;
+}
+.detail-body article * {
+  font-family: inherit !important;
 }
 .detail-body p + p { margin-top: 0.75rem; }
 .detail-body h2, .detail-body h3 {
