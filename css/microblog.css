@@ -364,6 +364,21 @@ body {
   color: #6b7280;
 }
 
+.microblog-full-wrapper {
+  margin-bottom: 4rem;
+}
+
+.microblog-full-wrapper .section-subtitle {
+  font-size: 0.95rem;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: #6b7280;
+}
+
+.microblog-full-article {
+  margin-top: 1.5rem;
+}
+
 .legend-item {
   display: flex;
   align-items: center;
@@ -557,7 +572,7 @@ body {
 .detail-body h2 { font-size: 1.5rem; }
 .detail-body h3 { font-size: 1.25rem; }
 
-.detail-body .butlerian-jihad-article {
+.butlerian-jihad-article {
   font-family: var(--butlerian-serif);
   color: #1b1a16;
   background: linear-gradient(180deg, rgba(253, 252, 250, 0.85), rgba(250, 247, 240, 0.9));

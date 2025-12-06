@@ -81,6 +81,24 @@ function renderMicroblogCards() {
   });
 }
 
+function renderFullEssay() {
+  const target = document.getElementById('microblog-full-article');
+  if (!target) return;
+  const posts = window.microblogPosts || [];
+  if (!posts.length) {
+    target.innerHTML = '<p style="text-align:center; padding: 1.5rem;">No essay available yet.</p>';
+    return;
+  }
+  const essayPost = posts.find(post => !!post.fullContent) || posts[0];
+  if (essayPost && essayPost.fullContent) {
+    target.innerHTML = essayPost.fullContent;
+  } else if (essayPost && essayPost.content) {
+    target.textContent = essayPost.content;
+  } else {
+    target.innerHTML = '<p style="text-align:center; padding: 1.5rem;">No essay available yet.</p>';
+  }
+}
+
 // Staggered load animations
 function addLoadAnimations() {
   const cards = document.querySelectorAll('.microblog-card');
@@ -207,6 +225,7 @@ function init() {
 
 function renderAndSetup() {
   renderMicroblogCards();
+  renderFullEssay();
   setTimeout(() => {
     addLoadAnimations();
     addRandomAnimationDelays();
