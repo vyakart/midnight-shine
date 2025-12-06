@@ -81,18 +81,6 @@ function renderMicroblogCards() {
   });
 }
 
-// Load more button
-function setupLoadMoreButton() {
-  const loadMoreBtn = document.querySelector('.load-more-btn');
-  if (!loadMoreBtn) return;
-  loadMoreBtn.addEventListener('click', () => {
-    console.log('Load more posts clicked');
-    loadMoreBtn.style.transform = 'scale(0.95)';
-    setTimeout(() => { loadMoreBtn.style.transform = 'scale(1.05)'; }, 150);
-    setTimeout(() => { loadMoreBtn.style.transform = 'scale(1)'; }, 300);
-  });
-}
-
 // Staggered load animations
 function addLoadAnimations() {
   const cards = document.querySelectorAll('.microblog-card');
@@ -219,7 +207,6 @@ function init() {
 
 function renderAndSetup() {
   renderMicroblogCards();
-  setupLoadMoreButton();
   setTimeout(() => {
     addLoadAnimations();
     addRandomAnimationDelays();
