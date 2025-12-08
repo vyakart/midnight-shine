@@ -62,9 +62,15 @@ function renderMicroblogCards() {
     return;
   }
 
+  function getTime(post) {
+    if (!post || !post.timestamp) return 0;
+    const time = new Date(post.timestamp).getTime();
+    return isNaN(time) ? 0 : time;
+  }
+
   const cardsHTML = posts
     .slice()
-    .sort((a, b) => a.id - b.id)
+    .sort((a, b) => getTime(a) - getTime(b))
     .map((p, i) => createMicroblogCard(p, i))
     .join('');
   grid.innerHTML = cardsHTML;
