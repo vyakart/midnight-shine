@@ -220,13 +220,6 @@
       video.dataset.prepared = '1';
       try { video.load(); } catch (_) {}
     }
-    function playOnGesture() {
-      prepareVideo();
-      try {
-        var p = video.play();
-        if (p && typeof p.then === 'function') p.catch(function(){});
-      } catch (_) {}
-    }
 
     // Show/hide poster based on playback state
     function hidePoster() {
@@ -240,17 +233,23 @@
       posterImg.setAttribute('aria-hidden', 'false');
     }
 
-    // Prefer going back to poster when motion is reduced
-    if (reduceMotion) {
-      try { video.loop = false; } catch (_) {}
+    // Reset video to beginning when it ends
+    function resetVideo() {
+      try {
+        video.currentTime = 0;
+        video.pause();
+      } catch (_) {}
+      showPoster();
     }
 
     video.addEventListener('playing', hidePoster);
     video.addEventListener('pause', showPoster);
-    video.addEventListener('ended', showPoster);
+    video.addEventListener('ended', resetVideo);
     video.addEventListener('error', showPoster);
     document.addEventListener('visibilitychange', function () {
-      if (document.hidden) showPoster();
+      if (document.hidden) {
+        resetVideo();
+      }
     });
 
     // Prepare when near viewport; keep paused to avoid autoplay at first paint
@@ -265,13 +264,21 @@
       }, { rootMargin: '200px' });
       io.observe(video);
     }
-    // Start playback only after explicit user gesture on hero
-    ['click', 'touchstart', 'keydown'].forEach(function(evt) {
-      (heroMedia || video).addEventListener(evt, function onFirst() {
-        playOnGesture();
-        (heroMedia || video).removeEventListener(evt, onFirst);
-      });
-    });
+    // Start playback on user click/touch (can be repeated to replay)
+    var playHandler = function() {
+      // Reset and play from beginning if video ended or paused
+      if (video.paused || video.ended) {
+        prepareVideo();
+        try {
+          video.currentTime = 0;
+          var p = video.play();
+          if (p && typeof p.then === 'function') p.catch(function(){});
+        } catch (_) {}
+      }
+    };
+
+    (heroMedia || video).addEventListener('click', playHandler);
+    (heroMedia || video).addEventListener('touchstart', playHandler, { passive: true });
   }
 
   // Terminal toggle (kept)
