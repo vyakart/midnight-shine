@@ -553,6 +553,7 @@ body {
 }
 .detail-body article * {
   font-family: inherit !important;
+  color: var(--color-text-primary) !important;
 }
 .detail-body p + p { margin-top: 0.75rem; }
 .detail-body h2, .detail-body h3 {
@@ -562,6 +563,38 @@ body {
 }
 .detail-body h2 { font-size: 1.5rem; }
 .detail-body h3 { font-size: 1.25rem; }
+
+/* Override inline styles from post content */
+.detail-body article p,
+.detail-body article h1,
+.detail-body article h2,
+.detail-body article h3,
+.detail-body article h4,
+.detail-body article h5,
+.detail-body article h6,
+.detail-body article span,
+.detail-body article a,
+.detail-body article li,
+.detail-body article strong,
+.detail-body article em {
+  color: var(--color-text-primary) !important;
+}
+
+.detail-body article a {
+  color: var(--color-primary) !important;
+  text-decoration: underline;
+}
+
+.detail-body article a:hover {
+  color: var(--color-secondary) !important;
+}
+
+/* Override background colors from inline styles */
+.detail-body article,
+.butlerian-jihad-source,
+.innocence-article {
+  background-color: transparent !important;
+}
 
 .butlerian-jihad-article {
   font-family: var(--butlerian-serif);
