@@ -214,6 +214,9 @@
         posterImg.style.opacity = '1';
       } catch (_) {}
     }
+    // Initialize video as hidden
+    video.style.transition = 'opacity 200ms ease';
+    video.style.opacity = '0';
 
     function prepareVideo() {
       if (video.dataset.prepared === '1') return;
@@ -226,11 +229,15 @@
       if (!posterImg) return;
       posterImg.style.opacity = '0';
       posterImg.setAttribute('aria-hidden', 'true');
+      // Show video when hiding poster
+      video.style.opacity = '1';
     }
     function showPoster() {
       if (!posterImg) return;
       posterImg.style.opacity = '1';
       posterImg.setAttribute('aria-hidden', 'false');
+      // Hide video when showing poster
+      video.style.opacity = '0';
     }
 
     // Reset video to beginning when it ends
